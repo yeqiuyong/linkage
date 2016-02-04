@@ -84,7 +84,7 @@
 
                     </div>
                     <ul class="nav nav-pills nav-stacked main-menu">
-                        {{ elements.getMenu2() }}
+                        {{ elements.getAdminMenu() }}
                     </ul>
 
                 </div>

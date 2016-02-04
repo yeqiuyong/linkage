@@ -27,10 +27,11 @@
         {{ stylesheet_link('css/uploadify.css'  ) }}
         {{ stylesheet_link('css/animate.min.css'  ) }}
 
+        {{ javascript_include('js/jquery.min.js') }}
     </head>
     <body>
         {{ content() }}
-        {{ javascript_include('js/jquery.min.js') }}
+
         {{ javascript_include('js/utils.js') }}
 
         {{ javascript_include("bower_components/bootstrap/dist/js/bootstrap.min.js") }}

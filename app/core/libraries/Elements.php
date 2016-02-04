@@ -3,6 +3,7 @@ namespace Multiple\Core\Libraries;
 
 use Phalcon\Mvc\User\Component;
 use Phalcon\Tag;
+use Phalcon\Mvc\Url;
 
 /**
  * Elements
@@ -67,6 +68,31 @@ class Elements extends Component
         )
     );
 
+    private $admin_menu = [
+        'Dashboard' => [
+            'link' => 'admin/index/index',
+            'class' => 'glyphicon glyphicon-home',
+            'profile' => 1,
+            'has_child' => false
+        ],
+        '管理员管理' => [
+            'link' => 'admin/index/index',
+            'class' => 'glyphicon glyphicon-plus',
+            'profile' => 0,
+            'has_child' => true,
+            'child_menu' =>[
+                '角色管理' => [
+                    'link' => 'admin/index/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                '管理员管理' => [
+                    'link' => 'admin/index/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ]
+            ]
+        ]
+    ];
+
     /**
      * Builds header menu with left and right items
      *
@@ -104,45 +130,47 @@ class Elements extends Component
 
     }
 
-    public function getMenu2()
+    public function getAdminMenu()
     {
+        $auth = $this->session->get('auth');
+        if ($auth == null) {
+            return;
+        }
 
-//        $auth = $this->session->get('auth');
-//        if ($auth) {
-//            $this->_headerMenu['navbar-right']['session'] = array(
-//                'caption' => 'Log Out',
-//                'action' => 'end'
-//            );
-//        } else {
-//            unset($this->_headerMenu['navbar-left']['invoices']);
-//        }
+        $url = new Url();
+        $base_url = $url->getBaseUri();
 
-//        $controllerName = $this->view->getControllerName();
-//        foreach ($this->_headerMenu as $position => $menu) {
-//            echo '<div class="nav-collapse">';
-//            echo '<ul class="nav navbar-nav ', $position, '">';
-//            foreach ($menu as $controller => $option) {
-//                if ($controllerName == $controller) {
-//                    echo '<li class="active">';
-//                } else {
-//                    echo '<li>';
-//                }
-//                echo $this->tag->linkTo($controller . '/' . $option['action'], $option['caption']);
-//                echo '</li>';
-//            }
-//            echo '</ul>';
-//            echo '</div>';
-//        }
         echo '<li class="nav-header">Main</li>';
-        echo          '<li>';
 
-        echo Tag::linkTo(array("admin/index/index", "Dashboard", "class" => "glyphicon glyphicon-home"));
-        echo '</li>';
+        $profile_id = $auth['profile_id'];
 
-//                        <li><a href="error.html"><i class="glyphicon glyphicon-ban-circle"></i><span> Error Page</span></a>
-//                        </li>
-//                        <li><a href="login.html"><i class="glyphicon glyphicon-lock"></i><span> Login Page</span></a>
-//                        </li>
+        foreach($this->admin_menu as $option_name => $option){
+            if($profile_id > $option['profile']){
+                continue;
+            }
+
+            echo '<li>';
+            //echo Tag::linkTo(array($option['link'], "class" => 'ajax-link'));
+
+            if($option['has_child']){
+                echo '<li class="accordion">';
+                echo '<a href="#"><i class="glyphicon glyphicon-plus"></i><span>'.$option_name.'</span></a>';
+                echo '<ul class="nav nav-pills nav-stacked">';
+
+                foreach($option['child_menu'] as $child_option_name => $child_option){
+                    echo '<li>';
+                    echo Tag::linkTo(array($child_option['link'], $child_option_name));
+                    echo '</li>';
+                }
+
+                echo '</ul>';
+                echo '</li>';
+            }else{
+                echo '<a class="ajax-link" href="'.$base_url.$option['link'].'"><i class="'.$option['class'].'"></i><span>'.$option_name.'</span></a>';
+            }
+            echo '</li>';
+        }
+
     }
 
     /**

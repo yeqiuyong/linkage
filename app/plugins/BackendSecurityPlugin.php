@@ -23,7 +23,7 @@ class BackendSecurityPlugin extends Plugin
 	public function beforeDispatch(Event $event, Dispatcher $dispatcher)
 	{
 		$controller = $dispatcher->getControllerName();
-		$action = $dispatcher->getActionName();
+		//$action = $dispatcher->getActionName();
 
 		if($controller == 'session' || $controller == 'errors'){
 			return true;
