@@ -6,25 +6,43 @@
                 <a href="#">Home</a>
             </li>
             <li>
-                <a href="#">User Profile</a>
+                <a href="#">管理员管理</a>
             </li>
         </ul>
     </div>
 
 
-    <div class="box-header well" data-original-title="">
-        <h2><i class="glyphicon glyphicon-user"></i> Datatable + Responsive</h2>
+    <div class="box-content">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="active"><a href="#admin-info">个人信息</a></li>
+            <li><a href="#admin-add">添加管理员</a></li>
+        </ul>
 
-        <div class="box-icon">
-            <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
-            <a href="#" class="btn btn-minimize btn-round btn-default"><i
-                        class="glyphicon glyphicon-chevron-up"></i></a>
-            <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+        <div class="box col-md-12" id="admin-info">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="管理员信息">
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                    class="glyphicon glyphicon-chevron-up"></i></a>
+                        <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+                    </div>
+                </div>
+                <div id="user-table" class="box-content">
+                </div>
+            </div>
+        </div>
+
+        <div class="box col-md-12" id="admin-info">
+            <div class="box-inner">
+
+            </div>
         </div>
     </div>
-    <div id="user-table" class="box-content">
 
-    </div>
+
+
+
 </div>
 
 <!-- Ad ends -->
@@ -69,15 +87,36 @@
 
                     var register_time = new Date();
                     for (var i = 0; i < page.items.length; i++) {
-
                         register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 
                         strtable += "<tr>";
                         strtable += "<td>" + page.items[i].username + "</td>";
                         strtable += "<td>" + register_time.toLocaleDateString() + "</td>";
                         strtable += "<td>" + page.items[i].profile.profile_name + "</td>";
-                        strtable += "<td>" + "aaa" + "</td>";
-                        strtable += "<td>" + "aaa" + "</td>";
+
+                        strtable += '<td class="center">';
+                        if(page.items[i].active == 'Y') {
+                            strtable += '<span class="label-success label label-default">Active</span>';
+                        }else{
+                            strtable += '<span class="label label-default">Inactive</span>';
+                        }
+                        strtable += '</td>';
+
+                        strtable += '<td class="center">';
+                        strtable += '<a class="btn btn-success" href="#">';
+                        strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
+                        strtable += '查看';
+                        strtable += '</a>';
+                        strtable += '<a class="btn btn-info" href="#">';
+                        strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
+                        strtable += '编辑';
+                        strtable += '</a>';
+                        strtable += '<a class="btn btn-danger" href="#">';
+                        strtable += '<i class="glyphicon glyphicon-trash icon-white"></i>';
+                        strtable += '删除';
+                        strtable += '</a>';
+                        strtable += '</td>';
+
                         strtable += "</tr>";
                     }
 
