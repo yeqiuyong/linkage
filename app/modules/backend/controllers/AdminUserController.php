@@ -25,22 +25,24 @@ class AdminUserController extends BackendControllerBase
 
     }
 
-    public function searchAction(){
+    public function listAction(){
         // Current page to show
         // In a controller this can be:
         // $this->request->getQuery('page', 'int'); // GET
         $currentPage = $this->request->getPost('pageindex', 'int'); // POST
-        $page_num = ($currentPage == null) ? 0 : $currentPage;
+        $page_num = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $users      = AdminUser::find();
+        $users = AdminUser::find();
+        echo $users[0]->profile->profile_name;
+
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
-        $paginator   = new PaginatorModel(
+        $paginator = new PaginatorModel(
             array(
                 "data"  => $users,
                 "limit" => 1,
-                "page"  => $currentPage
+                "page"  => $page_num
             )
         );
 

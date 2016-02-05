@@ -72,13 +72,13 @@ class Elements extends Component
         'Dashboard' => [
             'link' => 'admin/index/index',
             'class' => 'glyphicon glyphicon-home',
-            'profile' => 1,
+            'profile' => 2,
             'has_child' => false
         ],
         '管理员管理' => [
             'link' => 'admin/index/index',
             'class' => 'glyphicon glyphicon-plus',
-            'profile' => 0,
+            'profile' => 1,
             'has_child' => true,
             'child_menu' =>[
                 '角色管理' => [

@@ -10,12 +10,18 @@ use Multiple\Core\Constants\Services;
 
 class AdminUser extends Model
 {
+    public $profile_id;
     private $email;
 
     public function initialize()
     {
         $this->setSource("linkage_adminuser");
+
+        $this->hasOne('profile_id', 'Multiple\Models\AdminProfile', 'profile_id', array(  'alias' => 'profile',
+            'reusable' => true ));
     }
+
+
 
     public function changePassword($username, $oldpwd, $newpwd){
         $security = Di::getDefault()->get(Services::SECURITY);

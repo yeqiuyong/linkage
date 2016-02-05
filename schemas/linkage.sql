@@ -4,17 +4,6 @@
 -- ------------------------------------------------------
 -- Server version	5.1.50
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
 --
 -- Table structure for table `adminuser`
 --
@@ -26,7 +15,7 @@ CREATE TABLE `linkage_adminuser` (
   `name` varchar(120)  DEFAULT '',
   `mobile` varchar(30) DEFAULT '',
   `email` varchar(70) DEFAULT '',
-  `profile_id` int(11) NOT NULL DEFAULT 0,
+  `profile_id` int(11) unsigned NOT NULL DEFAULT 0,
   `token` VARCHAR(255) NOT NULL DEFAULT '',
   `loginip` varchar(31) DEFAULT '127.0.0.1',
   `create_time` int(11) NOT NULL DEFAULT 0,
@@ -35,7 +24,8 @@ CREATE TABLE `linkage_adminuser` (
   PRIMARY KEY (`admin_id`),
   UNIQUE KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+insert into linkage_adminuser ( `username`,`password`,`name`,`mobile`,`email`,`profile_id`,`token`,`loginip`,`create_time`,`update_time`,`active`)
+values ('admin','$2a$08$ItRuZG9iZHOdRwCObXAAaOAwvw0NzzDd/YrGsdgTRFKk8E4mr3uSy','叶秋永','1881655517','yeqiuyong@aliyun.com',1,'','127.0.0.1',1454660363,1454660363,'Y');
 
 --
 -- Table structure for table 'admin_profiles'
@@ -46,8 +36,8 @@ CREATE TABLE `linkage_admin_profile` (
   `profile_name` varchar(255) NOT NULL default '',
   PRIMARY KEY (`profile_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
+insert into linkage_admin_profile ( `profile_name`) values ('超级管理员');
+insert into linkage_admin_profile ( `profile_name`) values ('管理员');
 
 --
 -- Table structure for table 'admin_pages_to_profiles'
@@ -58,7 +48,7 @@ CREATE TABLE `linkage_admin_page_to_profile` (
   `page_key` varchar(255) NOT NULL default '',
   UNIQUE KEY profile_page (profile_id, page_key),
   UNIQUE KEY page_profile (page_key, profile_id)
-) ENGINE=MyISAM;
+) ENGINE=InnoDB;
 
 --
 -- Table structure for table `admin_activity_log`

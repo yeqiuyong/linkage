@@ -60,18 +60,22 @@
             $.ajax({
                 type: "post",
                 dataType:"json",
-                url: "<?php echo $this->url->get('admin/adminuser/search') ?>",
+                url: "<?php echo $this->url->get('admin/adminuser/list') ?>",
                 data: {'pageindex':pageindex},
                 success: function (page) {
 
                     var strtable = '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
                     strtable += '<thead><tr> <th>用户名</th> <th>注册时间</th> <th>角色</th> <th>状态</th> <th>操作</th> </tr> </thead>';
 
+                    var register_time = new Date();
                     for (var i = 0; i < page.items.length; i++) {
+
+                        register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
+
                         strtable += "<tr>";
                         strtable += "<td>" + page.items[i].username + "</td>";
-                        strtable += "<td>" + "aaaeee" + "</td>";
-                        strtable += "<td>" + "ff" + "</td>";
+                        strtable += "<td>" + register_time.toLocaleDateString() + "</td>";
+                        strtable += "<td>" + page.items[i].profile.profile_name + "</td>";
                         strtable += "<td>" + "aaa" + "</td>";
                         strtable += "<td>" + "aaa" + "</td>";
                         strtable += "</tr>";
