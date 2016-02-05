@@ -86,7 +86,7 @@ class Elements extends Component
                     'class' => 'nav nav-pills nav-stacked',
                 ],
                 '管理员管理' => [
-                    'link' => 'admin/index/index',
+                    'link' => 'admin/adminuser/index',
                     'class' => 'nav nav-pills nav-stacked',
                 ]
             ]

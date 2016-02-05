@@ -1,16 +1,3 @@
-
-<!--/span-->
-<!-- left menu ends -->
-
-<noscript>
-    <div class="alert alert-block col-md-12">
-        <h4 class="alert-heading">Warning!</h4>
-
-        <p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a>
-            enabled to use this site.</p>
-    </div>
-</noscript>
-
 <div id="content" class="col-lg-10 col-sm-10">
     <!-- content starts -->
     <div>
@@ -25,109 +12,21 @@
     </div>
 
 
-    <div class="row">
-        <div class="box col-md-12">
-            <div class="box-inner profilepage-box">
-                <div class="box-header well">
-                    <h2><i class="glyphicon glyphicon-th"></i> xxxx 个人信息</h2>
+    <div class="box-header well" data-original-title="">
+        <h2><i class="glyphicon glyphicon-user"></i> Datatable + Responsive</h2>
 
-                    <div class="box-icon">
-                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                    class="glyphicon glyphicon-cog"></i></a>
-                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
-                                    class="glyphicon glyphicon-chevron-up"></i></a>
-                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                    class="glyphicon glyphicon-remove"></i></a>
-                    </div>
-                </div>
-                <div class="box-content">
-                    <ul class="nav nav-tabs" id="myTab">
-                        <li class="active"><a href="#info">个人信息</a></li>
-                        <li><a href="#modifyinfo">修改信息</a></li>
-                        <li><a href="#modifypwd">修改密码</a></li>
-                    </ul>
-
-                    <div id="myTabContent" class="tab-content">
-                        <div class="tab-pane active" id="info">
-                            <div class="box-content">
-                                <ul class="dashboard-list">
-                                    <li>
-                                        <strong>账号:</strong> <small>Usman</small> <br>
-                                    </li>
-                                    <li>
-                                        <strong>姓名:</strong> <small>Usman</small> <br>
-                                    </li>
-                                    <li>
-                                        <strong>电话:</strong> <small>Usman</small> <br>
-                                    </li>
-                                    <li>
-                                        <strong>邮箱:</strong> <small>Usman</small> <br>
-                                    </li>
-                                    <li>
-                                        <strong>角色:</strong> <small>Usman</small> <br>
-                                    </li>
-                                    <li>
-                                        <strong>上次登陆时间:</strong> <small>Usman</small> </h3><br>
-                                    </li>
-                                    <li>
-                                        <strong>状态:</strong> </h3><span class="label-success label label-default">Approved</span>
-                                    </li>
-
-
-
-                                </ul>
-                            </div>
-
-                        </div>
-
-                        <div class="tab-pane" id="modifyinfo">
-                            <div class="box-content">
-                                {{ form('admin/profile/changeProfile', 'role': 'form') }}
-                                    <div class="form-group">
-                                        <label>姓名</label>
-                                        {{ text_field('realname', 'class': "form-control") }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">电话</label>
-                                        {{ text_field('mobile', 'class': "form-control") }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">邮箱</label>
-                                        {{ text_field('email', 'class': "form-control") }}
-                                    </div>
-
-                                    {{ submit_button('提交', 'class': 'btn btn-primary') }}
-                                </form>
-
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="modifypwd">
-                            <div class="box-content">
-                                {{ form('admin/profile/changepwd', 'role': 'form') }}
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">旧密码</label>
-                                        {{ password_field('oldpassword', 'class': "form-control") }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">新密码</label>
-                                        {{ password_field('newpassword', 'class': "form-control") }}
-                                    </div>
-
-                                    {{ submit_button('提交', 'class': 'btn btn-primary') }}
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="box-icon">
+            <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
+            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                        class="glyphicon glyphicon-chevron-up"></i></a>
+            <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
         </div>
-        <!--/span-->
+    </div>
+    <div id="user-table" class="box-content">
 
-<!-- content ends -->
-</div><!--/#content.col-md-0-->
-
+    </div>
 </div>
+
 <!-- Ad ends -->
 
 <hr>
@@ -152,3 +51,54 @@
     </div>
 </div>
 
+<script type="text/javascript">
+        var pagesize = 10;
+        var pageindexinit = 1;
+
+        function load(pageindex) {
+
+            $.ajax({
+                type: "post",
+                dataType:"json",
+                url: "<?php echo $this->url->get('admin/adminuser/search') ?>",
+                data: {'pageindex':pageindex},
+                success: function (page) {
+
+                    var strtable = '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+                    strtable += '<thead><tr> <th>用户名</th> <th>注册时间</th> <th>角色</th> <th>状态</th> <th>操作</th> </tr> </thead>';
+
+                    for (var i = 0; i < page.items.length; i++) {
+                        strtable += "<tr>";
+                        strtable += "<td>" + page.items[i].username + "</td>";
+                        strtable += "<td>" + "aaaeee" + "</td>";
+                        strtable += "<td>" + "ff" + "</td>";
+                        strtable += "<td>" + "aaa" + "</td>";
+                        strtable += "<td>" + "aaa" + "</td>";
+                        strtable += "</tr>";
+                    }
+
+                    strtable += '</table>';
+
+                    strtable += '<ul class="pagination pagination-centered">';
+                    strtable += '<li><a href="#" onclick="load('+page.before+')">Prev</a></li>';
+
+                    for (var i = 0; i < page.total_pages; i++) {
+                        var index  = i + 1;
+                        if(index == pageindex){
+                            strtable += '<li class="active"><a href="#" onclick="load('+index+')">'+index+'</a></li>';
+                        }else{
+                            strtable += '<li><a href="#" onclick="load('+index+')">'+index+'</a></li>';
+                        }
+                    }
+
+                    strtable += '<li><a href="#" onclick="load('+page.next+')">Next</a></li>';
+                    strtable +='</ul>';
+
+                    $("#user-table").html(strtable);
+                }
+            });
+        }
+
+        load(pageindexinit);
+
+</script>

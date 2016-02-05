@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        {{ get_title() }}
+        <title>{% block title %}{% endblock %} - My Webpage</title>
         {{ stylesheet_link('css/bootstrap.min.css') }}
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +28,7 @@
         {{ stylesheet_link('css/animate.min.css'  ) }}
 
         {{ javascript_include('js/jquery.min.js') }}
+
     </head>
     <body>
         {{ content() }}
@@ -52,5 +53,7 @@
         {{ javascript_include("js/jquery.cookie.js")  }}
 
         {{ javascript_include("js/charisma.js")  }}
+
+
     </body>
 </html>
