@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: joe
+ * Date: 25/1/16
+ * Time: 10:25 AM
+ */
+
 namespace Multiple\Core;
 
 use Phalcon\Mvc\Controller;
@@ -6,13 +13,6 @@ use Phalcon\Mvc\Controller;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use Multiple\Core\Constants\Services;
-
-/**
- * Created by PhpStorm.
- * User: joe
- * Date: 25/1/16
- * Time: 10:25 AM
- */
 
 class APIControllerBase extends Controller
 {

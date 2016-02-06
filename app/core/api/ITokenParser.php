@@ -1,11 +1,12 @@
 <?php
-namespace Multiple\Core\API;
 /**
  * Created by PhpStorm.
  * User: joe
  * Date: 28/1/16
  * Time: 6:02 PM
  */
+
+namespace Multiple\Core\API;
 
 use Multiple\Core\Auth\Session;
 

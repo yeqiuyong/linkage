@@ -1,5 +1,4 @@
 <?php
-namespace Multiple\Core\API;
 /**
  * Created by PhpStorm.
  * User: joe
@@ -7,6 +6,7 @@ namespace Multiple\Core\API;
  * Time: 5:38 PM
  */
 
+namespace Multiple\Core\API;
 
 interface IAuthenticateAdaptor
 {

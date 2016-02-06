@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: joe
+ * Date: 25/1/16
+ * Time: 10:25 AM
+ */
+
 namespace Multiple\Core\Constants;
 
 class ErrorCodes
@@ -29,6 +36,7 @@ class ErrorCodes
     const AUTH_EXPIRED = 3030;
 
     // User management
+    const USER_DUPLICATE = 4002;
     const USER_NOTACTIVE = 4003;
     const USER_NOTFOUND = 4004;
     const USER_REGISTERFAIL = 4005;
@@ -63,6 +71,7 @@ class ErrorCodes
         self:: AUTH_EXPIRED => "授权超时",
 
          // User management
+        self:: USER_DUPLICATE=> "注册用户已存在",
         self:: USER_NOTACTIVE => "用户被禁止",
         self:: USER_NOTFOUND => "用户查找失败",
         self:: USER_REGISTERFAIL => "用户注册失败",

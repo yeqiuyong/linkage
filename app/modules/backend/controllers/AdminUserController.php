@@ -6,12 +6,14 @@
  * Time: 4:25 PM
  */
 
-
 namespace Multiple\Backend\Controllers;
 
 use Multiple\Core\BackendControllerBase;
+use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 use Multiple\Models\AdminUser;
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
+
+use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 class AdminUserController extends BackendControllerBase
 {
@@ -33,15 +35,23 @@ class AdminUserController extends BackendControllerBase
         $page_num = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
+        $results = [];
         $users = AdminUser::find();
-        echo $users[0]->profile->profile_name;
+        foreach ($users as $user) {
+            $result = [];
+            $result['username'] = $user->username;
+            $result['create_time'] = $user->create_time;
+            $result['active'] = $user->active;
+            $result['profile_name'] = $user->profile->profile_name;
 
+            array_push($results,$result);
+        }
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
-        $paginator = new PaginatorModel(
+        $paginator = new PaginatorArray(
             array(
-                "data"  => $users,
-                "limit" => 1,
+                "data"  => $results,
+                "limit" => 10,
                 "page"  => $page_num
             )
         );
@@ -50,6 +60,26 @@ class AdminUserController extends BackendControllerBase
         $page = $paginator->getPaginate();
 
         return $this->response->setJsonContent($page);
+
+    }
+
+    public function addAction(){
+        $username = $this->request->getPost('username');
+        $password = $this->request->getPost('password');
+        $realname = $this->request->getPost('realname');
+        $mobile = $this->request->getPost('mobile');
+        $email = $this->request->getPost('email');
+
+        $adminUser = new AdminUser();
+        try{
+            $adminUser->add($username, $password, $realname, $mobile , $email);
+            return $this->forward('adminuser/index');
+        }catch (UserOperationException $e){
+            echo "用户名已经被注册";
+        }catch (DataBaseException $e){
+            echo "数据库错误";
+        }
+
 
     }
 }

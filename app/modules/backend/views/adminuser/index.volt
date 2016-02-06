@@ -18,30 +18,59 @@
             <li><a href="#admin-add">添加管理员</a></li>
         </ul>
 
-        <div class="box col-md-12" id="admin-info">
-            <div class="box-inner">
-                <div class="box-header well" data-original-title="管理员信息">
-                    <div class="box-icon">
-                        <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
-                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
-                                    class="glyphicon glyphicon-chevron-up"></i></a>
-                        <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane active" id="admin-info">
+                <div class="box col-md-12" >
+                    <div class="box-inner">
+                        <div class="box-header well" data-original-title="管理员信息">
+                            <div class="box-icon">
+                                <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
+                                <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                            class="glyphicon glyphicon-chevron-up"></i></a>
+                                <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+                            </div>
+                        </div>
+                        <div id="user-table" class="box-content">
+                        </div>
                     </div>
                 </div>
-                <div id="user-table" class="box-content">
-                </div>
             </div>
-        </div>
 
-        <div class="box col-md-12" id="admin-info">
-            <div class="box-inner">
+            <div class="tab-pane" id="admin-add">
+                <div class="box col-md-12">
+                    <div class="box-inner">
+                        <div class="box-content">
+                            {{ form('admin/adminuser/add', 'role': 'form') }}
+                            <div class="form-group">
+                                <label>用户名</label>
+                                {{ text_field('username', 'class': "form-control") }}
+                            </div>
+                            <div class="form-group">
+                                <label>密码</label>
+                                {{ password_field('password', 'class': "form-control") }}
+                            </div>
+                            <div class="form-group">
+                                <label>姓名</label>
+                                {{ text_field('realname', 'class': "form-control") }}
+                            </div>
+                            <div class="form-group">
+                                <label>电话</label>
+                                {{ text_field('mobile', 'class': "form-control") }}
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">邮箱</label>
+                                {{ text_field('email', 'class': "form-control") }}
+                            </div>
 
+                            {{ submit_button('提交', 'class': 'btn btn-primary') }}
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-
-
 
 </div>
 
@@ -92,7 +121,7 @@
                         strtable += "<tr>";
                         strtable += "<td>" + page.items[i].username + "</td>";
                         strtable += "<td>" + register_time.toLocaleDateString() + "</td>";
-                        strtable += "<td>" + page.items[i].profile.profile_name + "</td>";
+                        strtable += "<td>" + page.items[i].profile_name + "</td>";
 
                         strtable += '<td class="center">';
                         if(page.items[i].active == 'Y') {

@@ -2,13 +2,13 @@
 /**
  * Created by PhpStorm.
  * User: joe
- * Date: 25/1/16
- * Time: 10:25 AM
+ * Date: 6/2/16
+ * Time: 3:48 PM
  */
 
 namespace Multiple\Core\Exception;
 
-class AuthenticateException extends Exception
+class UserOperationException extends Exception
 {
 
 }
