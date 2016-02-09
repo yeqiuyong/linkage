@@ -20,15 +20,48 @@ class ProfileController extends BackendControllerBase
     }
 
     public function indexAction(){
-        if (!$this->request->isPost()) {
-            $this->flash->notice('This is a sample application of the Phalcon Framework.
-                Please don\'t provide us any personal information. Thanks');
-        }
+        $user = AdminUser::findFirst([
+            'conditions' => 'username = :username:',
+            'bind' => ['username' => $this->user_name]
+        ]);
+
+        $this->view->setVars(
+            array(
+                'username' => $this->user_name,
+                'realname' => $user->name,
+                'mobile' => $user->mobile,
+                'email' => $user->email,
+                'profile_name' => $user->profile->profile_name,
+                'update_time' =>date('Y-m-d',$user->update_time),
+            )
+        );
     }
 
     public function changeProfileAction(){
-        $auth = $this->session->get("auth");
-        $username = $auth['username'];
+        $realname = $this->request->getPost('realname');
+        $mobile = $this->request->getPost('mobile');
+        $email = $this->request->getPost('email');
+
+        $user = AdminUser::findFirst([
+            'conditions' => 'username = :username:',
+            'bind' => ['username' => $this->user_name]
+        ]);
+
+        if($realname){
+            $user->name = $realname;
+        }
+
+        if($mobile){
+            $user->mobile = $mobile;
+        }
+
+        if($email){
+            $user->email = $email;
+        }
+
+        $user->update();
+
+        return $this->forward('profile/index');
     }
 
     public function changepwdAction(){

@@ -12,11 +12,24 @@ use Multiple\Core\ControllerBase;
 
 class BackendControllerBase extends ControllerBase
 {
+    protected $user_name;
 
     protected function initialize()
     {
         $this->tag->prependTitle('Linkage | ');
         $this->view->setTemplateAfter('main');
+        $this->myProfile();
+    }
+
+    private function myProfile(){
+        $auth = $this->session->get('auth');
+        $this->user_name = $auth['username'];
+
+        $this->view->setVars(
+            array(
+                'username'   => $this->user_name,
+            )
+        );
     }
 
 }

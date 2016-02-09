@@ -16,7 +16,7 @@ CREATE TABLE `linkage_adminuser` (
   `mobile` varchar(30) DEFAULT '',
   `email` varchar(70) DEFAULT '',
   `profile_id` int(11) unsigned NOT NULL DEFAULT 0,
-  `token` VARCHAR(255) NOT NULL DEFAULT '',
+  `token` VARCHAR(255) DEFAULT '',
   `loginip` varchar(31) DEFAULT '127.0.0.1',
   `create_time` int(11) NOT NULL DEFAULT 0,
   `update_time` int(11) NOT NULL DEFAULT 0,

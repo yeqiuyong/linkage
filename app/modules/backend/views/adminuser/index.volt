@@ -99,78 +99,77 @@
 </div>
 
 <script type="text/javascript">
-        var pagesize = 10;
-        var pageindexinit = 1;
+    var pagesize = 10;
+    var pageindexinit = 1;
 
-        function load(pageindex) {
+    function load(pageindex) {
 
-            $.ajax({
-                type: "post",
-                dataType:"json",
-                url: "<?php echo $this->url->get('admin/adminuser/list') ?>",
-                data: {'pageindex':pageindex},
-                success: function (page) {
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('admin/adminuser/list') ?>",
+            data: {'pageindex':pageindex},
+            success: function (page) {
 
-                    var strtable = '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-                    strtable += '<thead><tr> <th>用户名</th> <th>注册时间</th> <th>角色</th> <th>状态</th> <th>操作</th> </tr> </thead>';
+                var strtable = '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
+                strtable += '<thead><tr> <th>用户名</th> <th>注册时间</th> <th>角色</th> <th>状态</th> <th>操作</th> </tr> </thead>';
 
-                    var register_time = new Date();
-                    for (var i = 0; i < page.items.length; i++) {
-                        register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
+                var register_time = new Date();
+                for (var i = 0; i < page.items.length; i++) {
+                    register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 
-                        strtable += "<tr>";
-                        strtable += "<td>" + page.items[i].username + "</td>";
-                        strtable += "<td>" + register_time.toLocaleDateString() + "</td>";
-                        strtable += "<td>" + page.items[i].profile_name + "</td>";
+                    strtable += "<tr>";
+                    strtable += "<td>" + page.items[i].username + "</td>";
+                    strtable += "<td>" + register_time.toLocaleDateString() + "</td>";
+                    strtable += "<td>" + page.items[i].profile_name + "</td>";
 
-                        strtable += '<td class="center">';
-                        if(page.items[i].active == 'Y') {
-                            strtable += '<span class="label-success label label-default">Active</span>';
-                        }else{
-                            strtable += '<span class="label label-default">Inactive</span>';
-                        }
-                        strtable += '</td>';
-
-                        strtable += '<td class="center">';
-                        strtable += '<a class="btn btn-success" href="#">';
-                        strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
-                        strtable += '查看';
-                        strtable += '</a>';
-                        strtable += '<a class="btn btn-info" href="#">';
-                        strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
-                        strtable += '编辑';
-                        strtable += '</a>';
-                        strtable += '<a class="btn btn-danger" href="#">';
-                        strtable += '<i class="glyphicon glyphicon-trash icon-white"></i>';
-                        strtable += '删除';
-                        strtable += '</a>';
-                        strtable += '</td>';
-
-                        strtable += "</tr>";
+                    strtable += '<td class="center">';
+                    if(page.items[i].active == 'Y') {
+                        strtable += '<span class="label-success label label-default">Active</span>';
+                    }else{
+                        strtable += '<span class="label label-default">Inactive</span>';
                     }
+                    strtable += '</td>';
 
-                    strtable += '</table>';
+                    strtable += '<td class="center">';
+                    strtable += '<a class="btn btn-success" href="#">';
+                    strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
+                    strtable += '查看';
+                    strtable += '</a>';
+                    strtable += '<a class="btn btn-info" href="#">';
+                    strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
+                    strtable += '编辑';
+                    strtable += '</a>';
+                    strtable += '<a class="btn btn-danger" href="#">';
+                    strtable += '<i class="glyphicon glyphicon-trash icon-white"></i>';
+                    strtable += '删除';
+                    strtable += '</a>';
+                    strtable += '</td>';
 
-                    strtable += '<ul class="pagination pagination-centered">';
-                    strtable += '<li><a href="#" onclick="load('+page.before+')">Prev</a></li>';
-
-                    for (var i = 0; i < page.total_pages; i++) {
-                        var index  = i + 1;
-                        if(index == pageindex){
-                            strtable += '<li class="active"><a href="#" onclick="load('+index+')">'+index+'</a></li>';
-                        }else{
-                            strtable += '<li><a href="#" onclick="load('+index+')">'+index+'</a></li>';
-                        }
-                    }
-
-                    strtable += '<li><a href="#" onclick="load('+page.next+')">Next</a></li>';
-                    strtable +='</ul>';
-
-                    $("#user-table").html(strtable);
+                    strtable += "</tr>";
                 }
-            });
-        }
 
-        load(pageindexinit);
+                strtable += '</table>';
 
+                strtable += '<ul class="pagination pagination-centered">';
+                strtable += '<li><a href="#" onclick="load('+page.before+')">Prev</a></li>';
+
+                for (var i = 0; i < page.total_pages; i++) {
+                    var index  = i + 1;
+                    if(index == pageindex){
+                        strtable += '<li class="active"><a href="#" onclick="load('+index+')">'+index+'</a></li>';
+                    }else{
+                        strtable += '<li><a href="#" onclick="load('+index+')">'+index+'</a></li>';
+                    }
+                }
+
+                strtable += '<li><a href="#" onclick="load('+page.next+')">Next</a></li>';
+                strtable +='</ul>';
+
+                $("#user-table").html(strtable);
+            }
+        });
+    }
+
+    load(pageindexinit);
 </script>

@@ -24,7 +24,7 @@ class AdminUser extends Model
 
     public  $profile_name;
 
-    private $email;
+    //private $email;
 
     public function initialize()
     {
@@ -72,7 +72,7 @@ class AdminUser extends Model
         $this->name = $realname;
         $this->mobile = $mobile;
         $this->email = $email;
-        $this->profile_id = 1;
+        $this->profile_id = 2;
         $this->token = '';
         $this->login = '127.0.0.1';
         $this->active = 'Y';

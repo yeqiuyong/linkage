@@ -29,7 +29,7 @@
         <div class="box col-md-12">
             <div class="box-inner profilepage-box">
                 <div class="box-header well">
-                    <h2><i class="glyphicon glyphicon-th"></i> xxxx 个人信息</h2>
+                    <h2><i class="glyphicon glyphicon-th"></i> {{ username }} 个人信息</h2>
 
                     <div class="box-icon">
                         <a href="#" class="btn btn-setting btn-round btn-default"><i
@@ -52,22 +52,22 @@
                             <div class="box-content">
                                 <ul class="dashboard-list">
                                     <li>
-                                        <strong>账号:</strong> <small>Usman</small> <br>
+                                        <strong>账号:</strong> <small>{{ username }}</small> <br>
                                     </li>
                                     <li>
-                                        <strong>姓名:</strong> <small>Usman</small> <br>
+                                        <strong>姓名:</strong> <small>{{ realname }}</small> <br>
                                     </li>
                                     <li>
-                                        <strong>电话:</strong> <small>Usman</small> <br>
+                                        <strong>电话:</strong> <small>{{ mobile }}</small> <br>
                                     </li>
                                     <li>
-                                        <strong>邮箱:</strong> <small>Usman</small> <br>
+                                        <strong>邮箱:</strong> <small>{{ email }}</small> <br>
                                     </li>
                                     <li>
-                                        <strong>角色:</strong> <small>Usman</small> <br>
+                                        <strong>角色:</strong> <small>{{ profile_name }}</small> <br>
                                     </li>
                                     <li>
-                                        <strong>上次登陆时间:</strong> <small>Usman</small> </h3><br>
+                                        <strong>上次登陆时间:</strong> <small> {{ update_time }} </small> </h3><br>
                                     </li>
                                     <li>
                                         <strong>状态:</strong> </h3><span class="label-success label label-default">Approved</span>
@@ -152,3 +152,9 @@
     </div>
 </div>
 
+
+<script type="text/javascript">
+    function changeProfile(pageindex) {
+
+    }
+</script>
