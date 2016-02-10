@@ -30,29 +30,34 @@ class SessionController extends ControllerBase{
      */
     public function loginAction()
     {
-        if (!$this->request->isPost()) {
-            return $this->forward('session/index');
-        }
+        if ($this->request->isPost()) {
+            $password = $this->request->getPost("password", "string");
+            $username = $this->request->getPost("username", "string");
 
-        $username = $this->request->getPost('username');
-        $password = $this->request->getPost('password');
+            if (empty($username) || empty($password)) {
+                $data = array("result" => 1, "msg" => "用户名、密码不能为空！", "success" => false);
+            } else {
+                $user = AdminUser::findFirst([
+                    'conditions' => 'username = :username:',
+                    'bind' => ['username' => $username]
+                ]);
 
-        /** @var \User $user */
-        $user = AdminUser::findFirst([
-            'conditions' => 'username = :username:',
-            'bind' => ['username' => $username]
-        ]);
+                if ($user) {
+                    $security = Di::getDefault()->get(Services::SECURITY);
 
-        $security = Di::getDefault()->get(Services::SECURITY);
-
-        if(!$security->checkHash($password, $user->password)){
-            $this->flash->error('Wrong email/password');
-        }else{
-            if ($user != false) {
-                $this->_registerSession($user);
-                $this->flash->success('Welcome ' . $user->username);
-                return $this->forward('index/index');
+                    if (!$security->checkHash($password, $user->password)) {
+                        $data = array("msg" => "密码错误，请重试！", "status" => 1);
+                    } else {
+                        if ($user != false) {
+                            $this->_registerSession($user);
+                            $data = array("msg" => "登陆成功！", "status" => 0, "url" => "/admin/index/index");
+                        } else {
+                            $data = array("msg" => "用户名不存在，请重试！", "status" => 1);
+                        }
+                    }
+                }
             }
+            return $this->response->setJsonContent($data);
         }
     }
 
@@ -67,8 +72,6 @@ class SessionController extends ControllerBase{
         $this->flash->success('Goodbye!');
         return $this->forward('session/index');
     }
-
-
 
     /**
      * Register an authenticated user into session data
