@@ -135,7 +135,10 @@ CREATE TABLE `linkage_role` (
   `memo` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+insert into linkage_role ( `rolename`,`memo` ) values ('厂商','发起物流委托流程的工厂');
+insert into linkage_role ( `rolename`,`memo` ) values ('承运商管理员','承运商公司，首个在平台注册的特定承运商用户');
+insert into linkage_role ( `rolename`,`memo` ) values ('承运商','承运商公司，由管理员通过邀请码在平台注册的承运商');
+insert into linkage_role ( `rolename`,`memo` ) values ('司机','承运商公司指定司机');
 
 --
 -- Table structure for table `permission`

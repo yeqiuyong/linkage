@@ -36,8 +36,7 @@ class Company extends Model
      */
     public $city;
 
-    public function initialize()
-    {
+    public function initialize(){
         $this->setSource("linkage_companies");
     }
 }

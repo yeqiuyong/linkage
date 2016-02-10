@@ -6,7 +6,6 @@
  * Time: 6:02 PM
  */
 
-
 namespace Multiple\Models;
 
 use Phalcon\Di;
@@ -20,9 +19,11 @@ class ClientUser extends Model
 {
     public $email;
 
-    public function initialize()
-    {
+    public function initialize(){
         $this->setSource("linkage_clientuser");
+
+        $this->hasMany('user_id', 'Multiple\Models\ClientUserRole', 'user_id', array(  'alias' => 'user_role',
+            'reusable' => true ));
     }
 
     public function registerByName($username, $password){
@@ -37,8 +38,7 @@ class ClientUser extends Model
         return $this->save();
     }
 
-    public function validation()
-    {
+    public function validation(){
         if($this->email){
             $this->validate(new EmailValidator(array(
                 'field' => 'email'

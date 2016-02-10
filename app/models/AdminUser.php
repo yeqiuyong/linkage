@@ -26,8 +26,7 @@ class AdminUser extends Model
 
     //private $email;
 
-    public function initialize()
-    {
+    public function initialize(){
         $this->setSource("linkage_adminuser");
 
         $this->hasOne('profile_id', 'Multiple\Models\AdminProfile', 'profile_id', array(  'alias' => 'profile',

@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: joe
- * Date: 28/1/16
- * Time: 6:02 PM
+ * Date: 10/2/16
+ * Time: 3:47 PM
  */
 
 namespace Multiple\Models;
@@ -11,13 +11,10 @@ namespace Multiple\Models;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
 
-class AdminProfile extends Model
+class Role extends Model
 {
-    public $profile_id;
-
     public function initialize(){
-        $this->setSource("linkage_admin_profile");
+        $this->setSource("linkage_role");
     }
-
 
 }
