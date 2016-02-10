@@ -84,6 +84,7 @@ class SessionController extends ControllerBase{
             'id' => $user->id,
             'username' => $user->username,
             'profile_id' => $user->profile_id,
+            'profile_name' => $user->profile->profile_name,
         ));
     }
 }

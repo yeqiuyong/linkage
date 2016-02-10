@@ -14,6 +14,8 @@ class BackendControllerBase extends ControllerBase
 {
     protected $user_name;
 
+    protected $user_profile;
+
     protected function initialize()
     {
         $this->tag->prependTitle('Linkage | ');
@@ -24,10 +26,12 @@ class BackendControllerBase extends ControllerBase
     private function myProfile(){
         $auth = $this->session->get('auth');
         $this->user_name = $auth['username'];
+        $this->user_profile = $auth['profile_name'];
 
         $this->view->setVars(
             array(
                 'username'   => $this->user_name,
+                'profilename' => $this->user_profile,
             )
         );
     }
