@@ -31,22 +31,15 @@ $di->set(AppServices::URL, function () use ($config) {
  * Database connection is created based in the parameters defined in the configuration file
  */
 $di->set(AppServices::DB, function () use ($config) {
-	$config = $config->get('database')->toArray();
+	$connection = new Phalcon\Db\Adapter\Pdo\Mysql(array(
+		"host" => $config->database->host,
+		"username" => $config->database->username,
+		"password" => $config->database->password,
+		"dbname" => $config->database->dbname,
+		//"prefix" => $config->database->prefix,
+		"options" => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING ,PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
+	));
 
-	$dbClass = 'Phalcon\Db\Adapter\Pdo\\' . $config['adapter'];
-	unset($config['adapter']);
-
-//	$connection = new Phalcon\Db\Adapter\Pdo\Mysql(array(
-//		"host" => $config->database->host,
-//		"username" => $config->database->username,
-//		"password" => $config->database->password,
-//		"dbname" => $config->database->name,
-//		//"prefix" => $config->database->prefix,
-//		"options" => array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING ,PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
-//	));
-
-
-	return new $dbClass($config);
 	return $connection;
 });
 
@@ -100,6 +93,7 @@ $di->set(
 	AppServices::ROUTER,
 	function () {
 		require __DIR__.'/routes.php';
+
 		return $router;
 	}
 );
