@@ -191,16 +191,86 @@ CREATE TABLE `linkage_role_permission` (
 DROP TABLE IF EXISTS `linkage_company`;
 CREATE TABLE `linkage_company` (
   `company_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` tinyint(4) unsigned NOT NULL ,
   `name` varchar(70)  NOT NULL DEFAULT '',
   `telephone` varchar(30)  NOT NULL DEFAULT '',
   `address` varchar(40)  NOT NULL DEFAULT '',
   `city` varchar(40)  DEFAULT NULL,
-  `memo` varchar(128) DEFAULT NULL,
+  `description` TEXT DEFAULT null,
+  `memo` TEXT DEFAULT NULL,
+  `image` VARCHAR(64) DEFAULT NULL ,
   `create_time` int(11) NOT NULL DEFAULT 0,
   `update_time` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Table structure for table `user_role`
+--
+DROP TABLE IF EXISTS `linkage_driver`;
+CREATE TABLE `linkage_driver` (
+  `driver_id` int(11) unsigned NOT NULL DEFAULT 0,
+  `license` VARCHAR(16) NOT NULL COMMENT '车牌号',
+  `car_type` VARCHAR(100) NOT NULL COMMENT '车类型',
+  `memo` VARCHAR(128) NOT NULL COMMENT '其它说明',
+  PRIMARY KEY (`driver_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=561 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `order`
+--
+DROP TABLE IF EXISTS `linkage_order`;
+CREATE TABLE `linkage_order` (
+  `orders_id` CHAR(64)  NOT NULL DEFAULT '',
+  `type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '出口0,进口1',
+  `manufacture_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '订单委托厂商',
+  `transporter_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '接单承运商',
+  `driver_id` int(11) unsigned COMMENT '委托司机',
+  `manufacture_contact_name` VARCHAR(120) COMMENT '厂商联系人',
+  `manufacture_contact_tel` VARCHAR(30) COMMENT '厂商联系电话',
+  `transporter_contact_name` VARCHAR(120) COMMENT '承运商联系人',
+  `transporter_contact_tel` VARCHAR(30) COMMENT '承运商联系电话',
+  `delivery_address` VARCHAR(400) COMMENT '货柜接货地址',
+  `delivery_time` DATETIME COMMENT '货柜接货时间',
+  `customs` DATETIME COMMENT '报关时间',
+  `port` VARCHAR(120) COMMENT '码头',
+  `so` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '',
+  `ship_company` VARCHAR(120) COMMENT '头程公司',
+  `ship_name` VARCHAR(120) COMMENT '头程船名',
+  `ship_schedule_no` VARCHAR(64) COMMENT '头程班次',
+  `consignee` VARCHAR(120) COMMENT '收货人',
+  `VESSEL`  VARCHAR(64) COMMENT '',
+  `memo` TEXT COMMENT '特殊事项',
+  `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '订单生成日期',
+  `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '订单修改日期',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '订单状态',
+  PRIMARY KEY (`orders_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `order_driver`
+--
+DROP TABLE IF EXISTS `linkage_order_driver`;
+CREATE TABLE `linkage_order_driver` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orders_id` int(11) unsigned NOT NULL,
+  `driver_id` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `key` (`orders_id`,`driver_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `order_cargo`
+--
+DROP TABLE IF EXISTS `linkage_order_cargo`;
+CREATE TABLE `linkage_order_cargo` (
+  `cargo_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orders_id` int(11) unsigned NOT NULL DEFAULT 0,
+  `cargo_no` VARCHAR(64) NOT NULL COMMENT '货柜号',
+  `memo` VARCHAR(400) COMMENT '其它说明',
+  `image` VARCHAR(400) COMMENT '司机拍照',
+  PRIMARY KEY (`cargo_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `contact`
@@ -215,6 +285,30 @@ CREATE TABLE `linkage_contact` (
   `created_at` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+#
+# Table structure for table 'banners'
+#
+
+DROP TABLE IF EXISTS banner;
+CREATE TABLE banner (
+  `banners_id` int(11) NOT NULL auto_increment,
+  `banners_title` varchar(64) NOT NULL default '',
+  `banners_url` varchar(255) NOT NULL default '',
+  `banners_image` varchar(64) NOT NULL default '',
+  `banners_group` varchar(15) NOT NULL default '',
+  `banners_html_text` text,
+  `expires_date` int(11) default 0,
+  `create_time` int(11)  NOT NULL default 0,
+  `update_time` int(11)  not NULL default 0,
+  `status` TINYINT(1) NOT NULL default '1',
+  `banners_open_new_windows` TINYINT(1) NOT NULL default '1',
+  `banners_on_ssl` TINYINT(1) NOT NULL default '1',
+  `banners_sort_order` int(11) NOT NULL default '0',
+  PRIMARY KEY  (banners_id)
+
+) ENGINE=MyISAM;
 
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
