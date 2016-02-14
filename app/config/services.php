@@ -8,6 +8,7 @@ use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
+use Phalcon\Mvc\Model\Manager;
 
 use Multiple\Core\Constants\Services as AppServices;
 use Multiple\Core\Libraries\Elements;
@@ -89,6 +90,9 @@ $di->set(AppServices::ELEMENTS, function () {
 });
 
 
+/**
+ * Register a Router
+ */
 $di->set(
 	AppServices::ROUTER,
 	function () {
@@ -97,3 +101,12 @@ $di->set(
 		return $router;
 	}
 );
+
+/**
+ * Register a Model manager service
+ */
+$di->set(
+	AppServices::MODELS_MANAGER,
+	function(){
+		return new Manager();
+});

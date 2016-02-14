@@ -31,7 +31,7 @@
                                 <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
                             </div>
                         </div>
-                        <div id="user-table" class="box-content">
+                        <div id="manufacture-table" class="box-content">
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                                 <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
                             </div>
                         </div>
-                        <div id="user-table" class="box-content">
+                        <div id="transporter-table" class="box-content">
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                                 <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
                             </div>
                         </div>
-                        <div id="user-table" class="box-content">
+                        <div id="driver-table" class="box-content">
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
             url: "<?php echo $this->url->get('admin/clientuser/manufactures') ?>",
             data: {'pageindex':pageindex},
             success: function (page) {
-                render("loadManufactures", pageindex, page);
+                render("loadManufactures", "manufacture-table", pageindex, page);
             }
         });
     }
@@ -123,7 +123,7 @@
             url: "<?php echo $this->url->get('admin/clientuser/transporters') ?>",
             data: {'pageindex':pageindex},
             success: function (page) {
-                render("loadTransporters", pageindex, page);
+                render("loadTransporters", "transporter-table", pageindex, page);
             }
         });
     }
@@ -135,12 +135,12 @@
             url: "<?php echo $this->url->get('admin/clientuser/drivers') ?>",
             data: {'pageindex':pageindex},
             success: function (page) {
-                render("loadDrivers", pageindex, page);
+                render("loadDrivers", "driver-table", pageindex, page);
             }
         });
     }
 
-    function render(func, pageindex, page){
+    function render(func, mydiv,  pageindex, page){
         var strtable = '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
         strtable += '<thead><tr> <th>编号</th>  <th>用户名</th> <th>电话</th> <th>注册时间</th> <th>状态</th> <th>操作</th> </tr> </thead>';
 
@@ -199,7 +199,7 @@
         strtable += '<li><a href="#" onclick="'+ func +'('+page.next+')">Next</a></li>';
         strtable +='</ul>';
 
-        $("#user-table").html(strtable);
+        $("#"+mydiv).html(strtable);
     }
 
     loadManufactures(pageindexinit);
