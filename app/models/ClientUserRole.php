@@ -8,7 +8,6 @@
 
 namespace Multiple\Models;
 
-use Phalcon\Di;
 use Phalcon\Mvc\Model;
 
 

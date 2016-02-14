@@ -90,6 +90,27 @@ class Elements extends Component
                     'class' => 'nav nav-pills nav-stacked',
                 ]
             ]
+        ],
+        '用户管理' => [
+            'link' => 'admin/index/index',
+            'class' => 'glyphicon glyphicon-plus',
+            'profile' => 2,
+            'has_child' => true,
+            'child_menu' =>[
+                '等级管理' => [
+                    'link' => 'admin/index/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                '用户管理' => [
+                    'link' => 'admin/clientuser/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                '公司管理' => [
+                    'link' => 'admin/clientuser/companies',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+
+            ]
         ]
     ];
 

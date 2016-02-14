@@ -24,6 +24,10 @@ class ClientUser extends Model
 
         $this->hasMany('user_id', 'Multiple\Models\ClientUserRole', 'user_id', array(  'alias' => 'user_role',
             'reusable' => true ));
+
+        $this->BelongsTo('company_id', 'Multiple\Models\Company', 'company_id', array(  'alias' => 'company',
+            'reusable' => true ));
+
     }
 
     public function registerByName($username, $password){

@@ -11,32 +11,10 @@ use Phalcon\Mvc\Model;
 
 class Company extends Model
 {
-    /**
-     * @var integer
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $telephone;
-
-    /**
-     * @var string
-     */
-    public $address;
-
-    /**
-     * @var string
-     */
-    public $city;
-
     public function initialize(){
-        $this->setSource("linkage_companies");
+        $this->setSource("linkage_company");
+
+        $this->hasMany('company_id', 'Multiple\Models\ClientUser', 'company_id', array(  'alias' => 'users',
+            'reusable' => true ));
     }
 }

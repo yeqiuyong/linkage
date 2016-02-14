@@ -3,17 +3,18 @@
  * Created by PhpStorm.
  * User: joe
  * Date: 10/2/16
- * Time: 3:47 PM
+ * Time: 11:18 PM
  */
 
 namespace Multiple\Models;
 
 use Phalcon\Mvc\Model;
 
-class Role extends Model
+class Order extends Model
 {
     public function initialize(){
-        $this->setSource("linkage_role");
+        $this->setSource("linkage_order");
+
     }
 
 }

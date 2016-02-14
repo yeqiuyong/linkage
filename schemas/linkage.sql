@@ -207,8 +207,9 @@ CREATE TABLE `linkage_company` (
 --
 -- Table structure for table `user_role`
 --
-DROP TABLE IF EXISTS `linkage_driver`;
-CREATE TABLE `linkage_driver` (
+DROP TABLE IF EXISTS `linkage_car`;
+CREATE TABLE `linkage_car` (
+  `car_id`  int(11) unsigned NOT NULL AUTO_INCREMENT,
   `driver_id` int(11) unsigned NOT NULL DEFAULT 0,
   `license` VARCHAR(16) NOT NULL COMMENT '车牌号',
   `car_type` VARCHAR(100) NOT NULL COMMENT '车类型',
@@ -225,7 +226,6 @@ CREATE TABLE `linkage_order` (
   `type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '出口0,进口1',
   `manufacture_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '订单委托厂商',
   `transporter_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '接单承运商',
-  `driver_id` int(11) unsigned COMMENT '委托司机',
   `manufacture_contact_name` VARCHAR(120) COMMENT '厂商联系人',
   `manufacture_contact_tel` VARCHAR(30) COMMENT '厂商联系电话',
   `transporter_contact_name` VARCHAR(120) COMMENT '承运商联系人',
@@ -287,10 +287,9 @@ CREATE TABLE `linkage_contact` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-#
-# Table structure for table 'banners'
-#
-
+--
+-- Table structure for table 'banners'
+--
 DROP TABLE IF EXISTS banner;
 CREATE TABLE banner (
   `banners_id` int(11) NOT NULL auto_increment,
