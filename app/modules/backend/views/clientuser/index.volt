@@ -157,15 +157,17 @@
 
 
             strtable += '<td class="center">';
-            if(page.items[i].active == 'Y') {
-                strtable += '<span class="label-success label label-default">Active</span>';
-            }else{
-                strtable += '<span class="label label-default">Inactive</span>';
+            switch (page.items[i].status) {
+                case '0': strtable += '<span class="label-success label label-default">Active</span>'; break;
+                case '1': strtable += '<span class="label-default label">Inactive</span>'; break;
+                case '2': strtable += '<span class="label-warning label">Pending</span>'; break;
+                case '3': strtable += '<span class="label-default label-danger">Banned</span>'; break;
+                default : strtable += '<span class="label-success label label-default">Active</span>';
             }
             strtable += '</td>';
 
             strtable += '<td class="center">';
-            strtable += '<a class="btn btn-success" href="#">';
+            strtable += '<a class="btn btn-success" href="#" onclick="loadUserInfo('+ num +')">';
             strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
             strtable += '查看';
             strtable += '</a>';
@@ -200,6 +202,10 @@
         strtable +='</ul>';
 
         $("#"+mydiv).html(strtable);
+    }
+
+    function loadUserInfo(id){
+        window.location.href = "<?php echo $this->url->get('admin/clientuser/information').'?id=2' ?>";
     }
 
     loadManufactures(pageindexinit);

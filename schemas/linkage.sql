@@ -120,7 +120,7 @@ CREATE TABLE `linkage_clientuser` (
   `loginip` varchar(31) NOT NULL DEFAULT '127.0.0.1',
   `create_time` int(11) NOT NULL DEFAULT 0,
   `update_time` int(11) NOT NULL DEFAULT 0,
-  `active` char(1) NOT NULL DEFAULT 'Y',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;2 pending; 3 banned',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

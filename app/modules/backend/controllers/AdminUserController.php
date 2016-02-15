@@ -32,7 +32,7 @@ class AdminUserController extends BackendControllerBase
         // In a controller this can be:
         // $this->request->getQuery('page', 'int'); // GET
         $currentPage = $this->request->getPost('pageindex', 'int'); // POST
-        $page_num = ($currentPage == null) ? 1 : $currentPage;
+        $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
         $results = [];
@@ -52,7 +52,7 @@ class AdminUserController extends BackendControllerBase
             array(
                 "data"  => $results,
                 "limit" => 10,
-                "page"  => $page_num
+                "page"  => $pageNum
             )
         );
 

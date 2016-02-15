@@ -29,7 +29,7 @@ class ClientUserController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $phql="select a.username, a.mobile, a.create_time, a.active from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b where a.user_id = b.user_id and b.role_id = 1";
+        $phql="select a.username, a.mobile, a.create_time, a.status from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b where a.user_id = b.user_id and b.role_id = 1";
         $users=$this->modelsManager->executeQuery($phql);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
@@ -53,7 +53,7 @@ class ClientUserController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $phql="select a.username, a.mobile, a.create_time, a.active from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b where a.user_id = b.user_id and b.role_id in (2,3)";
+        $phql="select a.username, a.mobile, a.create_time, a.status from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b where a.user_id = b.user_id and b.role_id in (2,3)";
         $users=$this->modelsManager->executeQuery($phql);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
@@ -76,7 +76,7 @@ class ClientUserController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $phql="select a.username, a.mobile, a.create_time, a.active from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b where a.user_id = b.user_id and b.role_id = 4";
+        $phql="select a.username, a.mobile, a.create_time, a.status from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b where a.user_id = b.user_id and b.role_id = 4";
         $users=$this->modelsManager->executeQuery($phql);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
@@ -92,5 +92,11 @@ class ClientUserController extends BackendControllerBase
         $page = $paginator->getPaginate();
 
         return $this->response->setJsonContent($page);
+    }
+
+    public function informationAction(){
+        $userID = $this->request->getQuery('id', 'int'); // POST
+
+        echo $userID;
     }
 }
