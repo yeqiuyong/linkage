@@ -6,6 +6,7 @@
  * Time: 6:02 PM
  */
 
+namespace Multiple\Models;
 
 use Phalcon\Mvc\Model;
 

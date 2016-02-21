@@ -81,8 +81,12 @@ class Elements extends Component
             'profile' => 1,
             'has_child' => true,
             'child_menu' =>[
-                '角色管理' => [
-                    'link' => 'admin/index/index',
+                '管理员角色' => [
+                    'link' => 'admin/adminuser/role',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                '客户角色' => [
+                    'link' => 'admin/clientuser/role',
                     'class' => 'nav nav-pills nav-stacked',
                 ],
                 '管理员管理' => [
@@ -97,21 +101,45 @@ class Elements extends Component
             'profile' => 2,
             'has_child' => true,
             'child_menu' =>[
-                '等级管理' => [
-                    'link' => 'admin/index/index',
-                    'class' => 'nav nav-pills nav-stacked',
-                ],
                 '用户管理' => [
                     'link' => 'admin/clientuser/index',
                     'class' => 'nav nav-pills nav-stacked',
                 ],
                 '公司管理' => [
-                    'link' => 'admin/clientuser/companies',
+                    'link' => 'admin/company/index',
                     'class' => 'nav nav-pills nav-stacked',
                 ],
-
             ]
-        ]
+        ],
+        '订单管理' => [
+            'link' => 'admin/index/index',
+            'class' => 'glyphicon glyphicon-plus',
+            'profile' => 2,
+            'has_child' => true,
+            'child_menu' =>[
+                '出口订单' => [
+                    'link' => 'admin/order/export',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                '入口订单' => [
+                    'link' => 'admin/order/import',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+            ]
+        ],
+        '设置' => [
+            'link' => 'admin/index/index',
+            'class' => 'glyphicon glyphicon-plus',
+            'profile' => 2,
+            'has_child' => true,
+            'child_menu' =>[
+                '广告管理' => [
+                    'link' => 'admin/adv/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+            ]
+        ],
+
     ];
 
     /**

@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="index.html"> <img alt="Charisma Logo" src="img/logo20.png" class="hidden-xs"/>
-            <span>Charisma</span></a>
+            <span>Linkage</span></a>
 
         <!-- user dropdown starts -->
         <div class="btn-group pull-right">

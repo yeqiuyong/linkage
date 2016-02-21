@@ -24,7 +24,7 @@
             <a data-toggle="tooltip" title="6 new members." class="well top-block" href="#">
                 <i class="glyphicon glyphicon-user blue"></i>
 
-                <div>Total Members</div>
+                <div>用户数</div>
                 <div>507</div>
                 <span class="notification">6</span>
             </a>
@@ -32,29 +32,29 @@
 
         <div class="col-md-3 col-sm-3 col-xs-6">
             <a data-toggle="tooltip" title="4 new pro members." class="well top-block" href="#">
-                <i class="glyphicon glyphicon-star green"></i>
+                <i class="glyphicon glyphicon-user green"></i>
 
-                <div>Pro Members</div>
+                <div>厂商</div>
                 <div>228</div>
                 <span class="notification green">4</span>
             </a>
         </div>
 
         <div class="col-md-3 col-sm-3 col-xs-6">
-            <a data-toggle="tooltip" title="$34 new sales." class="well top-block" href="#">
-                <i class="glyphicon glyphicon-shopping-cart yellow"></i>
+            <a data-toggle="tooltip" title="4 new sales." class="well top-block" href="#">
+                <i class="glyphicon glyphicon-user yellow"></i>
 
-                <div>Sales</div>
-                <div>$13320</div>
-                <span class="notification yellow">$34</span>
+                <div>运营商</div>
+                <div>20</div>
+                <span class="notification yellow">20</span>
             </a>
         </div>
 
         <div class="col-md-3 col-sm-3 col-xs-6">
             <a data-toggle="tooltip" title="12 new messages." class="well top-block" href="#">
-                <i class="glyphicon glyphicon-envelope red"></i>
+                <i class="glyphicon glyphicon-user red"></i>
 
-                <div>Messages</div>
+                <div>司机</div>
                 <div>25</div>
                 <span class="notification red">12</span>
             </a>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="box-content row">
                     <div class="col-lg-7 col-md-12">
-                        <h1>Charisma <br>
+                        <h1>Linkage <br>
                             <small>free, premium quality, responsive, multiple skin admin template.</small>
                         </h1>
                         <p>It's a live demo of the template. I have created Charisma to ease the repeat work I have to do on my

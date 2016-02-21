@@ -190,17 +190,29 @@ CREATE TABLE `linkage_role_permission` (
 --
 DROP TABLE IF EXISTS `linkage_company`;
 CREATE TABLE `linkage_company` (
-  `company_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` tinyint(4) unsigned NOT NULL ,
-  `name` varchar(70)  NOT NULL DEFAULT '',
-  `telephone` varchar(30)  NOT NULL DEFAULT '',
-  `address` varchar(40)  NOT NULL DEFAULT '',
+  `company_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(70)  NOT NULL DEFAULT '企业名称',
+  `code` char(40) DEFAULT '' COMMENT '企业代号',
+  `level` TINYINT(4)  DEFAULT 0 COMMENT '企业等级',
+  `credit` INT(11)  DEFAULT 0 COMMENT '企业积分',
+  `type` tinyint(4) unsigned NOT NULL COMMENT '0厂商；1运营商',
+  `contactor` varchar(40)  NOT NULL DEFAULT '' COMMENT '联系人',
+  `address` varchar(40)  NOT NULL DEFAULT ''COMMENT '联系地址',
+  `province` varchar(40)  DEFAULT NULL,
   `city` varchar(40)  DEFAULT NULL,
-  `description` TEXT DEFAULT null,
-  `memo` TEXT DEFAULT NULL,
-  `image` VARCHAR(64) DEFAULT NULL ,
+  `email` varchar(70) DEFAULT NULL,
+  `service_phone_1` varchar(30)  NOT NULL DEFAULT '' COMMENT '客户电话1',
+  `service_phone_2` varchar(30)  NOT NULL DEFAULT '' COMMENT '客户电话2',
+  `service_phone_3` varchar(30)  NOT NULL DEFAULT '' COMMENT '客户电话3',
+  `service_phone_4` varchar(30)  NOT NULL DEFAULT '' COMMENT '客户电话4',
+  `description` TEXT DEFAULT null COMMENT '企业简介',
+  `remark` TEXT DEFAULT NULL COMMENT '备注',
+  `logo` VARCHAR(64) DEFAULT '' COMMENT '企业logo',
   `create_time` int(11) NOT NULL DEFAULT 0,
   `update_time` int(11) NOT NULL DEFAULT 0,
+  `create_by` int(11) NOT NULL DEFAULT 0 COMMENT '创建人用户id',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;2 pending; 3 banned',
+  `version` INT(8) NOT NULL DEFAULT 0 COMMENT '每修改一次版本+1，app 端缓存所有企业信息，当检测到企业版本更新，则更新企业信息',
   PRIMARY KEY (`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -223,7 +235,7 @@ CREATE TABLE `linkage_car` (
 DROP TABLE IF EXISTS `linkage_order`;
 CREATE TABLE `linkage_order` (
   `orders_id` CHAR(64)  NOT NULL DEFAULT '',
-  `type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '出口0,进口1',
+  `type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '码头出口0,码头进口1,内陆柜2,自备柜3',
   `manufacture_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '订单委托厂商',
   `transporter_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '接单承运商',
   `manufacture_contact_name` VARCHAR(120) COMMENT '厂商联系人',
@@ -232,7 +244,8 @@ CREATE TABLE `linkage_order` (
   `transporter_contact_tel` VARCHAR(30) COMMENT '承运商联系电话',
   `delivery_address` VARCHAR(400) COMMENT '货柜接货地址',
   `delivery_time` DATETIME COMMENT '货柜接货时间',
-  `customs` DATETIME COMMENT '报关时间',
+  `customs_in` DATETIME COMMENT '货柜到关口报关时间',
+  `customs_out` DATETIME COMMENT '报关完毕，从关口出关时间',
   `port` VARCHAR(120) COMMENT '码头',
   `so` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '',
   `ship_company` VARCHAR(120) COMMENT '头程公司',

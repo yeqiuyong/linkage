@@ -9,9 +9,12 @@
 
 namespace Multiple\Backend\Controllers;
 
-use Multiple\Core\BackendControllerBase;
-
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
+
+use Multiple\Core\BackendControllerBase;
+use Multiple\Models\ClientUser;
+
+
 
 class ClientUserController extends BackendControllerBase
 {
@@ -97,6 +100,21 @@ class ClientUserController extends BackendControllerBase
     public function informationAction(){
         $userID = $this->request->getQuery('id', 'int'); // POST
 
-        echo $userID;
+        $user = ClientUser::findFirst([
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userID]
+        ]);
+
+        $this->view->setVars(
+            array(
+                'username' => $this->username,
+                'realname' => $user->name,
+                'mobile' => $user->mobile,
+                'email' => $user->email,
+                'profile_name' => $user->profile->profile_name,
+                'update_time' =>date('Y-m-d',$user->update_time),
+            )
+        );
     }
+
 }
