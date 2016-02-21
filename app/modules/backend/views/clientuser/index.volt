@@ -3,7 +3,7 @@
     <div>
         <ul class="breadcrumb">
             <li>
-                <a href="#">Home</a>
+                <a href="#">主页</a>
             </li>
             <li>
                 <a href="#">用户管理</a>
@@ -146,7 +146,9 @@
 
         var register_time = new Date();
         for (var i = 0; i < page.items.length; i++) {
-            num = i + 1 ;
+            var num = i + 1 ;
+            var id = page.items[i].user_id
+
             register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 
             strtable += "<tr>";
@@ -167,7 +169,7 @@
             strtable += '</td>';
 
             strtable += '<td class="center">';
-            strtable += '<a class="btn btn-success" href="#" onclick="loadUserInfo('+ num +')">';
+            strtable += '<a class="btn btn-success" href="#" onclick="loadUserInfo('+ id +')">';
             strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
             strtable += '查看';
             strtable += '</a>';

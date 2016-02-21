@@ -19,10 +19,10 @@
                 <a href="#">主页</a>
             </li>
             <li>
-                <a href="#">用户管理</a>
+                <a href="#">公司管理</a>
             </li>
             <li>
-                <a href="#">用户信息</a>
+                <a href="#">公司信息</a>
             </li>
         </ul>
     </div>
@@ -30,9 +30,9 @@
 
     <div class="row">
         <div class="box col-md-12">
-            <div class="box-inner profilepage-box">
+            <div class="box-inner companypage-box">
                 <div class="box-header well">
-                    <h2><i class="glyphicon glyphicon-th"></i> {{ username }} 个人信息</h2>
+                    <h2><i class="glyphicon glyphicon-th"></i> {{ name }} 信息</h2>
 
                     <div class="box-icon">
                         <a href="#" class="btn btn-setting btn-round btn-default"><i
@@ -46,22 +46,40 @@
                 <div class="box-content">
                     <ul class="dashboard-list">
                         <li>
-                            <strong>账号:</strong> <small>{{ username }}</small> <br>
+                            <strong>公司名称:</strong> <small>{{ name }}</small> <br>
                         </li>
                         <li>
-                            <strong>姓名:</strong> <small>{{ realname }}</small> <br>
+                            <strong>类型:</strong> <small>{{ type }}</small> <br>
                         </li>
                         <li>
-                            <strong>电话:</strong> <small>{{ mobile }}</small> <br>
+                            <strong>企业代号:</strong> <small>{{ code }}</small> <br>
                         </li>
                         <li>
-                            <strong>邮箱:</strong> <small>{{ email }}</small> <br>
+                            <strong>联系人:</strong> <small>{{ contactor }}</small> <br>
                         </li>
                         <li>
-                            <strong>角色:</strong> <small>{{ profile_name }}</small> <br>
+                            <strong>联系地址:</strong> <small>{{ address }}</small> <br>
                         </li>
                         <li>
-                            <strong>上次登陆时间:</strong> <small> {{ update_time }} </small> </h3><br>
+                            <strong>联系邮件:</strong> <small> {{ email }} </small> </h3><br>
+                        </li>
+                        <li>
+                            <strong>服务电话1:</strong> <small> {{ service_phone1 }} </small> </h3><br>
+                        </li>
+                        <li>
+                            <strong>服务电话2:</strong> <small> {{ service_phone2 }} </small> </h3><br>
+                        </li>
+                        <li>
+                            <strong>服务电话3:</strong> <small> {{ service_phone3 }} </small> </h3><br>
+                        </li>
+                        <li>
+                            <strong>服务电话4:</strong> <small> {{ service_phone4 }} </small> </h3><br>
+                        </li>
+                        <li>
+                            <strong>企业简介:</strong> <small> {{ description }} </small> </h3><br>
+                        </li>
+                        <li>
+                            <strong>更新时间:</strong> <small> {{ update_time }} </small> </h3><br>
                         </li>
                         <li>
                             <strong>状态:</strong> </h3><span class="label-success label label-default">Approved</span>

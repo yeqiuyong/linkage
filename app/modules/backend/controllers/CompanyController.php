@@ -98,4 +98,36 @@ class CompanyController extends BackendControllerBase
 
         return $results;
     }
+
+    public function informationAction(){
+        $companyID = $this->request->getQuery('id', 'int'); // POST
+
+        $company = Company::findFirst([
+            'conditions' => 'company_id = :company_id:',
+            'bind' => ['company_id' => $companyID]
+        ]);
+
+        $type = $company->type == 0 ? "厂商" : "承运商";
+
+        $this->view->setVars(
+            array(
+                'name' => $company->name,
+                'code' => $company->code,
+                'type' => $type,
+                'contactor' => $company->contactor,
+                'address' => $company->address,
+                'email' => $company->email,
+                'service_phone1' => $company->service_phone_1,
+                'service_phone2' => $company->service_phone_2,
+                'service_phone3' => $company->service_phone_3,
+                'service_phone4' => $company->service_phone_4,
+                'description' => $company->description,
+                'update_time' =>date('Y-m-d',$company->update_time),
+                'status' => $company->status,
+                'level' => $company->level,
+                'credit' => $company->credit,
+            )
+        );
+    }
+
 }

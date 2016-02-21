@@ -117,7 +117,8 @@
 
         var register_time = new Date();
         for (var i = 0; i < page.items.length; i++) {
-            num = i + 1 ;
+            var num = i + 1 ;
+            var id = page.items[i].id;
             register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 
             strtable += "<tr>";
@@ -139,7 +140,7 @@
             strtable += '</td>';
 
             strtable += '<td class="center">';
-            strtable += '<a class="btn btn-success" href="#" onclick="loadCompanyInfo('+ num +')">';
+            strtable += '<a class="btn btn-success" href="#" onclick="loadCompanyInfo('+ id +')">';
             strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
             strtable += '查看';
             strtable += '</a>';

@@ -125,6 +125,14 @@ class Elements extends Component
                     'link' => 'admin/order/import',
                     'class' => 'nav nav-pills nav-stacked',
                 ],
+                '内陆订单' => [
+                    'link' => 'admin/order/inland',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                '自备柜' => [
+                    'link' => 'admin/order/self',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
             ]
         ],
         '设置' => [
