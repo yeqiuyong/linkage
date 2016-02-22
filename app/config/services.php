@@ -8,6 +8,7 @@ use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
+use Phalcon\Db\Adapter\Pdo\Mysql as DBAdapter;
 use Phalcon\Mvc\Model\Manager;
 
 use Multiple\Core\Constants\Services as AppServices;
@@ -32,7 +33,7 @@ $di->set(AppServices::URL, function () use ($config) {
  * Database connection is created based in the parameters defined in the configuration file
  */
 $di->set(AppServices::DB, function () use ($config) {
-	$connection = new Phalcon\Db\Adapter\Pdo\Mysql(array(
+	$connection = new DBAdapter(array(
 		"host" => $config->database->host,
 		"username" => $config->database->username,
 		"password" => $config->database->password,

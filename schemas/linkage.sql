@@ -234,7 +234,7 @@ CREATE TABLE `linkage_car` (
 --
 DROP TABLE IF EXISTS `linkage_order`;
 CREATE TABLE `linkage_order` (
-  `orders_id` CHAR(64)  NOT NULL DEFAULT '',
+  `order_id` CHAR(64)  NOT NULL DEFAULT '',
   `type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '码头出口0,码头进口1,内陆柜2,自备柜3',
   `manufacture_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '订单委托厂商',
   `transporter_id` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '接单承运商',
