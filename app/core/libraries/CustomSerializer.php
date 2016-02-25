@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: joe
+ * Date: 27/1/16
+ * Time: 11:45 AM
+ */
+
 namespace Multiple\Core\Libraries;
 
 class CustomSerializer extends \League\Fractal\Serializer\ArraySerializer

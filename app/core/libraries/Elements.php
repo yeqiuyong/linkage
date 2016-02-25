@@ -1,15 +1,18 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: joe
+ * Date: 27/1/16
+ * Time: 11:45 AM
+ */
+
 namespace Multiple\Core\Libraries;
 
 use Phalcon\Mvc\User\Component;
 use Phalcon\Tag;
 use Phalcon\Mvc\Url;
 
-/**
- * Elements
- *
- * Helps to build UI elements for the application
- */
+
 class Elements extends Component
 {
 

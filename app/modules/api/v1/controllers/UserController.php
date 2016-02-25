@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: joe
+ * Date: 25/1/16
+ * Time: 10:25 AM
+ */
+
 namespace Multiple\API\Controllers;
 
 use Multiple\Core\Exception\Exception;
@@ -99,9 +106,11 @@ class UserController extends APIControllerBase
     public function meAction()
     {
 //        return $this->respondItem($this->user, new \UserTransformer, 'user');
+        $authManager = $this->di->get(Services::AUTH_MANAGER);
+        //$token = $authManager->getSession()->getToken();
         $response = [
-            'token' => 'aadfaeaa',
-            'expires' => 'cccc'
+            'token' => 'fefe',
+            'expires' => 'caaaaccc'
         ];
 
         $this->respondArray($response,'test');
