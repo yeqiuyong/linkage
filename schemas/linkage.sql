@@ -173,7 +173,7 @@ CREATE TABLE `linkage_permission` (
   `sort_order` INT(11) NOT NULL,
   `url` VARCHAR(100) DEFAULT NULL,
   PRIMARY KEY (`permission_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `user_role`
@@ -184,7 +184,7 @@ CREATE TABLE `linkage_user_role` (
   `user_id` INT(11) UNSIGNED NOT NULL,
   `role_id` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=561 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table `role_permission`
@@ -195,7 +195,7 @@ CREATE TABLE `linkage_role_permission` (
   `permission_id` INT(11) UNSIGNED NOT NULL,
   `role_id` INT(11) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=561 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 --
@@ -266,6 +266,7 @@ CREATE TABLE `linkage_order` (
   `ship_company` VARCHAR(120) COMMENT '头程公司',
   `ship_name` VARCHAR(120) COMMENT '头程船名',
   `ship_schedule_no` VARCHAR(64) COMMENT '头程班次',
+  `is_book_cargo` TINYINT(4) COMMENT '是否与头程越好货柜',
   `consignee` VARCHAR(120) COMMENT '收货人',
   `VESSEL`  VARCHAR(64) COMMENT '',
   `memo` TEXT COMMENT '特殊事项',
@@ -295,6 +296,21 @@ CREATE TABLE `linkage_driver_task` (
   `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务生成日期',
   `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务修改日期',
   PRIMARY KEY (`task_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Table structure for table `linkage_driver_task_history`
+--
+DROP TABLE IF EXISTS `linkage_driver_task_history`;
+CREATE TABLE `linkage_driver_task_history` (
+  `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `task_id` INT(11) UNSIGNED NOT NULL,
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0:未委派，1：委派司机，2：到港提柜，3：运柜出港，4：送达卸货(入口)/到达载柜（出口），5：返港还柜,6：拒绝任务',
+  `memo` TEXT COMMENT '其它说明',
+  `image` VARCHAR(400) COMMENT '司机拍照。图片链接地址',
+  `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务生成日期',
+  `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务修改日期',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
