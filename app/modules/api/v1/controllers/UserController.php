@@ -23,6 +23,10 @@ use Multiple\Models\ClientUser;
 class UserController extends APIControllerBase
 {
 
+    public function initialize(){
+        parent::initialize();
+    }
+
     /**
      * @title("Authenticate")
      * @description("Authenticate user")
@@ -109,7 +113,7 @@ class UserController extends APIControllerBase
         $authManager = $this->di->get(Services::AUTH_MANAGER);
         //$token = $authManager->getSession()->getToken();
         $response = [
-            'token' => 'fefe',
+            'token' => strlen($this->token),
             'expires' => 'caaaaccc'
         ];
 

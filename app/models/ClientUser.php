@@ -33,13 +33,37 @@ class ClientUser extends Model
     public function registerByName($username, $password){
         $security = Di::getDefault()->get(Services::SECURITY);
 
+        $now = time();
+
         $this->username = $username;
-        $this->password = $security->hash($password);;
-        $this->create_time = time();
-        $this->update_time = time();
+        $this->password = $security->hash($password);
+        $this->token = md5($now.$username);
+        $this->create_time = $now;
+        $this->update_time = $now;
         $this->active = 'Y';
 
         return $this->save();
+    }
+
+    public function getSecretByName($username){
+        $user = self::findFirst([
+            'conditions' => 'username = :username:',
+            'bind' => ['username' => $username]
+        ]);
+
+        $password = $user == null ? '' : $user->password;
+        $userToken = $user == null ? '' : $user->token;
+
+        return ['password' => $password, 'user_token' => $userToken];
+    }
+
+    public function getUserByToken($token){
+        $user = ClientUser::findFirst([
+            'conditions' => 'token = :token:',
+            'bind' => ['token' => $token]
+        ]);
+
+        return $user;
     }
 
     public function validation(){

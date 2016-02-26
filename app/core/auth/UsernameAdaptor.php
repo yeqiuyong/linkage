@@ -28,30 +28,22 @@ class UsernameAdaptor implements IAuthenticateAdaptor
         $password = $data[AuthenticateManager::LOGIN_DATA_PASSWORD];
 
         /** @var \User $user */
-        $user = ClientUser::findFirst([
-            'conditions' => 'username = :username:',
-            'bind' => ['username' => $username]
-        ]);
 
-        if(!$user){
+        $user = new ClientUser();
+        $secret = $user->getSecretByName($username);
+
+        if(!$security->checkHash($password, $secret['password'])){
             return null;
         }
 
-        if(!$security->checkHash($password, $user->password)){
-            return null;
-        }
-
-        return (string)$user->user_id;
+        return $secret['user_token'];
 
     }
 
     public function authenticate($identity)
     {
-        $user = ClientUser::findFirst([
-            'conditions' => 'user_id = :identity:',
-            'bind' => ['identity' => $identity]
-        ]);
+        $user = new ClientUser();
 
-        return ($user == null ? false: true);
+        return ($user->getUserByToken($identity) == null ? false: true);
     }
 }

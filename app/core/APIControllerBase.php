@@ -87,6 +87,7 @@ class APIControllerBase extends Controller
         $this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
 
         $this->cid = $this->request->getPost('cid');
+        $this->token = $this->request->getPost('token');
     }
 
     public function respondArray($array, $key){
