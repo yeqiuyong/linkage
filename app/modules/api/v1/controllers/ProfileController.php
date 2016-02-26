@@ -22,6 +22,27 @@ class ProfileController extends APIControllerBase
         parent::initialize();
     }
 
+
+    /**
+     * @title("information")
+     * @description("user information")
+     * @requestExample("POST /profile/information")
+     * @response("Data object or Error object")
+     */
+    public function informationAction(){
+
+    }
+
+    /**
+     * @title("modInformation")
+     * @description("modify user information")
+     * @requestExample("POST /profile/modinformation")
+     * @response("Data object or Error object")
+     */
+    public function modInformationAction(){
+
+    }
+
     /**
      * @title("modPassword")
      * @description("Modify Password")
@@ -33,9 +54,9 @@ class ProfileController extends APIControllerBase
     }
 
     /**
-     * @title("modPassword")
-     * @description("Modify Password")
-     * @requestExample("POST /profile/modpassword")
+     * @title("modmobile")
+     * @description("Modify Mobile")
+     * @requestExample("POST /profile/modmobile")
      * @response("Data object or Error object")
      */
     public function modMobileAction(){
@@ -44,7 +65,7 @@ class ProfileController extends APIControllerBase
 
     /**
      * @title("addCompany")
-     * @description("Add company")
+     * @description("Add user company")
      * @requestExample("POST /profile/addcompany")
      * @response("Data object or Error object")
      */
@@ -53,12 +74,15 @@ class ProfileController extends APIControllerBase
     }
 
     /**
-     * @title("forgot password")
-     * @description("User profile password")
+     * @title("modCompany")
+     * @description("Modify user company")
      * @requestExample("POST /profile/forgotpassword")
      * @response("Data object or Error object")
      */
-    public function forgotPasswordAction(){
+    public function modCompanyAction(){
 
     }
+
+
+
 }
