@@ -18,10 +18,16 @@ class APIControllerBase extends Controller
 {
 
     /**
+     * 用户cid
+     * @var string
+     */
+    public $cid = '';
+
+    /**
      * 登陆用户信息
      * @var array
      */
-    public $userinfo;
+    public $userInfo;
 
     /**
      * 当前请求设备id
@@ -42,33 +48,26 @@ class APIControllerBase extends Controller
      *
      * @var String
      */
-    public $client_model = '';
+    public $clientModel = '';
 
     /**
      * 客户端版本号
      *
      * @var int
      */
-    public $client_ver = 0;
+    public $clientVersion = 0;
 
     /**
      * 手机 SDK 版本号
      * @var String
      */
-    public $client_sdkver = '';
+    public $clientSdkVersion = '';
 
     /**
      * 客户端操作系统版本号
      * @var String
      */
-    public $client_releasever = '';
-
-
-    /**
-     * 卡卡兔cid
-     * @var string
-     */
-    public $cid = '';
+    public $clientReleaseVersion = '';
 
 
     /**
@@ -79,49 +78,37 @@ class APIControllerBase extends Controller
 
 
     /**
-     * User Model
-     * @var muser
-     */
-    public $muser = null;
-
-
-
-    /**
      * @var \League\Fractal\Manager
      */
     protected $fractal;
 
 
-
-    public function onConstruct()
-    {
+    protected function initialize(){
         $this->fractal = $this->di->get(Services::FRACTAL_MANAGER);
+
+        $this->cid = $this->request->getPost('cid');
     }
 
-    public function respondArray($array, $key)
-    {
+    public function respondArray($array, $key){
         $response = [$key => $array];
 
         return $this->respond($response);
     }
 
-    public function respondOK()
-    {
+    public function respondOK(){
         $response = ['result' => 'OK'];
 
         return $this->respond($response);
     }
 
-    public function responseItemOK($item, $callback, $resource_key)
-    {
+    public function responseItemOK($item, $callback, $resource_key){
         $response = $this->respondItem($item, $callback, $resource_key);
         $response['result'] = 'OK';
 
         return $this->respond($response);
     }
 
-    public function respondItem($item, $callback, $resource_key, $meta = [])
-    {
+    public function respondItem($item, $callback, $resource_key, $meta = []){
         $resource = new Item($item, $callback, $resource_key);
         $data = $this->fractal->createData($resource)->toArray();
         $response = array_merge($data, $meta);
@@ -129,8 +116,7 @@ class APIControllerBase extends Controller
         return $this->respond($response);
     }
 
-    public function respondCollection($collection, $callback, $resource_key, $meta = [])
-    {
+    public function respondCollection($collection, $callback, $resource_key, $meta = []){
         $resource = new Collection($collection, $callback, $resource_key);
         $data = $this->fractal->createData($resource)->toArray();
         $response = array_merge($data, $meta);
@@ -138,8 +124,7 @@ class APIControllerBase extends Controller
         return $this->respond($response);
     }
 
-    public function respond($response)
-    {
+    public function respond($response){
         $json = json_encode($response);
         echo $json;
     }

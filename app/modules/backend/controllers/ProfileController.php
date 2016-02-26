@@ -22,12 +22,12 @@ class ProfileController extends BackendControllerBase
     public function indexAction(){
         $user = AdminUser::findFirst([
             'conditions' => 'username = :username:',
-            'bind' => ['username' => $this->user_name]
+            'bind' => ['username' => $this->userName]
         ]);
 
         $this->view->setVars(
             array(
-                'username' => $this->user_name,
+                'username' => $this->userName,
                 'realname' => $user->name,
                 'mobile' => $user->mobile,
                 'email' => $user->email,
@@ -44,7 +44,7 @@ class ProfileController extends BackendControllerBase
 
         $user = AdminUser::findFirst([
             'conditions' => 'username = :username:',
-            'bind' => ['username' => $this->user_name]
+            'bind' => ['username' => $this->userName]
         ]);
 
         if($realname){

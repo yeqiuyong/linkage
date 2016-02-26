@@ -12,9 +12,9 @@ use Multiple\Core\ControllerBase;
 
 class BackendControllerBase extends ControllerBase
 {
-    protected $user_name;
+    protected $userName;
 
-    protected $user_profile;
+    protected $userProfile;
 
     protected function initialize()
     {
@@ -25,13 +25,13 @@ class BackendControllerBase extends ControllerBase
 
     private function myProfile(){
         $auth = $this->session->get('auth');
-        $this->user_name = $auth['username'];
-        $this->user_profile = $auth['profile_name'];
+        $this->userName = $auth['username'];
+        $this->userProfile = $auth['profile_name'];
 
         $this->view->setVars(
             array(
-                'username'   => $this->user_name,
-                'profilename' => $this->user_profile,
+                'username'   => $this->userName,
+                'profilename' => $this->userProfile,
             )
         );
     }
