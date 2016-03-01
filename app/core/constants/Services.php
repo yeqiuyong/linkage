@@ -40,6 +40,7 @@ class Services
     const ASSETS = "assets";
     const METADATA = 'modelsMetadata';
     const ELEMENTS = 'elements';
+    const LOGGER = 'logger';
 
     // PhalconRest
     const AUTH_MANAGER = 'authManager';

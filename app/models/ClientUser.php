@@ -52,15 +52,15 @@ class ClientUser extends Model
         ]);
 
         $password = $user == null ? '' : $user->password;
-        $userToken = $user == null ? '' : $user->token;
+        $id = $user == null ? '' : $user->user_id;
 
-        return ['password' => $password, 'user_token' => $userToken];
+        return ['password' => $password, 'id' => $id];
     }
 
-    public function getUserByToken($token){
+    public function getUserByToken($identity){
         $user = ClientUser::findFirst([
-            'conditions' => 'token = :token:',
-            'bind' => ['token' => $token]
+            'conditions' => 'user_id = :identity:',
+            'bind' => ['identity' => $identity]
         ]);
 
         return $user;

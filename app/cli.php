@@ -58,7 +58,7 @@ $loader->register();
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
-$di->set(AppServices::DB, function () use ($config) {
+$di->setShared(AppServices::DB, function () use ($config) {
     $connection = new DBAdapter(array(
         "host" => $config->database->host,
         "username" => $config->database->username,
@@ -73,7 +73,7 @@ $di->set(AppServices::DB, function () use ($config) {
 /**
  * Redis connection is created based in the parameters defined in the configuration file
  */
-$di->set(AppServices::REDIS, function() use ($config) {
+$di->setShared(AppServices::REDIS, function() use ($config) {
     $redisConnect = new Redis();
     $redisConnect->connect($config->redis->host, $config->redis->port);
     return $redisConnect;

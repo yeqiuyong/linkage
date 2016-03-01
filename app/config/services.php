@@ -13,6 +13,7 @@ use Phalcon\Mvc\Model\Manager;
 
 use Multiple\Core\Constants\Services as AppServices;
 use Multiple\Core\Libraries\Elements;
+use Multiple\Core\Libraries\Logger;
 
 
 /**
@@ -53,6 +54,13 @@ $di->set(AppServices::REDIS, function() use ($config) {
 	$redisConnect->connect($config->redis->host, $config->redis->port);
 	//$redisConnect->select($config->redis->database);
 	return $redisConnect;
+});
+
+/**
+ * Register a user component
+ */
+$di->set(AppServices::LOGGER, function() use ($config){
+	return new Logger( APP_PATH.$config->logger->path, $config->logger->level);
 });
 
 /**

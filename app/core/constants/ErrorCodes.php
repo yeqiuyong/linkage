@@ -42,6 +42,8 @@ class ErrorCodes
     const USER_REGISTERFAIL = 4005;
     const USER_MODFAIL = 4006;
     const USER_CREATEFAIL = 4007;
+    const USER_MOBILE_NULL = 4008;
+    const USER_SMS_CONTENT_NULL = 4009;
 
     public static $MESSAGE = [
         // General
@@ -77,6 +79,8 @@ class ErrorCodes
         self:: USER_REGISTERFAIL => "用户注册失败",
         self:: USER_MODFAIL => "用户信息修改失败",
         self:: USER_CREATEFAIL => "添加用户失败",
+        self:: USER_MOBILE_NULL => "电话号码为空",
+        self:: USER_SMS_CONTENT_NULL => "信息内容为空",
     ];
 
 }

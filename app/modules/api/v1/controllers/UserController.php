@@ -8,9 +8,9 @@
 
 namespace Multiple\API\Controllers;
 
-use Multiple\Core\Exception\Exception;
-use Phalcon\Db\RawValue;
+use Phalcon\Di;
 
+use Multiple\Core\Exception\Exception;
 use Multiple\Core\APIControllerBase;
 use Multiple\Core\Auth\UsernameAdaptor;
 use Multiple\Core\Constants\Services;
@@ -23,8 +23,13 @@ use Multiple\Models\ClientUser;
 class UserController extends APIControllerBase
 {
 
+    private $logger;
+
     public function initialize(){
         parent::initialize();
+
+        $this->logger = Di::getDefault()->get(Services::LOGGER);
+
     }
 
     /**
@@ -117,6 +122,7 @@ class UserController extends APIControllerBase
             'expires' => 'caaaaccc'
         ];
 
+        $this->logger->debug('dfaefa');
         $this->respondArray($response,'test');
     }
 

@@ -36,7 +36,7 @@ class UsernameAdaptor implements IAuthenticateAdaptor
             return null;
         }
 
-        return $secret['user_token'];
+        return $secret['id'];
 
     }
 
