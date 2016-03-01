@@ -245,7 +245,7 @@ CREATE TABLE `linkage_car` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Table structure for table `order`
+-- Table structure for table `linkage_order`
 --
 DROP TABLE IF EXISTS `linkage_order`;
 CREATE TABLE `linkage_order` (
@@ -259,21 +259,82 @@ CREATE TABLE `linkage_order` (
   `transporter_contact_tel` VARCHAR(30) COMMENT '承运商联系电话',
   `take_address` VARCHAR(400) COMMENT '货柜接货地址',
   `take_time` INT(11) COMMENT '货柜接货时间',
-  `customs_in` INT(11) COMMENT '货柜到关口报关时间',
-  `customs_out` INT(11) COMMENT '报关完毕，从关口出关时间',
-  `port` VARCHAR(120) COMMENT '码头／关口',
-  `so` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '',
-  `ship_company` VARCHAR(120) COMMENT '头程公司',
-  `ship_name` VARCHAR(120) COMMENT '头程船名',
-  `ship_schedule_no` VARCHAR(64) COMMENT '头程班次',
-  `is_book_cargo` TINYINT(4) COMMENT '是否与头程越好货柜',
-  `consignee` VARCHAR(120) COMMENT '收货人',
-  `VESSEL`  VARCHAR(64) COMMENT '',
+  `delivery_address` VARCHAR(400) COMMENT '货柜收货地址',
+  `delivery_time` INT(11) COMMENT '货柜收货时间',
+  `cargos_rent_expire` INT(11) COMMENT '柜组到期日',
   `memo` TEXT COMMENT '特殊事项',
   `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '订单生成日期',
   `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '订单修改日期',
   `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '订单状态',
   PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `linkage_order_export`
+--
+DROP TABLE IF EXISTS `linkage_order_export`;
+CREATE TABLE `linkage_order_export` (
+  `order_id` CHAR(64)  NOT NULL DEFAULT '',
+  `so` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '',
+  `customs_in` INT(11) COMMENT '禁关时间',
+  `ship_company` VARCHAR(120) COMMENT '头程公司',
+  `ship_name` VARCHAR(120) COMMENT '头程船名',
+  `ship_schedule_no` VARCHAR(64) COMMENT '头程班次',
+  `is_book_cargo` TINYINT(4) COMMENT '是否与头程越好货柜。0否；1是',
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `linkage_order_import`
+--
+DROP TABLE IF EXISTS `linkage_order_import`;
+CREATE TABLE `linkage_order_import` (
+  `order_id` CHAR(64)  NOT NULL DEFAULT '',
+  `bill_no` CHAR(64)  NOT NULL DEFAULT '提单号',
+  `customs_broker` VARCHAR(120) COMMENT '报关行联系人',
+  `customshouse_contact` VARCHAR(30) COMMENT '报关行联系电话',
+  `cargo_company` VARCHAR(120) COMMENT '二柜公司',
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `linkage_order_inland`
+--
+DROP TABLE IF EXISTS `linkage_order_inland`;
+CREATE TABLE `linkage_order_inland` (
+  `order_id` CHAR(64)  NOT NULL DEFAULT '',
+  `customs_in` INT(11) COMMENT '禁关时间',
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+--
+-- Table structure for table `linkage_order_self_cargo`
+--
+DROP TABLE IF EXISTS `linkage_order_self_cargo`;
+CREATE TABLE `linkage_order_self_cargo` (
+  `order_id` CHAR(64)  NOT NULL DEFAULT '',
+  `is_customs_declare` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '是否须要报关。0不需要，1须要',
+  `customs_in` INT(11) COMMENT '报关时间',
+  `customs_out` INT(11) COMMENT '报关结束时间',
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `linkage_import_order_2_cargo`
+--
+DROP TABLE IF EXISTS `linkage_import_order_2_cargo`;
+CREATE TABLE `linkage_import_order_2_cargo` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `order_id` CHAR(64)  NOT NULL DEFAULT '订单号',
+  `cargo_no` CHAR(64)  NOT NULL DEFAULT '柜号',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`order_id`, `cargo_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
