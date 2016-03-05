@@ -90,6 +90,13 @@ class APIControllerBase extends Controller
         $this->token = $this->request->getPost('token');
     }
 
+    public function respondData($data){
+        $data['result'] = 0;
+        $data['reason'] = '';
+
+        return $this->respond($data);
+    }
+
     public function respondArray($array, $key){
         $response['result'] = 0;
         $response['reason'] = '';

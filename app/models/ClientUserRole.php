@@ -28,7 +28,7 @@ class ClientUserRole extends Model
         $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
-    public function create($userid, $roleid){
+    public function add($userid, $roleid){
         $this->user_id = $userid;
         $this->role_id = $roleid;
 
@@ -37,7 +37,7 @@ class ClientUserRole extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->debug($message);
+            $this->logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }

@@ -31,7 +31,7 @@ class Company extends Model
         $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
-    public function create($name, $type){
+    public function add($name, $type){
         if($this->isCompanyRegistered($name)){
             throw new UserOperationException(ErrorCodes::COMPANY_DEUPLICATE, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_DEUPLICATE]);
         }
@@ -54,7 +54,7 @@ class Company extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->debug($message);
+            $this->logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -75,18 +75,18 @@ class Company extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->debug($message);
+            $this->logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
     }
 
     private function isCompanyRegistered($companyName){
-        $user = self::findFirst([
-            'conditions' => 'mobile = :mobile:',
-            'bind' => ['mobile' => $companyName]
+        $companies = self::find([
+            'conditions' => 'name = :name:',
+            'bind' => ['name' => $companyName]
         ]);
 
-        return isset($user);
+        return sizeof($companies) > 0 ? true : false;
     }
 }

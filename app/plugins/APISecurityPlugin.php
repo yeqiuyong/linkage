@@ -40,7 +40,7 @@ class APISecurityPlugin extends Plugin
 
             //Public area resources
             $publicResources = array(
-                'user'  => array('register', 'registerbyname','registerbymobile', 'session', 'test','login'),
+                'session'  => array('register4admin', 'test','login'),
                 'errors' => array('show'),
 
             );

@@ -59,7 +59,7 @@ class ClientUser extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->debug($message);
+            $this->logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -89,7 +89,7 @@ class ClientUser extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->debug($message);
+            $this->logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -134,20 +134,20 @@ class ClientUser extends Model
 
 
     private function isMobileRegistered($mobile){
-        $user = self::findFirst([
+        $users = self::find([
             'conditions' => 'mobile = :mobile:',
             'bind' => ['mobile' => $mobile]
         ]);
 
-        return isset($user);
+        return sizeof($users) > 0 ? true : false;
     }
 
     private function isUserNameRegistered($username){
-        $user = self::findFirst([
+        $users = self::findFirst([
             'conditions' => 'username = :username:',
             'bind' => ['username' => $username]
         ]);
 
-        return isset($user);
+        return sizeof($users) > 0 ? true : false;
     }
 }

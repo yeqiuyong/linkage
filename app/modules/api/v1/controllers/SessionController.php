@@ -9,7 +9,6 @@
 namespace Multiple\API\Controllers;
 
 use Phalcon\Di;
-use Phalcon\Db\RawValue;
 
 use Multiple\Core\APIControllerBase;
 use Multiple\Core\Constants\Services;
@@ -17,6 +16,7 @@ use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Exception\Exception;
+use Multiple\Core\Auth\UsernameAdaptor;
 
 use Multiple\Models\Company;
 use Multiple\Models\ClientUser;
@@ -72,7 +72,7 @@ class SessionController extends APIControllerBase
             $this->db->begin();
 
             $company = new Company();
-            $company->create($companyName,$companyType);
+            $company->add($companyName, $companyType);
             $companyID = $company->company_id;
 
             $user = new ClientUser();
@@ -80,7 +80,7 @@ class SessionController extends APIControllerBase
             $userID = $user->user_id;
 
             $userRole = new ClientUserRole();
-            $userRole->create($userID, $role);
+            $userRole->add($userID, $role);
 
             // Commit the transaction
             $this->db->commit();
@@ -91,7 +91,15 @@ class SessionController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        $authManager = $this->di->get(Services::AUTH_MANAGER);
+        $session = $authManager->loginWithUsernamePassword(UsernameAdaptor::NAME, $mobile, $password);
+        $response = [
+            'token' => $session->getToken(),
+            'expires' => $session->getExpirationTime()
+        ];
+
+        return $this->respondData($response);
+
     }
 
     /**
