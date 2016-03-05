@@ -44,6 +44,11 @@ class ErrorCodes
     const USER_CREATEFAIL = 4007;
     const USER_MOBILE_NULL = 4008;
     const USER_SMS_CONTENT_NULL = 4009;
+    const USER_PASSWORD_NULL = 4010;
+    const USER_VERIFY_CODE_NULL = 4011;
+    const USER_ROLE_NULL = 4012;
+    const USER_COMPANY_NAME_NULL = 4013;
+    const USER_MOBILE_DUPLICATE = 4014;
 
     public static $MESSAGE = [
         // General
@@ -73,7 +78,7 @@ class ErrorCodes
         self:: AUTH_EXPIRED => "授权超时",
 
          // User management
-        self:: USER_DUPLICATE=> "注册用户已存在",
+        self:: USER_DUPLICATE => "注册用户已存在",
         self:: USER_NOTACTIVE => "用户被禁止",
         self:: USER_NOTFOUND => "用户查找失败",
         self:: USER_REGISTERFAIL => "用户注册失败",
@@ -81,6 +86,11 @@ class ErrorCodes
         self:: USER_CREATEFAIL => "添加用户失败",
         self:: USER_MOBILE_NULL => "电话号码为空",
         self:: USER_SMS_CONTENT_NULL => "信息内容为空",
+        self:: USER_PASSWORD_NULL =>  "用户密码为空",
+        self:: USER_VERIFY_CODE_NULL => "校验码为空",
+        self:: USER_ROLE_NULL => "公司名为空",
+        self:: USER_COMPANY_NAME_NULL => "公司名为空",
+        self:: USER_MOBILE_DUPLICATE => "手机被注册",
     ];
 
 }

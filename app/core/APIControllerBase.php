@@ -91,20 +91,30 @@ class APIControllerBase extends Controller
     }
 
     public function respondArray($array, $key){
+        $response['result'] = 0;
+        $response['reason'] = '';
+
         $response = [$key => $array];
 
         return $this->respond($response);
     }
 
     public function respondOK(){
-        $response = ['result' => 'OK'];
+        $response = ['result' => 0, 'reason' => ''];
+
+        return $this->respond($response);
+    }
+
+    public function respondError($result, $reason){
+        $response = ['result' => $result, 'reason' => $reason];
 
         return $this->respond($response);
     }
 
     public function responseItemOK($item, $callback, $resource_key){
         $response = $this->respondItem($item, $callback, $resource_key);
-        $response['result'] = 'OK';
+        $response['result'] = 0;
+        $response['reason'] = '';
 
         return $this->respond($response);
     }

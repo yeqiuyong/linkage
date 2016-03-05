@@ -131,7 +131,7 @@ CREATE TABLE `linkage_clientuser` (
   `loginip` VARCHAR(31) NOT NULL DEFAULT '127.0.0.1',
   `create_time` INT(11) NOT NULL DEFAULT 0,
   `update_time` INT(11) NOT NULL DEFAULT 0,
-  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;2 pending; 3 banned',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;2 pending; 3 banned;4 deleted',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY (`username`),
   UNIQUE KEY (`mobile`)
@@ -215,18 +215,19 @@ CREATE TABLE `linkage_company` (
   `city` VARCHAR(40)  DEFAULT NULL,
   `email` VARCHAR(70) DEFAULT NULL,
   `service_phone_1` VARCHAR(30)  NOT NULL DEFAULT '' COMMENT '客户电话1',
-  `service_phone_2` VARCHAR(30)  NOT NULL DEFAULT '' COMMENT '客户电话2',
-  `service_phone_3` VARCHAR(30)  NOT NULL DEFAULT '' COMMENT '客户电话3',
-  `service_phone_4` VARCHAR(30)  NOT NULL DEFAULT '' COMMENT '客户电话4',
+  `service_phone_2` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话2',
+  `service_phone_3` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话3',
+  `service_phone_4` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话4',
   `description` TEXT DEFAULT null COMMENT '企业简介',
   `remark` TEXT DEFAULT NULL COMMENT '备注',
   `logo` VARCHAR(64) DEFAULT '' COMMENT '企业logo',
   `create_time` INT(11) NOT NULL DEFAULT 0,
   `update_time` INT(11) NOT NULL DEFAULT 0,
   `create_by` INT(11) NOT NULL DEFAULT 0 COMMENT '创建人用户id',
-  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;2 pending; 3 banned',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;2 pending; 3 banned; 4 deleted',
   `version` INT(8) NOT NULL DEFAULT 0 COMMENT '每修改一次版本+1，app 端缓存所有企业信息，当检测到企业版本更新，则更新企业信息',
-  PRIMARY KEY (`company_id`)
+  PRIMARY KEY (`company_id`),
+  UNIQUE KEY (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
