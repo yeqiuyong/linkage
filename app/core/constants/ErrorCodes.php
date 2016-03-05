@@ -50,6 +50,10 @@ class ErrorCodes
     const USER_COMPANY_NAME_NULL = 4013;
     const USER_MOBILE_DUPLICATE = 4014;
 
+    //Company mangement
+    const COMPANY_DEUPLICATE = 5001;
+    const COMPANY_NOTFOUND = 5002;
+
     public static $MESSAGE = [
         // General
         self::GEN_SYSTEM => "系统通用错误",
@@ -91,6 +95,10 @@ class ErrorCodes
         self:: USER_ROLE_NULL => "公司名为空",
         self:: USER_COMPANY_NAME_NULL => "公司名为空",
         self:: USER_MOBILE_DUPLICATE => "手机被注册",
+
+        // Company management
+        self:: COMPANY_DEUPLICATE => "注册公司已存在",
+        self:: COMPANY_NOTFOUND => "公司查找失败",
     ];
 
 }

@@ -127,7 +127,7 @@ CREATE TABLE `linkage_clientuser` (
   `birthday` DATE DEFAULT NULL,
   `icon` VARCHAR(200) DEFAULT NULL,
   `identity_id` CHAR(16) DEFAULT NULL,
-  `company_id` INT(11) UNSIGNED DEFAULT NULL ,
+  `company_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `loginip` VARCHAR(31) NOT NULL DEFAULT '127.0.0.1',
   `create_time` INT(11) NOT NULL DEFAULT 0,
   `update_time` INT(11) NOT NULL DEFAULT 0,

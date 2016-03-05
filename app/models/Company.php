@@ -8,23 +8,34 @@
 
 namespace Multiple\Models;
 
+use Phalcon\Di;
 use Phalcon\Mvc\Model;
 
+use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 
 class Company extends Model
 {
+    private $logger;
+
     public function initialize(){
         $this->setSource("linkage_company");
 
         $this->hasMany('company_id', 'Multiple\Models\ClientUser', 'company_id', array(  'alias' => 'users',
             'reusable' => true ));
+
+        $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
     public function create($name, $type){
+        if($this->isCompanyRegistered($name)){
+            throw new UserOperationException(ErrorCodes::COMPANY_DEUPLICATE, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_DEUPLICATE]);
+        }
+
         $now = time();
 
         $this->name = $name;
@@ -45,17 +56,19 @@ class Company extends Model
             }
             $this->logger->debug($message);
 
-            throw new DataBaseException();
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
     }
 
     public function moddify($name){
-        /** @var \User $user */
         $company = self::findFirst([
-            'conditions' => 'username = :username:',
+            'conditions' => 'name = :name:',
             'bind' => ['name' => $name]
         ]);
 
+        if(!isset($company)){
+            throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+        }
 
         if($company->update() == false){
             $message = '';
@@ -64,7 +77,16 @@ class Company extends Model
             }
             $this->logger->debug($message);
 
-            throw new DataBaseException();
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
+    }
+
+    private function isCompanyRegistered($companyName){
+        $user = self::findFirst([
+            'conditions' => 'mobile = :mobile:',
+            'bind' => ['mobile' => $companyName]
+        ]);
+
+        return isset($user);
     }
 }

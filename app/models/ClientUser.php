@@ -22,6 +22,8 @@ class ClientUser extends Model
 {
     public $email;
 
+    private $logger;
+
     public function initialize(){
         $this->setSource("linkage_clientuser");
 
@@ -31,13 +33,15 @@ class ClientUser extends Model
         $this->BelongsTo('company_id', 'Multiple\Models\Company', 'company_id', array(  'alias' => 'company',
             'reusable' => true ));
 
+        $this->logger = Di::getDefault()->get(Services::LOGGER);
+
     }
 
-    public function registerByName($username, $mobile, $password, $status){
+    public function registerByName($username, $mobile, $password, $status, $companyID){
         $security = Di::getDefault()->get(Services::SECURITY);
 
         if($this->isUserNameRegistered($username)){
-            throw new UserOperationException(ErrorCodes::USER_DUPLICATE, ErrorCodes::$MESSAGE[ErrorCodes::USER_DUPLICATE]);
+            throw new UserOperationException(ErrorCodes::COMPANY_DEUPLICATE, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_DEUPLICATE]);
         }
 
         $now = time();
@@ -45,7 +49,7 @@ class ClientUser extends Model
         $this->username = $username;
         $this->mobile = $mobile;
         $this->password = $security->hash($password);
-        $this->token = md5($now.$username);
+        $this->company_id = $companyID;
         $this->create_time = $now;
         $this->update_time = $now;
         $this->status = $status;
@@ -62,7 +66,7 @@ class ClientUser extends Model
 
     }
 
-    public function registerByMobile($mobile, $password, $status){
+    public function registerByMobile($mobile, $password, $status, $companyID){
         $security = Di::getDefault()->get(Services::SECURITY);
 
         if($this->isMobileRegistered($mobile)){
@@ -74,6 +78,7 @@ class ClientUser extends Model
         $this->username = $mobile;
         $this->mobile = $mobile;
         $this->password = $security->hash($password);
+        $this->company_id = $companyID;
 
         $this->create_time = $now;
         $this->update_time = $now;
@@ -134,7 +139,7 @@ class ClientUser extends Model
             'bind' => ['mobile' => $mobile]
         ]);
 
-        return $user == null ? false : true;
+        return isset($user);
     }
 
     private function isUserNameRegistered($username){
@@ -143,6 +148,6 @@ class ClientUser extends Model
             'bind' => ['username' => $username]
         ]);
 
-        return $user == null ? false : true;
+        return isset($user);
     }
 }
