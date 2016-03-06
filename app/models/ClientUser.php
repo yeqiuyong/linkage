@@ -117,6 +117,32 @@ class ClientUser extends Model
         return $user;
     }
 
+    public function getCompanyidByUserid($userid){
+        $user = self::findFirst([
+            'conditions' => 'user_id = :$userid:',
+            'bind' => ['userid' => $userid]
+        ]);
+
+        if(!isset($user->company_id)){
+            throw new DataBaseException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        return $user->company_id;
+    }
+
+    public function getUserNameByUserid($userid){
+        $user = self::findFirst([
+            'conditions' => 'user_id = :$userid:',
+            'bind' => ['userid' => $userid]
+        ]);
+
+        if(!isset($user->username)){
+            throw new DataBaseException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        return $user->username;
+    }
+
     public function validation(){
         if($this->email){
             $this->validate(new EmailValidator(array(

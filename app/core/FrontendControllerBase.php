@@ -19,5 +19,18 @@ class FrontendControllerBase extends ControllerBase
         $this->view->setTemplateAfter('main');
     }
 
+    public function responseJsonOK(){
+        $data = array("result" => 0, "reason" => "");
+        return $this->response->setJsonContent($data);
+    }
 
+    public function responseJsonError($result, $reason){
+        $data = array("result" => $result, "reason" => $reason);
+        return$this->response->setJsonContent($data);
+    }
+
+    public function responseJsonData(Array $data = []){
+        $response = array("result" => 0, "reason" => "");
+        return $this->response->setJsonContent(array_merge($response,$data));
+    }
 }

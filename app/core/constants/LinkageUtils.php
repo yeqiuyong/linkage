@@ -12,8 +12,13 @@ class LinkageUtils
 {
     const APP_VERSION = 0;
 
+    const LINKAGE_SERVER = 'http://120.25.82.122:8000';
+    const APP_DOWNLOAD_URL = 'http://120.25.82.122:8000';
+
     const VERIFY_PREFIX = 'reg_verfiy_';
     const INVITE_PREFIX = 'reg_invite_';
+
+    const INVITE_SECRET = 13453;
 
     const COMPANY_MANUFACTURE = 0;
     const COMPANY_TRANSPORTER = 1;

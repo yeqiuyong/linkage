@@ -53,7 +53,7 @@ class FrontendSecurityPlugin extends Plugin
 			$publicResources = array(
 				'index'      => array('index'),
 				'about'      => array('index'),
-				'register'   => array('index'),
+				'register'   => array('index', 'register', 'verifycode'),
 				'errors'     => array('show401', 'show404', 'show500'),
 				'session'    => array('index', 'register', 'start', 'end'),
 				'contact'    => array('index', 'send'),

@@ -1,11 +1,25 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: joe
+ * Date: 4/2/16
+ * Time: 4:25 PM
+ */
+
 namespace Multiple\Frontend\Controllers;
 
-use Multiple\Core\FrontendControllerBase;
-use Multiple\Forms\RegisterForm;
-use Multiple\Models\ClientUser;
+use Phalcon\Di;
 
-use Phalcon\Db\RawValue;
+use Multiple\Core\FrontendControllerBase;
+use Multiple\Core\Exception\Exception;
+use Multiple\Core\Constants\Services;
+use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Constants\StatusCodes;
+use Multiple\Core\Constants\LinkageUtils;
+
+use Multiple\Models\ClientUser;
+use Multiple\Models\ClientUserRole;
+
 
 /**
  * SessionController
@@ -14,51 +28,120 @@ use Phalcon\Db\RawValue;
  */
 class RegisterController extends FrontendControllerBase
 {
+
+    private $redis;
+
+    private $sms;
+
     public function initialize()
     {
         $this->tag->setTitle('Sign Up/Sign In');
         parent::initialize();
+
+        $this->redis = Di::getDefault()->get(Services::REDIS);
+        $this->sms = Di::getDefault()->get(Services::SMS);
     }
 
     /**
      * Action to register a new user
      */
-    public function indexAction()
-    {
-        $form = new RegisterForm;
+    public function indexAction(){
+        $cn = $this->request->get("cn");
 
-        if ($this->request->isPost()) {
+        $this->view->setVar(
+            "cn",
+            $cn
+        );
+    }
 
-            $name = $this->request->getPost('name', array('string', 'striptags'));
-            $username = $this->request->getPost('username', 'alphanum');
-            $email = $this->request->getPost('email', 'email');
-            $password = $this->request->getPost('password');
-            $repeatPassword = $this->request->getPost('repeatPassword');
+    public function registerAction(){
+        $mobile = $this->request->getPost('mobile');
+        $password = $this->request->getPost('password');
+        $ctype = $this->request->getPost('ctype');
+        $verifyCode = $this->request->getPost('verifyCode');
 
-            if ($password != $repeatPassword) {
-                $this->flash->error('Passwords are different');
-                return false;
-            }
-
-            $user = new ClientUser();
-            $user->username = $username;
-            $user->password = sha1($password);
-            $user->name = $name;
-            $user->email = $email;
-            $user->created_at = new RawValue('now()');
-            $user->active = 'Y';
-            if ($user->save() == false) {
-                foreach ($user->getMessages() as $message) {
-                    $this->flash->error((string) $message);
-                }
-            } else {
-                $this->tag->setDefault('email', '');
-                $this->tag->setDefault('password', '');
-                $this->flash->success('Thanks for sign-up, please log-in to start generating invoices');
-                return $this->forward('session/index');
-            }
+        if(!isset($mobile)){
+            return $this->responseJsonError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
         }
 
-        $this->view->form = $form;
+        if(!isset($password)){
+            return $this->responseJsonError(ErrorCodes::USER_PASSWORD_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_PASSWORD_NULL]);
+        }
+
+        if(!isset($ctype)){
+            return $this->responseJsonError(ErrorCodes::USER_ROLE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ROLE_NULL]);
+        }
+
+        if(!isset($verifyCode)){
+            return $this->responseJsonError(ErrorCodes::USER_VERIFY_CODE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_NULL]);
+        }
+
+        if(!$this->redis->get($verifyCode)){
+            return $this->response->responseJsonError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
+        }
+
+        $cid = 0;
+        switch($ctype){
+            case '0': $role = LinkageUtils::USER_MANUFACTURE;break;
+            case '1': $role = LinkageUtils::USER_TRANSPORTER;break;
+            case '2': $role = LinkageUtils::USER_DRIVER;break;
+            default:
+                return $this->responseJsonError(ErrorCodes::USER_TYPE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_TYPE_ERROR]);
+        }
+
+        try{
+            // Start a transaction
+            $this->db->begin();
+
+            $companyID =
+
+            $user = new ClientUser();
+            $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
+            $userID = $user->user_id;
+            $cid = $userID;
+
+            $userRole = new ClientUserRole();
+            $userRole->add($userID, $role);
+
+            // Commit the transaction
+            $this->db->commit();
+
+        }catch (Exception $e){
+            $this->db->rollback();
+
+            return $this->responseJsonError($e->getCode(), $e->getMessage());
+        }
+
+        $downloadURL = ['url' => LinkageUtils::APP_DOWNLOAD_URL];
+        return $this->responseJsonData($downloadURL);
     }
+
+    public function verifycodeAction(){
+        $mobile = $this->request->getPost('mobile');
+
+        if(!isset($mobile)){
+            return $this->responseJsonError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
+        }
+
+        try{
+            $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+            $expire = 60;
+            $verify_code =  rand(1000, 9999);
+
+            $msg = "［］您的校验码是：".$verify_code."。1分钟内有效。如非本人操作忽略此短信。";
+
+            //如果客户端多次调用接口生成校验码，以最后一次校验码为准
+            $this->redis->setex($key, $expire, $verify_code);
+
+            //send message
+            $this->sms->send($mobile, $msg);
+
+        }catch (Exception $e){
+            return $this->responseJsonError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->responseJsonOK();
+
+    }
+
 }

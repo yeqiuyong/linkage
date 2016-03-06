@@ -2,71 +2,101 @@
 {{ content() }}
 
 <div class="page-header">
-    <h2>Register for INVO</h2>
+    <h2>Register for Linkage</h2>
 </div>
 
-{{ form('register', 'id': 'registerForm', 'onbeforesubmit': 'return false') }}
+<form id="registerForm" action="" method="post" >
 
     <fieldset>
-
         <div class="control-group">
-            {{ form.label('name', ['class': 'control-label']) }}
+            <label class="control-label" for="mobile">手机</label>
             <div class="controls">
-                {{ form.render('name', ['class': 'form-control']) }}
-                <p class="help-block">(required)</p>
-                <div class="alert alert-warning" id="name_alert">
-                    <strong>Warning!</strong> Please enter your full name
-                </div>
-            </div>
-        </div>
+                {{ text_field('mobile', 'class': "form-control") }}
 
-        <div class="control-group">
-            {{ form.label('username', ['class': 'control-label']) }}
-            <div class="controls">
-                {{ form.render('username', ['class': 'form-control']) }}
-                <p class="help-block">(required)</p>
                 <div class="alert alert-warning" id="username_alert">
-                    <strong>Warning!</strong> Please enter your desired user name
+                    <strong>警告!</strong> 请输入电话号码！
                 </div>
             </div>
         </div>
 
-        <div class="control-group">
-            {{ form.label('email', ['class': 'control-label']) }}
-            <div class="controls">
-                {{ form.render('email', ['class': 'form-control']) }}
-                <p class="help-block">(required)</p>
-                <div class="alert alert-warning" id="email_alert">
-                    <strong>Warning!</strong> Please enter your email
-                </div>
-            </div>
-        </div>
 
         <div class="control-group">
-            {{ form.label('password', ['class': 'control-label']) }}
+            <label class="control-label" for="password">密码</label>
             <div class="controls">
-                {{ form.render('password', ['class': 'form-control']) }}
-                <p class="help-block">(minimum 8 characters)</p>
+                {{ password_field('password', 'class': 'form-control') }}
+
                 <div class="alert alert-warning" id="password_alert">
-                    <strong>Warning!</strong> Please provide a valid password
+                    <strong>警告!</strong> 请输入密码！
                 </div>
             </div>
         </div>
 
         <div class="control-group">
-            <label class="control-label" for="repeatPassword">Repeat Password</label>
+            <label class="control-label" for="repeatPassword">确认密码</label>
             <div class="controls">
-                {{ password_field('repeatPassword', 'class': 'input-xlarge') }}
+                {{ password_field('repeatPassword', 'class': 'form-control') }}
                 <div class="alert" id="repeatPassword_alert">
-                    <strong>Warning!</strong> The password does not match
+                    <strong>警告!</strong> 密码不相符
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="verifyCode">校验码</label>
+            <div class="controls">
+                {{ text_field('verifyCode', 'class': 'form-control') }}
+                <div class="alert alert-warning" id="password_alert">
+                    <strong>警告!</strong> 请输入密码！
                 </div>
             </div>
         </div>
 
         <div class="form-actions">
-            {{ submit_button('Register', 'class': 'btn btn-primary', 'onclick': 'return SignUp.validate();') }}
-            <p class="help-block">By signing up, you accept terms of use and privacy policy.</p>
+            <input name="" type="button" id="get-vcode-btn" class="btn btn-primary" value="获取验证码" >
+        </div>
+
+        <div class="form-actions">
+            <input name="" type="button" id="register-form-btn" class="btn btn-primary" value="注册" >
         </div>
 
     </fieldset>
 </form>
+
+
+<script type="text/javascript">
+    $("#get-vcode-btn").click(function(){
+        var mobile = $("input[id='mobile']").val();
+
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('register/verifycode') ?>",
+            data: "mobile=" + mobile,
+            success:function(data){
+                if(data.result==0){
+                    alert('aaaaa');
+                }else{
+                    alert(data.reason);
+                }
+            }
+        });
+
+    });
+
+    $("#register-form-btn").click(function(){
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('register/register') ?>",
+            data:$("registerForm").serialize(),
+            success:function(data){
+                if(data.result==0){
+                    window.location.href=data.url;
+                }else{
+                    alert(data.reason);
+                }
+            }
+        });
+
+    });
+</script>

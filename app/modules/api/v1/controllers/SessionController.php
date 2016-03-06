@@ -26,9 +26,12 @@ class SessionController extends APIControllerBase
 {
     private $logger;
 
+    private $redis;
+
     public function initialize(){
         parent::initialize();
 
+        $this->redis = Di::getDefault()->get(Services::REDIS);
         $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
@@ -65,6 +68,16 @@ class SessionController extends APIControllerBase
             return $this->respondError(ErrorCodes::USER_COMPANY_NAME_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_COMPANY_NAME_NULL]);
         }
 
+        $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+        if(!$this->redis->get($key)){
+            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+        }else{
+            $code = $this->redis->get($key);
+            if($code != $verifyCode){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
+            }
+        }
+
         $cid = 0;
         $companyType = $ctype == '0' ? LinkageUtils::COMPANY_MANUFACTURE : LinkageUtils::COMPANY_TRANSPORTER;
         $role = $ctype == '1' ? LinkageUtils::USER_ADMIN_MANUFACTURE : LinkageUtils::USER_ADMIN_TRANSPORTER;
@@ -78,6 +91,82 @@ class SessionController extends APIControllerBase
 
             $user = new ClientUser();
             $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_PENDING, $companyID);
+            $userID = $user->user_id;
+            $cid = $userID;
+
+            $userRole = new ClientUserRole();
+            $userRole->add($userID, $role);
+
+            // Commit the transaction
+            $this->db->commit();
+
+        }catch (Exception $e){
+            $this->db->rollback();
+
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        $authManager = $this->di->get(Services::AUTH_MANAGER);
+        $session = $authManager->loginWithUsernamePassword(UsernameAdaptor::NAME, $mobile, $password);
+        $response = [
+            'cid' => $cid,
+            'token' => $session->getToken(),
+            'expires' => $session->getExpirationTime()
+        ];
+
+        return $this->respondData($response);
+
+    }
+
+    /**
+     * @title("register4invitecode")
+     * @description("User registration")
+     * @requestExample("POST /session/register4invitecode")
+     * @response("Data object or Error object")
+     */
+    public function register4invitecodeAction(){
+        $mobile = $this->request->getPost('mobile');
+        $password = $this->request->getPost('password');
+        $ctype = $this->request->getPost('ctype');
+        $inviteCode = $this->request->getPost('invite_code');
+
+        if(!isset($mobile)){
+            return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
+        }
+
+        if(!isset($password)){
+            return $this->respondError(ErrorCodes::USER_PASSWORD_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_PASSWORD_NULL]);
+        }
+
+        if(!isset($ctype)){
+            return $this->respondError(ErrorCodes::USER_ROLE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ROLE_NULL]);
+        }
+
+        if(!isset($inviteCode)){
+            return $this->respondError(ErrorCodes::USER_INVITE_CODE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_NULL]);
+        }
+
+        if(!$this->redis->get($inviteCode)){
+            return $this->respondError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
+        }
+
+        $cid = 0;
+        switch($ctype){
+            case '0': $role = LinkageUtils::USER_MANUFACTURE;break;
+            case '1': $role = LinkageUtils::USER_TRANSPORTER;break;
+            case '2': $role = LinkageUtils::USER_DRIVER;break;
+            default:
+                return $this->respondError(ErrorCodes::USER_TYPE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_TYPE_ERROR]);
+        }
+
+        try{
+            // Start a transaction
+            $this->db->begin();
+
+            $companyID = $this->redis->get($inviteCode);
+
+            $user = new ClientUser();
+            $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
             $userID = $user->user_id;
             $cid = $userID;
 

@@ -49,6 +49,12 @@ class ErrorCodes
     const USER_ROLE_NULL = 4012;
     const USER_COMPANY_NAME_NULL = 4013;
     const USER_MOBILE_DUPLICATE = 4014;
+    const USER_VERIFY_CODE_EXPIRE = 4015;
+    const USER_VERIFY_CODE_ERROR = 4016;
+    const USER_INVITE_CODE_NULL = 4017;
+    const USER_INVITE_CODE_EXPIRE = 4018;
+    const USER_TYPE_ERROR = 4019;
+    const USER_ID_NULL = 4020;
 
     //Company mangement
     const COMPANY_DEUPLICATE = 5001;
@@ -95,6 +101,12 @@ class ErrorCodes
         self:: USER_ROLE_NULL => "公司名为空",
         self:: USER_COMPANY_NAME_NULL => "公司名为空",
         self:: USER_MOBILE_DUPLICATE => "手机被注册",
+        self:: USER_VERIFY_CODE_EXPIRE => "校验码过期",
+        self:: USER_VERIFY_CODE_ERROR => "校验码错误",
+        self:: USER_INVITE_CODE_NULL => "邀请码为空",
+        self:: USER_INVITE_CODE_EXPIRE => "邀请码过期",
+        self:: USER_TYPE_ERROR => "用户类型不合法",
+        self:: USER_ID_NULL => "用户ID为空",
 
         // Company management
         self:: COMPANY_DEUPLICATE => "注册公司已存在",
