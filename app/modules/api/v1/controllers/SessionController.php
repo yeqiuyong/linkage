@@ -65,6 +65,7 @@ class SessionController extends APIControllerBase
             return $this->respondError(ErrorCodes::USER_COMPANY_NAME_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_COMPANY_NAME_NULL]);
         }
 
+        $cid = 0;
         $companyType = $ctype == '0' ? LinkageUtils::COMPANY_MANUFACTURE : LinkageUtils::COMPANY_TRANSPORTER;
         $role = $ctype == '1' ? LinkageUtils::USER_ADMIN_MANUFACTURE : LinkageUtils::USER_ADMIN_TRANSPORTER;
         try{
@@ -78,6 +79,7 @@ class SessionController extends APIControllerBase
             $user = new ClientUser();
             $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_PENDING, $companyID);
             $userID = $user->user_id;
+            $cid = $userID;
 
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);
@@ -94,6 +96,7 @@ class SessionController extends APIControllerBase
         $authManager = $this->di->get(Services::AUTH_MANAGER);
         $session = $authManager->loginWithUsernamePassword(UsernameAdaptor::NAME, $mobile, $password);
         $response = [
+            'cid' => $cid,
             'token' => $session->getToken(),
             'expires' => $session->getExpirationTime()
         ];

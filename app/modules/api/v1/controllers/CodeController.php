@@ -9,27 +9,62 @@
 
 namespace Multiple\API\Controllers;
 
-use Multiple\Core\Exception\Exception;
-use Phalcon\Db\RawValue;
+use Phalcon\Di;
 
+use Multiple\Core\Exception\Exception;
 use Multiple\Core\APIControllerBase;
-use Multiple\Core\Auth\UsernameAdaptor;
+use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Constants\Services;
-use Multiple\Models\ClientUser;
+
 
 class CodeController extends APIControllerBase
 {
+    private $redis;
+
+    private $logger;
+
+    private $sms;
+
     public function initialize(){
         parent::initialize();
+
+        $this->redis = Di::getDefault()->get(Services::REDIS);
+        $this->logger = Di::getDefault()->get(Services::LOGGER);
+        $this->sms = Di::getDefault()->get(Services::SMS);
     }
 
     /**
-     * @title("register")
+     * @title("verifyCode")
      * @description("Get password verify code")
      * @requestExample("POST /code/verifycode")
      * @response("Data object or Error object")
      */
-    public function verifyCodeAction(){
+    public function verifycodeAction(){
+        $mobile = $this->request->getPost('mobile');
+
+        if(!isset($mobile)){
+            return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
+        }
+
+        try{
+            $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+            $expire = 60;
+            $verify_code =  rand(1000, 9999);
+
+            $msg = "［］您的校验码是：".$verify_code."。1分钟内有效。如非本人操作忽略此短信。";
+
+            //如果客户端多次调用接口生成校验码，以最后一次校验码为准
+            $this->redis->setex($key, $expire, $verify_code);
+
+            //send message
+            $this->sms->send($mobile, $msg);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
 
     }
 
@@ -39,7 +74,7 @@ class CodeController extends APIControllerBase
      * @requestExample("POST /code/invitecode")
      * @response("Data object or Error object")
      */
-    public function inviteCodeAction(){
+    public function invitecodeAction(){
 
     }
 

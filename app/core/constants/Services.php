@@ -41,6 +41,7 @@ class Services
     const METADATA = 'modelsMetadata';
     const ELEMENTS = 'elements';
     const LOGGER = 'logger';
+    const SMS = 'sms';
 
     // PhalconRest
     const AUTH_MANAGER = 'authManager';

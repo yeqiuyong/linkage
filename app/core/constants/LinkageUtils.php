@@ -12,8 +12,8 @@ class LinkageUtils
 {
     const APP_VERSION = 0;
 
-    const REG_VERIFY_PREFIX = 'reg_verfiy_';
-    const FORGOT_PASSWORD_PREFIX = 'forgot_pwd_verfiy_';
+    const VERIFY_PREFIX = 'reg_verfiy_';
+    const INVITE_PREFIX = 'reg_invite_';
 
     const COMPANY_MANUFACTURE = 0;
     const COMPANY_TRANSPORTER = 1;

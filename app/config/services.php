@@ -14,6 +14,7 @@ use Phalcon\Mvc\Model\Manager;
 use Multiple\Core\Constants\Services as AppServices;
 use Multiple\Core\Libraries\Elements;
 use Multiple\Core\Libraries\Logger;
+use Multiple\Core\Libraries\SMS;
 
 
 /**
@@ -103,8 +104,7 @@ $di->set(AppServices::ELEMENTS, function () {
  * Register a Router
  */
 $di->set(
-	AppServices::ROUTER,
-	function () {
+	AppServices::ROUTER, function () {
 		require __DIR__.'/routes.php';
 
 		return $router;
@@ -115,7 +115,13 @@ $di->set(
  * Register a Model manager service
  */
 $di->set(
-	AppServices::MODELS_MANAGER,
-	function(){
+	AppServices::MODELS_MANAGER, function(){
 		return new Manager();
+});
+
+/**
+ * Register a SMS Service
+ */
+$di->set(AppServices::SMS, function() {
+	return new SMS();
 });
