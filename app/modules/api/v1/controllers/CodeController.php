@@ -76,10 +76,9 @@ class CodeController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function invitecodeAction(){
-        $cid = $this->request->getPost('cid');
         $mobile = $this->request->getPost('mobile');
 
-        if(!isset($cid)){
+        if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::USER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ID_NULL]);
         }
 
@@ -117,9 +116,7 @@ class CodeController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function inviteurlAction(){
-        $cid = $this->request->getPost('cid');
-
-        if(!isset($cid)){
+        if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::USER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ID_NULL]);
         }
 
@@ -128,7 +125,7 @@ class CodeController extends APIControllerBase
             $expire = 60 * 60 * 24;
 
             $user = new ClientUser();
-            $companyID = $user->getCompanyidByUserid($cid);
+            $companyID = $user->getCompanyidByUserid($this->cid);
             $CN = $this->genInviteCode($companyID);
 
             //如果客户端多次调用接口生成校验码，以最后一次校验码为准

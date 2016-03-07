@@ -18,6 +18,7 @@ class AuthenticateManager
 {
     const LOGIN_DATA_USERNAME = "username";
     const LOGIN_DATA_PASSWORD = "password";
+    const LOGIN_DATA_MOBILE = "mobile";
 
     /**
      * @var AccountType[] Account types
@@ -163,6 +164,24 @@ class AuthenticateManager
     {
         return $this->login($accountTypeName, [
             self::LOGIN_DATA_USERNAME => $username,
+            self::LOGIN_DATA_PASSWORD => $password,
+        ]);
+    }
+
+    /**
+     * @param string $accountTypeName
+     * @param string $mobile
+     * @param string $password
+     *
+     * @return Session Created session
+     * @throws AuthenticateException
+     *
+     * Helper to session with username & password
+     */
+    public function loginWithMobilePassword($accountTypeName, $mobile, $password)
+    {
+        return $this->login($accountTypeName, [
+            self::LOGIN_DATA_MOBILE => $mobile,
             self::LOGIN_DATA_PASSWORD => $password,
         ]);
     }

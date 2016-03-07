@@ -93,13 +93,100 @@ class ClientUser extends Model
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
+    }
 
+    public function updatePasswordByMobile($mobile, $password){
+        $security = Di::getDefault()->get(Services::SECURITY);
+
+        if(!$this->isMobileRegistered($mobile)){
+            throw new UserOperationException(ErrorCodes::USER_MOBILE_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NOTFOUND]);
+        }
+
+        $user = self::findFirst([
+            'conditions' => 'mobile = :mobile:',
+            'bind' => ['mobile' => $mobile]
+        ]);
+
+        $user->password = $security->hash($password);
+        $user->update_time = time();
+
+        if($user->update() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg;
+            }
+            $this->logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
+    public function updatePasswordByID($userid, $password){
+        $security = Di::getDefault()->get(Services::SECURITY);
+
+        if(!$this->isUserRegistered($userid)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $user = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        $user->password = $security->hash($password);
+        $user->update_time = time();
+
+        if($user->update() == false){
+            $message = '';
+            foreach ($user->getMessages() as $msg) {
+                $message .= (String)$msg;
+            }
+            $this->logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
+    public function updateMobileByID($userid, $mobile){
+        if(!$this->isUserRegistered($userid)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $user = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        $user->mobile = $mobile;
+        $user->update_time = time();
+
+        if($user->update() == false){
+            $message = '';
+            foreach ($user->getMessages() as $msg) {
+                $message .= (String)$msg;
+            }
+            $this->logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
     }
 
     public function getSecretByName($username){
         $user = self::findFirst([
             'conditions' => 'username = :username:',
             'bind' => ['username' => $username]
+        ]);
+
+        $password = $user == null ? '' : $user->password;
+        $id = $user == null ? '' : $user->user_id;
+
+        return ['password' => $password, 'id' => $id];
+    }
+
+    public function getSecretByMobile($mobile){
+        $user = self::findFirst([
+            'conditions' => 'mobile = :mobile:',
+            'bind' => ['mobile' => $mobile]
         ]);
 
         $password = $user == null ? '' : $user->password;
@@ -115,6 +202,24 @@ class ClientUser extends Model
         ]);
 
         return $user;
+    }
+
+    public function getUserInfomation($userid){
+        $user = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['userid' => $userid]
+        ]);
+
+        return [
+            'username' => $user->username,
+            'realname' => $user->name,
+            'mobile' => $user->mobile,
+            'email' => $user->email,
+            'gender' => $user->gender,
+            'birthday' => $user->birthday,
+            'identity' => $user->identity,
+            'icon' => $user->icon,
+        ];
     }
 
     public function getCompanyidByUserid($userid){
@@ -143,6 +248,17 @@ class ClientUser extends Model
         return $user->username;
     }
 
+    public function isPasswordValidate($userid, $password){
+        $security = Di::getDefault()->get(Services::SECURITY);
+
+        $user = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['userid' => $userid]
+        ]);
+
+        return $security->checkHash($password, $user->password);
+    }
+
     public function validation(){
         if($this->email){
             $this->validate(new EmailValidator(array(
@@ -158,7 +274,6 @@ class ClientUser extends Model
         }
     }
 
-
     private function isMobileRegistered($mobile){
         $users = self::find([
             'conditions' => 'mobile = :mobile:',
@@ -172,6 +287,15 @@ class ClientUser extends Model
         $users = self::findFirst([
             'conditions' => 'username = :username:',
             'bind' => ['username' => $username]
+        ]);
+
+        return sizeof($users) > 0 ? true : false;
+    }
+
+    private function isUserRegistered($userid){
+        $users = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['userid' => $userid]
         ]);
 
         return sizeof($users) > 0 ? true : false;

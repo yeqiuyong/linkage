@@ -107,7 +107,7 @@ class SessionController extends APIControllerBase
         }
 
         $authManager = $this->di->get(Services::AUTH_MANAGER);
-        $session = $authManager->loginWithUsernamePassword(UsernameAdaptor::NAME, $mobile, $password);
+        $session = $authManager->log(UsernameAdaptor::NAME, $mobile, $password);
         $response = [
             'cid' => $cid,
             'token' => $session->getToken(),
@@ -211,6 +211,41 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function forgotPasswordAction(){
+        $mobile = $this->request->getPost('mobile');
+        $password = $this->request->getPost('password');
+        $verifyCode = $this->request->getPost('verify_code');
+
+        if(!isset($mobile)){
+            return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
+        }
+
+        if(!isset($password)){
+            return $this->respondError(ErrorCodes::USER_PASSWORD_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_PASSWORD_NULL]);
+        }
+
+        if(!isset($verifyCode)){
+            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_NULL]);
+        }
+
+        $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+        if(!$this->redis->get($key)){
+            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+        }else{
+            $code = $this->redis->get($key);
+            if($code != $verifyCode){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
+            }
+        }
+
+        try{
+            $user = new ClientUser();
+            $user->updatePasswordByMobile($mobile, $password);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
 
     }
 }

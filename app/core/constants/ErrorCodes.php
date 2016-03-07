@@ -27,6 +27,8 @@ class ErrorCodes
     const DATA_NOTALLOWED = 2070;
 
     // Authentication
+    const AUTH_PASSWORD_INVALID = 3004;
+    const AUTH_IDENTITY_MISS = 3005;
     const AUTH_BADTOKEN = 3006;
     const AUTH_NOUSERNAME = 3007;
     const AUTH_INVALIDTYPE = 3008;
@@ -36,6 +38,7 @@ class ErrorCodes
     const AUTH_EXPIRED = 3030;
 
     // User management
+    const USER_MOBILE_NOTFOUND = 4001;
     const USER_DUPLICATE = 4002;
     const USER_NOTACTIVE = 4003;
     const USER_NOTFOUND = 4004;
@@ -55,6 +58,8 @@ class ErrorCodes
     const USER_INVITE_CODE_EXPIRE = 4018;
     const USER_TYPE_ERROR = 4019;
     const USER_ID_NULL = 4020;
+
+
 
     //Company mangement
     const COMPANY_DEUPLICATE = 5001;
@@ -79,6 +84,8 @@ class ErrorCodes
         self:: DATA_NOTALLOWED => "数据库授权错误",
 
          // Authentication
+        self:: AUTH_PASSWORD_INVALID => "密码不正确",
+        self:: AUTH_IDENTITY_MISS => "缺少用户ID",
         self:: AUTH_BADTOKEN => "无效签名",
         self:: AUTH_NOUSERNAME => "缺少用户名",
         self:: AUTH_INVALIDTYPE => "认证类型错误",
@@ -107,6 +114,7 @@ class ErrorCodes
         self:: USER_INVITE_CODE_EXPIRE => "邀请码过期",
         self:: USER_TYPE_ERROR => "用户类型不合法",
         self:: USER_ID_NULL => "用户ID为空",
+        self:: USER_MOBILE_NOTFOUND => "用户电话不存在",
 
         // Company management
         self:: COMPANY_DEUPLICATE => "注册公司已存在",

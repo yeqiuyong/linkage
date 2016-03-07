@@ -80,7 +80,6 @@ class RegisterController extends FrontendControllerBase
             return $this->response->responseJsonError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
         }
 
-        $cid = 0;
         switch($ctype){
             case '0': $role = LinkageUtils::USER_MANUFACTURE;break;
             case '1': $role = LinkageUtils::USER_TRANSPORTER;break;
@@ -98,7 +97,6 @@ class RegisterController extends FrontendControllerBase
             $user = new ClientUser();
             $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
             $userID = $user->user_id;
-            $cid = $userID;
 
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);

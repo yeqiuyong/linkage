@@ -14,7 +14,7 @@ use Phalcon\Events\Manager as EventsManager;
 
 use Multiple\Plugins\APISecurityPlugin;
 use Multiple\Core\Libraries\AuthenticateManager;
-use Multiple\Core\Auth\UsernameAdaptor;
+use Multiple\Core\Auth\MobileAdaptor;
 use Multiple\Core\Libraries\CustomSerializer;
 use Multiple\Core\Constants\Services;
 
@@ -88,7 +88,7 @@ class Module
 		$di->setShared(Services::AUTH_MANAGER, function () use ($di) {
 
 			$authManager = new AuthenticateManager(60000);
-			$authManager->registerAdaptor(UsernameAdaptor::NAME, new UsernameAdaptor());
+			$authManager->registerAdaptor(MobileAdaptor::NAME, new MobileAdaptor());
 			$authManager->registerTokenParser(new TokenParser("mysecret"));
 
 			return $authManager;
