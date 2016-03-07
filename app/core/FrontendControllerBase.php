@@ -31,6 +31,6 @@ class FrontendControllerBase extends ControllerBase
 
     public function responseJsonData(Array $data = []){
         $response = array("result" => 0, "reason" => "");
-        return $this->response->setJsonContent(array_merge($response,$data));
+        return $this->response->setJsonContent($response);
     }
 }

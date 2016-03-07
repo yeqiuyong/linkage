@@ -17,6 +17,7 @@ use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\LinkageUtils;
 
+use Multiple\Models\Company;
 use Multiple\Models\ClientUser;
 use Multiple\Models\ClientUserRole;
 
@@ -55,10 +56,15 @@ class RegisterController extends FrontendControllerBase
     }
 
     public function registerAction(){
+        $cn = $this->request->getPost('cn');
         $mobile = $this->request->getPost('mobile');
         $password = $this->request->getPost('password');
         $ctype = $this->request->getPost('ctype');
-        $verifyCode = $this->request->getPost('verifyCode');
+        $verifyCode = $this->request->getPost('verify_code');
+
+        if(!isset($cn)){
+            return $this->responseJsonError(ErrorCodes::AUTH_BADTOKEN, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_BADTOKEN]);
+        }
 
         if(!isset($mobile)){
             return $this->responseJsonError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
@@ -76,8 +82,13 @@ class RegisterController extends FrontendControllerBase
             return $this->responseJsonError(ErrorCodes::USER_VERIFY_CODE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_NULL]);
         }
 
-        if(!$this->redis->get($verifyCode)){
-            return $this->response->responseJsonError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
+        $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+        if(!$this->redis->get($key)){
+            return $this->responseJsonError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
+        }
+
+        if($verifyCode != $this->redis->get($key)){
+            return $this->responseJsonError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
         }
 
         switch($ctype){
@@ -92,7 +103,11 @@ class RegisterController extends FrontendControllerBase
             // Start a transaction
             $this->db->begin();
 
-            $companyID =
+            $companyID = $cn - LinkageUtils::INVITE_SECRET;
+            $company = new Company();
+            if($company->isCompanyExist($companyID)){
+                return $this->responseJsonError(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+            }
 
             $user = new ClientUser();
             $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);

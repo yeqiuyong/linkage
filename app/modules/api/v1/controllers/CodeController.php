@@ -90,8 +90,8 @@ class CodeController extends APIControllerBase
             $expire = 60 * 60 * 24;
 
             $user = new ClientUser();
-            $companyID = $user->getCompanyidByUserid($cid);
-            $userName = $user->getUserNameByUserid($cid);
+            $companyID = $user->getCompanyidByUserid($this->cid);
+            $userName = $user->getUserNameByUserid($this->cid);
             $inviteCode = $this->genInviteCode($companyID);
 
             //如果客户端多次调用接口生成校验码，以最后一次校验码为准

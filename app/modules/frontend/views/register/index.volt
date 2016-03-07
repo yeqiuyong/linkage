@@ -8,6 +8,21 @@
 <form id="registerForm" action="" method="post" >
 
     <fieldset>
+        <input type="text" name="cn" id="cn" value="{{ cn }}" hidden="true">
+
+        <div class="control-group">
+            <label class="control-label" for="selectError">注册类型</label>
+
+            <div class="controls">
+                <select id="usertype" name="usertype" data-rel="chosen">
+                    <option value ="0">厂商</option>
+                    <option value ="1">承运商</option>
+                    <option value ="2">司机</option>
+                </select>
+            </div>
+        </div>
+
+
         <div class="control-group">
             <label class="control-label" for="mobile">手机</label>
             <div class="controls">
@@ -62,6 +77,7 @@
     </fieldset>
 </form>
 
+{{ javascript_include('js/jquery.md5.js') }}
 
 <script type="text/javascript">
     $("#get-vcode-btn").click(function(){
@@ -74,7 +90,18 @@
             data: "mobile=" + mobile,
             success:function(data){
                 if(data.result==0){
-                    alert('aaaaa');
+                    var count = 60;
+                    var myCountdown = setInterval(countDown, 1000);
+
+                    function countDown() {
+                        $("#get-vcode-btn").attr("disabled", true);
+                        $("#get-vcode-btn").val(count + " s");
+                        if (count == 0) {
+                            clearInterval(myCountdown);
+                        }
+                        count--;
+                    }
+
                 }else{
                     alert(data.reason);
                 }
@@ -84,19 +111,59 @@
     });
 
     $("#register-form-btn").click(function(){
+        var cn = $("input[id='cn']").val();
+        var mobile = $("input[id='mobile']").val();
+        var password = $("input[id='password']").val();
+        var repeatPassword = $("input[id='repeatPassword']").val();
+        var verifyCode = $("input[id='verifyCode']").val();
+
+        if(cn == null || cn == ''){
+            alert("邀请链接错误！");
+            return;
+        }
+
+        if(password == null || password == ''){
+            alert("请输入密码");
+            return;
+        }
+
+        if(repeatPassword == null || repeatPassword == ''){
+            alert("请确认密码");
+            return;
+        }
+
+        if(verifyCode == null || verifyCode == ''){
+            alert("请输入校验码");
+            return;
+        }
+
+        if(password != repeatPassword){
+            alert("校验密码不一致");
+            return;
+        }
+
+        var pwd = $.md5(password);
+        var userType = $("#usertype").val();
+
         $.ajax({
             type: "post",
             dataType:"json",
             url: "<?php echo $this->url->get('register/register') ?>",
-            data:$("registerForm").serialize(),
+            data: "cn="+cn+"&mobile="+mobile+"&password="+pwd+"&ctype="+userType+"&verify_code="+verifyCode,
             success:function(data){
                 if(data.result==0){
                     window.location.href=data.url;
                 }else{
                     alert(data.reason);
                 }
+            },
+
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
             }
         });
-
     });
+
 </script>

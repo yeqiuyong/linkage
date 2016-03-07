@@ -81,6 +81,15 @@ class Company extends Model
         }
     }
 
+    public function isCompanyExist($companyID){
+        $companies = self::find([
+            'conditions' => 'company_id = :companyID:',
+            'bind' => ['companyID' => $companyID]
+        ]);
+
+        return sizeof($companies) > 0 ? true : false;
+    }
+
     private function isCompanyRegistered($companyName){
         $companies = self::find([
             'conditions' => 'name = :name:',

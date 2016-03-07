@@ -18,7 +18,7 @@ class LinkageUtils
     const VERIFY_PREFIX = 'reg_verfiy_';
     const INVITE_PREFIX = 'reg_invite_';
 
-    const INVITE_SECRET = 13453;
+    const INVITE_SECRET = 137453;
 
     const COMPANY_MANUFACTURE = 0;
     const COMPANY_TRANSPORTER = 1;
