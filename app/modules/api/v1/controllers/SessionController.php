@@ -16,7 +16,7 @@ use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Exception\Exception;
-use Multiple\Core\Auth\UsernameAdaptor;
+use Multiple\Core\Auth\MobileAdaptor;
 
 use Multiple\Models\Company;
 use Multiple\Models\ClientUser;
@@ -78,7 +78,6 @@ class SessionController extends APIControllerBase
             }
         }
 
-        $cid = 0;
         $companyType = $ctype == '0' ? LinkageUtils::COMPANY_MANUFACTURE : LinkageUtils::COMPANY_TRANSPORTER;
         $role = $ctype == '1' ? LinkageUtils::USER_ADMIN_MANUFACTURE : LinkageUtils::USER_ADMIN_TRANSPORTER;
         try{
@@ -107,7 +106,7 @@ class SessionController extends APIControllerBase
         }
 
         $authManager = $this->di->get(Services::AUTH_MANAGER);
-        $session = $authManager->log(UsernameAdaptor::NAME, $mobile, $password);
+        $session = $authManager->loginWithMobilePassword(MobileAdaptor::NAME, $mobile, $password);
         $response = [
             'cid' => $cid,
             'token' => $session->getToken(),

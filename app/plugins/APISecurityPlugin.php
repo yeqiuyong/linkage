@@ -40,15 +40,14 @@ class APISecurityPlugin extends Plugin
 
             //Public area resources
             $publicResources = array(
-                'session'  => array('register4admin', 'test','login'),
-                'code' => array('verifycode', 'invitecode'),
+                'session'  => array('register4admin', 'register4invitecode', 'test','login'),
+                'code' => array('verifycode'),
                 'errors' => array('show'),
 
             );
             foreach ($publicResources as $resource => $actions) {
                 $acl->addResource(new Resource($resource), $actions);
             }
-
 
             //Grant access to private area to role Users
             foreach ($publicResources as $resource => $actions) {
