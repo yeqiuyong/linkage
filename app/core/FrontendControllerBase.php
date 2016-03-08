@@ -20,17 +20,17 @@ class FrontendControllerBase extends ControllerBase
     }
 
     public function responseJsonOK(){
-        $data = array("result" => 0, "reason" => "");
-        return $this->response->setJsonContent($data);
+        $response = ['code' => 0, 'stackTrace' => '', 'message' => ''];
+        return $this->response->setJsonContent($response);
     }
 
-    public function responseJsonError($result, $reason){
-        $data = array("result" => $result, "reason" => $reason);
-        return$this->response->setJsonContent($data);
+    public function responseJsonError($code, $message){
+        $response = ['code' => $code, 'stackTrace' => '', 'message' => $message];
+        return$this->response->setJsonContent($response);
     }
 
     public function responseJsonData(Array $data = []){
         $response = array("result" => 0, "reason" => "");
-        return $this->response->setJsonContent($response);
+        return $this->response->setJsonContent(array_merge($response, $data));
     }
 }

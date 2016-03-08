@@ -120,7 +120,6 @@ class CodeController extends APIControllerBase
             return $this->respondError(ErrorCodes::USER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ID_NULL]);
         }
 
-        $url = '';
         try{
             $expire = 60 * 60 * 24;
 
@@ -141,7 +140,7 @@ class CodeController extends APIControllerBase
             'URL' => $url,
         ];
 
-        return $this->respondData($response);
+        return $this->respondArray($response);
 
     }
 

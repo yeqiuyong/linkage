@@ -106,7 +106,7 @@ class ProfileController extends APIControllerBase
 
         try{
             $user = new ClientUser();
-            $user->updatePasswordByID($cid, $newPassword);
+            $user->updatePasswordByID($this->cid, $newPassword);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());

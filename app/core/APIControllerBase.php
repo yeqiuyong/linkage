@@ -96,7 +96,7 @@ class APIControllerBase extends Controller
         $response['stackTrace'] = '';
         $response['message'] = '';
 
-        $response = ['result' => $array];
+        $response['result'] = $array;
 
         return $this->respond($response);
     }

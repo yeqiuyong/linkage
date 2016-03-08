@@ -68,15 +68,15 @@ class SessionController extends APIControllerBase
             return $this->respondError(ErrorCodes::USER_COMPANY_NAME_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_COMPANY_NAME_NULL]);
         }
 
-//        $key = LinkageUtils::VERIFY_PREFIX.$mobile;
-//        if(!$this->redis->get($key)){
-//            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
-//        }else{
-//            $code = $this->redis->get($key);
-//            if($code != $verifyCode){
-//                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
-//            }
-//        }
+        $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+        if(!$this->redis->get($key)){
+            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+        }else{
+            $code = $this->redis->get($key);
+            if($code != $verifyCode){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
+            }
+        }
 
         $companyType = $ctype == '0' ? LinkageUtils::COMPANY_MANUFACTURE : LinkageUtils::COMPANY_TRANSPORTER;
         $role = $ctype == '1' ? LinkageUtils::USER_ADMIN_MANUFACTURE : LinkageUtils::USER_ADMIN_TRANSPORTER;
@@ -91,7 +91,6 @@ class SessionController extends APIControllerBase
             $user = new ClientUser();
             $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_PENDING, $companyID);
             $userID = $user->user_id;
-            $cid = $userID;
 
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);
@@ -105,7 +104,7 @@ class SessionController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        $response = $this->getTokenResponse($cid, $mobile, $password);
+        $response = $this->getTokenResponse($userID, $mobile, $password);
 
         return $this->respondArray($response);
 

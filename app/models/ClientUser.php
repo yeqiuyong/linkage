@@ -224,7 +224,7 @@ class ClientUser extends Model
 
     public function getCompanyidByUserid($userid){
         $user = self::findFirst([
-            'conditions' => 'user_id = :$userid:',
+            'conditions' => 'user_id = :userid:',
             'bind' => ['userid' => $userid]
         ]);
 
@@ -237,7 +237,7 @@ class ClientUser extends Model
 
     public function getUserNameByUserid($userid){
         $user = self::findFirst([
-            'conditions' => 'user_id = :$userid:',
+            'conditions' => 'user_id = :userid:',
             'bind' => ['userid' => $userid]
         ]);
 

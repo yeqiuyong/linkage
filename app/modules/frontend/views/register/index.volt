@@ -89,7 +89,7 @@
             url: "<?php echo $this->url->get('register/verifycode') ?>",
             data: "mobile=" + mobile,
             success:function(data){
-                if(data.result==0){
+                if(data.code == 0){
                     var count = 60;
                     var myCountdown = setInterval(countDown, 1000);
 
@@ -103,7 +103,7 @@
                     }
 
                 }else{
-                    alert(data.reason);
+                    alert(data.message);
                 }
             }
         });
@@ -151,10 +151,10 @@
             url: "<?php echo $this->url->get('register/register') ?>",
             data: "cn="+cn+"&mobile="+mobile+"&password="+pwd+"&ctype="+userType+"&verify_code="+verifyCode,
             success:function(data){
-                if(data.result==0){
+                if(data.code==0){
                     window.location.href=data.url;
                 }else{
-                    alert(data.reason);
+                    alert(data.message);
                 }
             },
 
