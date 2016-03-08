@@ -10,13 +10,13 @@ namespace Multiple\API\Controllers;
 
 use Phalcon\Di;
 
+use Multiple\Core\Auth\MobileAdaptor;
 use Multiple\Core\APIControllerBase;
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Exception\Exception;
-use Multiple\Core\Auth\MobileAdaptor;
 
 use Multiple\Models\Company;
 use Multiple\Models\ClientUser;
@@ -68,15 +68,15 @@ class SessionController extends APIControllerBase
             return $this->respondError(ErrorCodes::USER_COMPANY_NAME_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_COMPANY_NAME_NULL]);
         }
 
-        $key = LinkageUtils::VERIFY_PREFIX.$mobile;
-        if(!$this->redis->get($key)){
-            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
-        }else{
-            $code = $this->redis->get($key);
-            if($code != $verifyCode){
-                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
-            }
-        }
+//        $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+//        if(!$this->redis->get($key)){
+//            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+//        }else{
+//            $code = $this->redis->get($key);
+//            if($code != $verifyCode){
+//                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
+//            }
+//        }
 
         $companyType = $ctype == '0' ? LinkageUtils::COMPANY_MANUFACTURE : LinkageUtils::COMPANY_TRANSPORTER;
         $role = $ctype == '1' ? LinkageUtils::USER_ADMIN_MANUFACTURE : LinkageUtils::USER_ADMIN_TRANSPORTER;
@@ -105,15 +105,9 @@ class SessionController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        $authManager = $this->di->get(Services::AUTH_MANAGER);
-        $session = $authManager->loginWithMobilePassword(MobileAdaptor::NAME, $mobile, $password);
-        $response = [
-            'cid' => $cid,
-            'token' => $session->getToken(),
-            'expires' => $session->getExpirationTime()
-        ];
+        $response = $this->getTokenResponse($cid, $mobile, $password);
 
-        return $this->respondData($response);
+        return $this->respondArray($response);
 
     }
 
@@ -149,7 +143,6 @@ class SessionController extends APIControllerBase
             return $this->respondError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
         }
 
-        $cid = 0;
         switch($ctype){
             case '0': $role = LinkageUtils::USER_MANUFACTURE;break;
             case '1': $role = LinkageUtils::USER_TRANSPORTER;break;
@@ -163,11 +156,14 @@ class SessionController extends APIControllerBase
             $this->db->begin();
 
             $companyID = $this->redis->get($inviteCode);
+            $company = new Company();
+            if(!$company->isCompanyExist($companyID)){
+                return $this->respondError(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+            }
 
             $user = new ClientUser();
             $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
             $userID = $user->user_id;
-            $cid = $userID;
 
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);
@@ -181,15 +177,9 @@ class SessionController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        $authManager = $this->di->get(Services::AUTH_MANAGER);
-        $session = $authManager->loginWithUsernamePassword(UsernameAdaptor::NAME, $mobile, $password);
-        $response = [
-            'cid' => $cid,
-            'token' => $session->getToken(),
-            'expires' => $session->getExpirationTime()
-        ];
+        $response = $this->getTokenResponse($userID, $mobile, $password);
 
-        return $this->respondData($response);
+        return $this->respondArray($response);
 
     }
 
@@ -246,5 +236,18 @@ class SessionController extends APIControllerBase
 
         return $this->respondOK();
 
+    }
+
+
+    private function getTokenResponse($cid, $mobile, $password){
+        $authManager = $this->di->get(Services::AUTH_MANAGER);
+        $session = $authManager->loginWithMobilePassword(MobileAdaptor::NAME, $mobile, $password);
+        $response = [
+            'cid' => $cid,
+            'token' => $session->getToken(),
+            'expires' => $session->getExpirationTime()
+        ];
+
+        return $response;
     }
 }

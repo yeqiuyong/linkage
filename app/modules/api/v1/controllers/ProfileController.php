@@ -40,7 +40,7 @@ class ProfileController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($info, 'profile');
+        return $this->respondArray($info);
     }
 
     /**

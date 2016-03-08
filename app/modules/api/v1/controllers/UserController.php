@@ -32,42 +32,7 @@ class UserController extends APIControllerBase
 
     }
 
-    /**
-     * @title("Authenticate")
-     * @description("Authenticate user")
-     * @headers({
-     *      "Authorization": "'Basic sd9u19221934y='"
-     * })
-     * @requestExample("POST /users/authenticate")
-     * @response("Data object or Error object")
-     */
-    public function registerbynameAction(){
-        $username = $this->request->getPost('username');
-        $password = $this->request->getPost('password');
-        $smscode = $this->request->getPost('smscode');
 
-
-        $user = new ClientUser();
-
-        if ($user->registerByName($username, $password) == false) {
-            $response = [];
-            foreach ($user->getMessages() as $message) {
-                array_push($response, (String)$message);
-            }
-            return $this->respondArray($response, 'data');
-        } else {
-            $authManager = $this->di->get(Services::AUTH_MANAGER);
-            $session = $authManager->loginWithUsernamePassword(UsernameAdaptor::NAME, $username, $password);
-            $response = [
-                'token' => $session->getToken(),
-                'expires' => $session->getExpirationTime()
-            ];
-
-            return $this->respondArray($response, 'data');
-        }
-
-
-    }
 
     /**
      * @title("Authenticate")
@@ -91,7 +56,7 @@ class UserController extends APIControllerBase
                 'expires' => $session->getExpirationTime()
             ];
 
-            return $this->respondArray($response, 'data');
+            return $this->respondArray($response);
 
         }catch (Exception $e){
             $this->dispatcher->forward(array(
@@ -137,6 +102,6 @@ class UserController extends APIControllerBase
 
         ];
 
-        $this->respondArray($response,'test');
+        $this->respondArray($response);
     }
 }

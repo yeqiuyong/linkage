@@ -90,38 +90,34 @@ class APIControllerBase extends Controller
         $this->token = $this->request->getPost('token');
     }
 
-    public function respondData($data){
-        $data['result'] = 0;
-        $data['reason'] = '';
 
-        return $this->respond($data);
-    }
+    public function respondArray($array){
+        $response['code'] = 0;
+        $response['stackTrace'] = '';
+        $response['message'] = '';
 
-    public function respondArray($array, $key){
-        $response['result'] = 0;
-        $response['reason'] = '';
-
-        $response = [$key => $array];
+        $response = ['result' => $array];
 
         return $this->respond($response);
     }
 
     public function respondOK(){
-        $response = ['result' => 0, 'reason' => ''];
+        $response = ['code' => 0, 'stackTrace' => '', 'message' => ''];
 
         return $this->respond($response);
     }
 
-    public function respondError($result, $reason){
-        $response = ['result' => $result, 'reason' => $reason];
+    public function respondError($code, $message){
+        $response = ['code' => $code, 'stackTrace' => '', 'message' => $message];
 
         return $this->respond($response);
     }
 
     public function responseItemOK($item, $callback, $resource_key){
         $response = $this->respondItem($item, $callback, $resource_key);
-        $response['result'] = 0;
-        $response['reason'] = '';
+        $response['code'] = 0;
+        $response['stackTrace'] = '';
+        $response['message'] = '';
 
         return $this->respond($response);
     }
