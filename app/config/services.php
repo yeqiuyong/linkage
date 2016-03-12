@@ -15,6 +15,7 @@ use Multiple\Core\Constants\Services as AppServices;
 use Multiple\Core\Libraries\Elements;
 use Multiple\Core\Libraries\Logger;
 use Multiple\Core\Libraries\SMS;
+use Multiple\Core\Libraries\UPyun;
 
 
 /**
@@ -114,14 +115,20 @@ $di->set(
 /**
  * Register a Model manager service
  */
-$di->set(
-	AppServices::MODELS_MANAGER, function(){
+$di->set(AppServices::MODELS_MANAGER, function(){
 		return new Manager();
 });
 
 /**
  * Register a SMS Service
  */
-$di->set(AppServices::SMS, function() {
+$di->setShared(AppServices::SMS, function() {
 	return new SMS();
+});
+
+/**
+ * Register a Upyun Service
+ */
+$di->setShared(AppServices::UPYUN, function() {
+	return new UPyun();
 });

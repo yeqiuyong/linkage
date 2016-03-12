@@ -214,6 +214,7 @@ CREATE TABLE `linkage_company` (
   `province` VARCHAR(40)  DEFAULT NULL,
   `city` VARCHAR(40)  DEFAULT NULL,
   `email` VARCHAR(70) DEFAULT NULL,
+  `home_page` VARCHAR(120)  NOT NULL DEFAULT '网页',
   `service_phone_1` VARCHAR(30)  NOT NULL DEFAULT '' COMMENT '客户电话1',
   `service_phone_2` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话2',
   `service_phone_3` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话3',

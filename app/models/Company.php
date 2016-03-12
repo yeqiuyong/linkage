@@ -60,14 +60,111 @@ class Company extends Model
         }
     }
 
-    public function moddify($name){
+    public function modifyNameById($companyId, $name, $info = array() ){
         $company = self::findFirst([
-            'conditions' => 'name = :name:',
-            'bind' => ['name' => $name]
+            'conditions' => 'company_id = :companyId:',
+            'bind' => ['companyId' => $companyId]
         ]);
 
-        if(!isset($company)){
+        if(!isset($company->company_id)){
             throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+        }
+
+        if(empty($info['name'])){
+            $company->name = $name;
+        }
+
+        if(empty($info['contact_name'])){
+            $company->contact_name = $info['contact_name'];
+        }
+
+        if(empty($info['address'])){
+            $company->address = $info['address'];
+        }
+
+        if(empty($info['email'])){
+            $company->email = $info['email'];
+        }
+
+        if(empty($info['home_page'])){
+            $company->home_page = $info['home_page'];
+        }
+
+        if(empty($info['description'])){
+            $company->description = $info['description'];
+        }
+
+        if(empty($info['phone_1'])){
+            $company->phone_1 = $info['phone_1'];
+        }
+
+        if(empty($info['phone_2'])){
+            $company->phone_2 = $info['phone_2'];
+        }
+
+        if(empty($info['phone_3'])){
+            $company->phone_3 = $info['phone_3'];
+        }
+
+        if(empty($info['phone_4'])){
+            $company->phone_4 = $info['phone_4'];
+        }
+
+        if($company->update() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg;
+            }
+            $this->logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
+    public function modifyById($companyId, $info = array() ){
+        $company = self::findFirst([
+            'conditions' => 'company_id = :companyId:',
+            'bind' => ['companyId' => $companyId]
+        ]);
+
+        if(!isset($company->company_id)){
+            throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+        }
+
+        if(empty($info['contact_name'])){
+            $company->contact_name = $info['contact_name'];
+        }
+
+        if(empty($info['address'])){
+            $company->address = $info['address'];
+        }
+
+        if(empty($info['email'])){
+            $company->email = $info['email'];
+        }
+
+        if(empty($info['home_page'])){
+            $company->home_page = $info['home_page'];
+        }
+
+        if(empty($info['description'])){
+            $company->description = $info['description'];
+        }
+
+        if(empty($info['phone_1'])){
+            $company->phone_1 = $info['phone_1'];
+        }
+
+        if(empty($info['phone_2'])){
+            $company->phone_2 = $info['phone_2'];
+        }
+
+        if(empty($info['phone_3'])){
+            $company->phone_3 = $info['phone_3'];
+        }
+
+        if(empty($info['phone_4'])){
+            $company->phone_4 = $info['phone_4'];
         }
 
         if($company->update() == false){

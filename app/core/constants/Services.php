@@ -42,6 +42,7 @@ class Services
     const ELEMENTS = 'elements';
     const LOGGER = 'logger';
     const SMS = 'sms';
+    const UPYUN = 'ypyun';
 
     // PhalconRest
     const AUTH_MANAGER = 'authManager';

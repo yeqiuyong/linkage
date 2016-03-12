@@ -12,6 +12,10 @@ class ErrorCodes
 {
     // General
     const GEN_SYSTEM = 9999;
+    const GEN_UPLOAD_FILE_NOT_FOUND = 9998;
+    const GEN_UPLOAD_FILE_SIZE_ERROR = 9997;
+    const GEN_UPLOAD_FILE_TYPE_ERROR = 9996;
+    const GEN_UPLOAD_UPYUN_ERROR = 9996;
 
     // Data
     const DATA_DUPLICATE = 2001;
@@ -58,7 +62,7 @@ class ErrorCodes
     const USER_INVITE_CODE_EXPIRE = 4018;
     const USER_TYPE_ERROR = 4019;
     const USER_ID_NULL = 4020;
-
+    const USER_NOT_ADMIN = 4021;
 
 
     //Company mangement
@@ -68,6 +72,9 @@ class ErrorCodes
     public static $MESSAGE = [
         // General
         self::GEN_SYSTEM => "系统通用错误",
+        self::GEN_UPLOAD_FILE_NOT_FOUND => "上存文件不存在",
+        self::GEN_UPLOAD_FILE_SIZE_ERROR => "上传文件大小错误",
+        self::GEN_UPLOAD_FILE_TYPE_ERROR => "上传文件类型错误",
 
         // Data
         self:: DATA_DUPLICATE => "数据重复",
@@ -115,6 +122,7 @@ class ErrorCodes
         self:: USER_TYPE_ERROR => "用户类型不合法",
         self:: USER_ID_NULL => "用户ID为空",
         self:: USER_MOBILE_NOTFOUND => "用户电话不存在",
+        self:: USER_NOT_ADMIN => "非管理员",
 
         // Company management
         self:: COMPANY_DEUPLICATE => "注册公司已存在",

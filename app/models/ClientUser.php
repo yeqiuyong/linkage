@@ -15,6 +15,7 @@ use Phalcon\Mvc\Model\Validator\Uniqueness as UniquenessValidator;
 
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Exception\DataBaseException;
 use Multiple\Core\Exception\UserOperationException;
 
@@ -272,6 +273,18 @@ class ClientUser extends Model
         if ($this->validationHasFailed() == true) {
             return false;
         }
+    }
+
+    public function isAdmin($userid){
+        $user = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['userid' => $userid]
+        ]);
+
+        $roleId = $user->user_role->role_id;
+
+        return ($roleId == LinkageUtils::USER_ADMIN_MANUFACTURE || $roleId == LinkageUtils::USER_ADMIN_TRANSPORTER) ? true : false;
+
     }
 
     private function isMobileRegistered($mobile){

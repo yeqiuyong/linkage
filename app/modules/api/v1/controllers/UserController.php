@@ -44,27 +44,7 @@ class UserController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function loginAction(){
-        $username = $this->request->getPost('username');
-        $password = $this->request->getPost('password');
 
-        try {
-            $authManager = $this->di->get(Services::AUTH_MANAGER);
-            $session = $authManager->loginWithUsernamePassword(UsernameAdaptor::NAME, $username, $password);
-
-            $response = [
-                'token' => $session->getToken(),
-                'expires' => $session->getExpirationTime()
-            ];
-
-            return $this->respondArray($response);
-
-        }catch (Exception $e){
-            $this->dispatcher->forward(array(
-                'controller' => 'errors',
-                'action'     => 'show',
-                "params" => array("code" => $e->getCode(), "message" => $e->getMessage()),
-            ));
-        }
     }
 
 

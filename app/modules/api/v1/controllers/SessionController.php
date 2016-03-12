@@ -189,7 +189,21 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function loginAction(){
+        $mobile = $this->request->getPost('mobile');
+        $password = $this->request->getPost('password');
 
+        try {
+            $authManager = $this->di->get(Services::AUTH_MANAGER);
+            $session = $authManager->loginWithMobilePassword(MobileAdaptor::NAME, $mobile, $password);
+            $userid = $session->getIdentity();
+
+            $response = $this->getTokenResponse($userid, $mobile, $password);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($response);
     }
 
     /**
