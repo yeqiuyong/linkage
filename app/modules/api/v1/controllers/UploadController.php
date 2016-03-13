@@ -13,6 +13,8 @@ use Phalcon\Di;
 use Multiple\Core\APIControllerBase;
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Exception\UploadException;
+use Multiple\Models\Company;
+use Multiple\Models\ClientUser;
 
 class UploadController extends APIControllerBase
 {
@@ -38,15 +40,18 @@ class UploadController extends APIControllerBase
         return $this->respondArray(['file' => $FileNames]);
     }
 
-    public function uploadFileAction()
+    public function userIconAction()
     {
         $this->upyun = Di::getDefault()->get(Services::UPYUN);
 
         // Check if the user has uploaded files
         if ($this->request->hasFiles()) {
             try{
-                $file = $this->request->getUploadedFiles();
+                $file = $this->request->getUploadedFiles()[0];
                 $fileName = $this->upyun->uploadImage($file);
+
+                $user = new ClientUser();
+                $user->updateIconById($this->cid, $fileName);
 
             }catch (UploadException $e){
                 $this->respondError($e->getCode(), $e->getMessage());
@@ -54,7 +59,33 @@ class UploadController extends APIControllerBase
 
         }
 
-        return $this->respondArray(['file' => $fileName]);
+        return $this->respondArray(['icon' => $fileName]);
+    }
+
+    public function companyIconAction()
+    {
+        $this->upyun = Di::getDefault()->get(Services::UPYUN);
+
+        // Check if the user has uploaded files
+        if ($this->request->hasFiles()) {
+            try{
+                $file = $this->request->getUploadedFiles()[0];
+                $fileName = $this->upyun->uploadImage($file);
+
+                $user = new ClientUser();
+                $companyId = $user->getCompanyidByUserid($this->cid);
+
+                $company = new Company();
+                $company->updateIconById($companyId, $fileName);
+
+
+            }catch (UploadException $e){
+                $this->respondError($e->getCode(), $e->getMessage());
+            }
+
+        }
+
+        return $this->respondArray(['icon' => $fileName]);
     }
 
 }

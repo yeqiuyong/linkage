@@ -178,6 +178,30 @@ class Company extends Model
         }
     }
 
+    public function updateIconById($companyId, $logo){
+        if(!$this->isCompanyExist($companyId)){
+            throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+        }
+
+        $company = self::findFirst([
+            'conditions' => 'company_id = :companyID:',
+            'bind' => ['companyID' => $companyId]
+        ]);
+
+        $company->logo = $logo;
+        $company->update_time = time();
+
+        if($company->update() == false){
+            $message = '';
+            foreach ($company->getMessages() as $msg) {
+                $message .= (String)$msg;
+            }
+            $this->logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function isCompanyExist($companyID){
         $companies = self::find([
             'conditions' => 'company_id = :companyID:',

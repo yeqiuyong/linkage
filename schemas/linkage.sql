@@ -221,7 +221,7 @@ CREATE TABLE `linkage_company` (
   `service_phone_4` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话4',
   `description` TEXT DEFAULT null COMMENT '企业简介',
   `remark` TEXT DEFAULT NULL COMMENT '备注',
-  `logo` VARCHAR(64) DEFAULT '' COMMENT '企业logo',
+  `logo` VARCHAR(200) DEFAULT '' COMMENT '企业logo',
   `create_time` INT(11) NOT NULL DEFAULT 0,
   `update_time` INT(11) NOT NULL DEFAULT 0,
   `create_by` INT(11) NOT NULL DEFAULT 0 COMMENT '创建人用户id',

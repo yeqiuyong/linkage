@@ -172,6 +172,30 @@ class ClientUser extends Model
         }
     }
 
+    public function updateIconById($userid, $icon){
+        if(!$this->isUserRegistered($userid)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $user = self::findFirst([
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        $user->icon = $icon;
+        $user->update_time = time();
+
+        if($user->update() == false){
+            $message = '';
+            foreach ($user->getMessages() as $msg) {
+                $message .= (String)$msg;
+            }
+            $this->logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function getSecretByName($username){
         $user = self::findFirst([
             'conditions' => 'username = :username:',
