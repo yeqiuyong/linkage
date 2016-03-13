@@ -48,40 +48,5 @@ class UserController extends APIControllerBase
     }
 
 
-    /**
-     * @title("Me")
-     * @description("Get the current user")
-     * @includeTypes({
-     *      "accounts": "Adds accounts object to the response"
-     * })
-     * @requestExample("GET /users/me")
-     * @response("User object or Error object")
-     */
-    public function meAction()
-    {
-//        return $this->respondItem($this->user, new \UserTransformer, 'user');
-        $authManager = $this->di->get(Services::AUTH_MANAGER);
-        //$token = $authManager->getSession()->getToken();
-        $response = [
-            'token' => strlen($this->token),
-            'expires' => 'caaaaccc'
-        ];
-
-        $this->logger->debug('dfaefa');
-        $this->respondArray($response,'test');
-    }
-
-    public function testAction(){
-        $redis = $this->di->get(Services::REDIS);
-
-       // $redis->set("aa", "aaadda");
-       // $redis->lpush('pushdaemon', "dddd");
-
-        $response = [
-            'token' => $redis->llen('pushdaemon'),
-
-        ];
-
-        $this->respondArray($response);
-    }
+   
 }
