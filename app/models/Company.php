@@ -20,7 +20,6 @@ use Multiple\Core\Exception\UserOperationException;
 
 class Company extends Model
 {
-    private $logger;
 
     public function initialize(){
         $this->setSource("linkage_company");
@@ -28,7 +27,6 @@ class Company extends Model
         $this->hasMany('company_id', 'Multiple\Models\ClientUser', 'company_id', array(  'alias' => 'users',
             'reusable' => true ));
 
-        $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
     public function add($name, $type){
@@ -54,7 +52,8 @@ class Company extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -70,52 +69,53 @@ class Company extends Model
             throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
         }
 
-        if(empty($info['name'])){
+        if(!empty($info['name'])){
             $company->name = $name;
         }
 
-        if(empty($info['contact_name'])){
+        if(!empty($info['contact_name'])){
             $company->contact_name = $info['contact_name'];
         }
 
-        if(empty($info['address'])){
+        if(!empty($info['address'])){
             $company->address = $info['address'];
         }
 
-        if(empty($info['email'])){
+        if(!empty($info['email'])){
             $company->email = $info['email'];
         }
 
-        if(empty($info['home_page'])){
+        if(!empty($info['home_page'])){
             $company->home_page = $info['home_page'];
         }
 
-        if(empty($info['description'])){
+        if(!empty($info['description'])){
             $company->description = $info['description'];
         }
 
-        if(empty($info['phone_1'])){
+        if(!empty($info['phone_1'])){
             $company->phone_1 = $info['phone_1'];
         }
 
-        if(empty($info['phone_2'])){
+        if(!empty($info['phone_2'])){
             $company->phone_2 = $info['phone_2'];
         }
 
-        if(empty($info['phone_3'])){
+        if(!empty($info['phone_3'])){
             $company->phone_3 = $info['phone_3'];
         }
 
-        if(empty($info['phone_4'])){
+        if(!empty($info['phone_4'])){
             $company->phone_4 = $info['phone_4'];
         }
 
         if($company->update() == false){
             $message = '';
-            foreach ($this->getMessages() as $msg) {
+            foreach ($company->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -131,31 +131,31 @@ class Company extends Model
             throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
         }
 
-        if(empty($info['contact_name'])){
+        if(!empty($info['contact_name'])){
             $company->contact_name = $info['contact_name'];
         }
 
-        if(empty($info['address'])){
+        if(!empty($info['address'])){
             $company->address = $info['address'];
         }
 
-        if(empty($info['email'])){
+        if(!empty($info['email'])){
             $company->email = $info['email'];
         }
 
-        if(empty($info['home_page'])){
+        if(!empty($info['home_page'])){
             $company->home_page = $info['home_page'];
         }
 
-        if(empty($info['description'])){
+        if(!empty($info['description'])){
             $company->description = $info['description'];
         }
 
-        if(empty($info['phone_1'])){
+        if(!empty($info['phone_1'])){
             $company->phone_1 = $info['phone_1'];
         }
 
-        if(empty($info['phone_2'])){
+        if(!empty($info['phone_2'])){
             $company->phone_2 = $info['phone_2'];
         }
 
@@ -163,16 +163,17 @@ class Company extends Model
             $company->phone_3 = $info['phone_3'];
         }
 
-        if(empty($info['phone_4'])){
+        if(!empty($info['phone_4'])){
             $company->phone_4 = $info['phone_4'];
         }
 
         if($company->update() == false){
             $message = '';
-            foreach ($this->getMessages() as $msg) {
+            foreach ($company->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -196,10 +197,40 @@ class Company extends Model
             foreach ($company->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
+    }
+
+    public function getCompanyInformation($companyId){
+        $company = self::findFirst([
+            'conditions' => 'company_id = :companyID:',
+            'bind' => ['companyID' => $companyId]
+        ]);
+
+
+        return [
+            'name' => $company->name,
+            'level' => $company->level,
+            'credit' => $company->credit,
+            'type' => $company->type,
+            'contactor' => $company->contactor,
+            'address' => $company->address,
+            'province' => $company->province,
+            'city' => $company->city,
+            'email' => $company->email,
+            'home_page' => $company->home_page,
+            'service_phone_1' => $company->service_phone_1,
+            'service_phone_2' => $company->service_phone_2,
+            'service_phone_3' => $company->service_phone_3,
+            'service_phone_4' => $company->service_phone_4,
+            'description' => $company->description,
+            'remark' => $company->remark,
+            'logo' => $company->logo,
+        ];
+
     }
 
     public function isCompanyExist($companyID){

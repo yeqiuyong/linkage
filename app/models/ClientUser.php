@@ -23,8 +23,6 @@ class ClientUser extends Model
 {
     public $email;
 
-    private $logger;
-
     public function initialize(){
         $this->setSource("linkage_clientuser");
 
@@ -33,8 +31,6 @@ class ClientUser extends Model
 
         $this->BelongsTo('company_id', 'Multiple\Models\Company', 'company_id', array(  'alias' => 'company',
             'reusable' => true ));
-
-        $this->logger = Di::getDefault()->get(Services::LOGGER);
 
     }
 
@@ -90,7 +86,8 @@ class ClientUser extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -113,10 +110,11 @@ class ClientUser extends Model
 
         if($user->update() == false){
             $message = '';
-            foreach ($this->getMessages() as $msg) {
+            foreach ($user->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -142,7 +140,8 @@ class ClientUser extends Model
             foreach ($user->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -166,7 +165,8 @@ class ClientUser extends Model
             foreach ($user->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -190,10 +190,60 @@ class ClientUser extends Model
             foreach ($user->getMessages() as $msg) {
                 $message .= (String)$msg;
             }
-            $this->logger->fatal($message);
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
+    }
+
+    public function updateProfile($userid, $info = array()){
+        if(!$this->isUserRegistered($userid)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $user = self::findFirst([
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        //$user->mobile = empty($info['mobile']) ? $user->mobile : $info['mobile'];
+
+        if(!empty($info['username'])){
+            $user->username = $info['username'];
+        }
+
+        if(!empty($info['name'])){
+            $user->name = $info['name'];
+        }
+
+        if(!empty($info['email'])){
+            $user->email = $info['email'];
+        }
+
+        if(!empty($info['gender'])){
+            $user->gender = $info['gender'];
+        }
+
+        if(!empty($info['birthday'])){
+            $user->birthday = $info['birthday'];
+        }
+
+        if(!empty($info['identity'])){
+            $user->identity = $info['identity'];
+        }
+
+        if($user->update() == false){
+            $message = '';
+            foreach ($user->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+
     }
 
     public function getSecretByName($username){
@@ -230,6 +280,10 @@ class ClientUser extends Model
     }
 
     public function getUserInfomation($userid){
+        if(!$this->isUserRegistered($userid)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
         $user = self::findFirst([
             'conditions' => 'user_id = :userid:',
             'bind' => ['userid' => $userid]
@@ -244,6 +298,7 @@ class ClientUser extends Model
             'birthday' => $user->birthday,
             'identity' => $user->identity,
             'icon' => $user->icon,
+            'company_id' =>$user->company_id,
         ];
     }
 
@@ -284,21 +339,6 @@ class ClientUser extends Model
         return $security->checkHash($password, $user->password);
     }
 
-    public function validation(){
-        if($this->email){
-            $this->validate(new EmailValidator(array(
-                'field' => 'email'
-            )));
-        }
-        $this->validate(new UniquenessValidator(array(
-            'field' => 'username',
-            'message' => 'Sorry, That username is already taken'
-        )));
-        if ($this->validationHasFailed() == true) {
-            return false;
-        }
-    }
-
     public function isAdmin($userid){
         $user = self::findFirst([
             'conditions' => 'user_id = :userid:',
@@ -330,11 +370,26 @@ class ClientUser extends Model
     }
 
     private function isUserRegistered($userid){
-        $users = self::findFirst([
+        $users = self::find([
             'conditions' => 'user_id = :userid:',
             'bind' => ['userid' => $userid]
         ]);
 
         return sizeof($users) > 0 ? true : false;
+    }
+
+    public function validation(){
+        if($this->email){
+            $this->validate(new EmailValidator(array(
+                'field' => 'email'
+            )));
+        }
+        $this->validate(new UniquenessValidator(array(
+            'field' => 'username',
+            'message' => 'Sorry, That username is already taken'
+        )));
+        if ($this->validationHasFailed() == true) {
+            return false;
+        }
     }
 }

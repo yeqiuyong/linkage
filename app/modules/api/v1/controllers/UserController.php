@@ -33,20 +33,4 @@ class UserController extends APIControllerBase
     }
 
 
-
-    /**
-     * @title("Authenticate")
-     * @description("Authenticate user")
-     * @headers({
-     *      "Authorization": "'Basic sd9u19221934y='"
-     * })
-     * @requestExample("POST /users/authenticate")
-     * @response("Data object or Error object")
-     */
-    public function loginAction(){
-
-    }
-
-
-
 }

@@ -9,10 +9,10 @@
 namespace Multiple\API\Controllers;
 
 use Multiple\Core\Exception\Exception;
-
 use Multiple\Core\APIControllerBase;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Models\ClientUser;
+use Multiple\Models\Company;
 
 class ProfileController extends APIControllerBase
 {
@@ -20,6 +20,41 @@ class ProfileController extends APIControllerBase
         parent::initialize();
     }
 
+    /**
+     * @title("main")
+     * @description("user main page")
+     * @requestExample("POST /profile/main")
+     * @response("Data object or Error object")
+     */
+    public function mainAction(){
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try{
+            $user = new ClientUser();
+            $userInfo = $user->getUserInfomation($this->cid);
+            $isAdmin =$user->isAdmin($this->cid) ? '1' : '0';
+
+            $company = new Company();
+            $companyInfo = $company->getCompanyInformation($userInfo['company_id']);
+
+            $result = [
+              'company_name' => $companyInfo['name'],
+                'company_icon' => $companyInfo['logo'],
+                'username' => isset($userInfo['username']) ? $userInfo['username'] : '',
+                'realname' => isset($userInfo['realname']) ? $userInfo['realname'] : '',
+                'mobile' => $userInfo['mobile'],
+                'user_icon' => $userInfo['icon'],
+                'is_admin' => $isAdmin,
+            ];
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($result);
+    }
 
     /**
      * @title("information")
@@ -50,6 +85,34 @@ class ProfileController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function modInformationAction(){
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        $username = $this->request->getPost('username');
+        $name = $this->request->getPost('realname');
+        $email = $this->request->getPost('email');
+        $gender = $this->request->getPost('gender');
+        $birthday = $this->request->getPost('birthday');
+        $identity = $this->request->getPost('identity');
+
+        $info = [
+            'username' => $username,
+            'name' =>$name,
+            'email' => $email,
+            'gender' => $gender,
+            'birthday' => $birthday,
+            'identity' => $identity,
+        ];
+
+        try{
+            $user = new ClientUser();
+            $user->updateProfile($this->cid, $info);
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
 
     }
 

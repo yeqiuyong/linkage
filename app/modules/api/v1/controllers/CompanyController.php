@@ -42,7 +42,7 @@ class CompanyController extends APIControllerBase
 
         $info = [
         'contact_name' => $contact_name,
-        'address' =>$address,
+        'address' => $address,
         'email' => $email,
             'home_page' => $home_page,
         'description' => $description,
