@@ -16,7 +16,7 @@ echo "$datetime SMS send task is not runing, fork now..."
 
 for j in {1..1}
 do
-    /www/php/bin/php /www/invo/app/cli.php sms send >> /tmp/sms.log 2>&1 &
+    /www/php/bin/php /www/linkage/app/cli.php sms send >> /tmp/sms.log 2>&1 &
 done
 echo "New sms task daemon process done"
 
