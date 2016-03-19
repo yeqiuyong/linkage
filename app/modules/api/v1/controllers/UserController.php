@@ -33,7 +33,7 @@ class UserController extends APIControllerBase
 
     }
 
-    public function staff(){
+    public function staffAction(){
         $pagination = $this->request->getPost('pagination');
         $offset = $this->request->getPost('offset');
         $size = $this->request->getPost('size');
@@ -58,7 +58,7 @@ class UserController extends APIControllerBase
         return $this->respondArray($staffs);
     }
 
-    public function delStaff(){
+    public function delStaffAction(){
         $staffId = $this->request->getPost('staff_cid');
 
         if(!isset($this->cid)){

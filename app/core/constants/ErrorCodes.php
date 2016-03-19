@@ -62,7 +62,7 @@ class ErrorCodes
     const USER_INVITE_CODE_EXPIRE = 4018;
     const USER_TYPE_ERROR = 4019;
     const USER_ID_NULL = 4020;
-    const USER_NOT_ADMIN = 4021;
+    const USER_COMPLAIN_CONTENT_NULL = 4021;
 
 
     //Company mangement
@@ -122,7 +122,7 @@ class ErrorCodes
         self:: USER_TYPE_ERROR => "用户类型不合法",
         self:: USER_ID_NULL => "用户ID为空",
         self:: USER_MOBILE_NOTFOUND => "用户电话不存在",
-        self:: USER_NOT_ADMIN => "非管理员",
+        self:: USER_COMPLAIN_CONTENT_NULL => "投诉内容为空",
 
         // Company management
         self:: COMPANY_DEUPLICATE => "注册公司已存在",

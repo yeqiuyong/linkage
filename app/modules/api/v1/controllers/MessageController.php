@@ -9,10 +9,12 @@
 
 namespace Multiple\API\Controllers;
 
+use Multiple\Models\ClientUser;
 use Phalcon\Di;
 
 use Multiple\Core\Exception\Exception;
 use Multiple\Core\APIControllerBase;
+use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\ErrorCodes;
 
@@ -51,14 +53,17 @@ class MessageController extends APIControllerBase
         }
 
         try {
+            $user = new ClientUser();
+            $roleId = $user->getRoleId($this->cid);
+
             $notice = new Notice();
-            $myFavorites = $notice->getList($this->cid, $pagination, $offset, $size);
+            $messages = $notice->getList(LinkageUtils::MESSAGE_TYPE_NOTICE, $roleId, $pagination, $offset, $size);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($myFavorites);
+        return $this->respondArray($messages);
 
     }
 
@@ -69,23 +74,21 @@ class MessageController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function detailAction(){
-        $pagination = $this->request->getPost('pagination');
-        $offset = $this->request->getPost('offset');
-        $size = $this->request->getPost('size');
+        $messageId = $this->request->getPost('mid');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
 
         try {
-            $favorite = new Favorite();
-            $myFavorites = $favorite->getList($this->cid, $pagination, $offset, $size);
+            $notice = new Notice();
+            $message = $notice->getDetail($messageId);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($myFavorites);
+        return $this->respondArray($message);
 
     }
 

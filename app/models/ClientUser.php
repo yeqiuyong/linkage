@@ -8,14 +8,15 @@
 
 namespace Multiple\Models;
 
-use Multiple\Core\Constants\StatusCodes;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 use Phalcon\Mvc\Model\Validator\Email as EmailValidator;
 use Phalcon\Mvc\Model\Validator\Uniqueness as UniquenessValidator;
 
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Exception\DataBaseException;
 use Multiple\Core\Exception\UserOperationException;
@@ -57,7 +58,9 @@ class ClientUser extends Model
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg . ",";
             }
-            $this->logger->fatal($message);
+
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
@@ -330,16 +333,52 @@ class ClientUser extends Model
     }
 
     public function getStaffs($userid, $pagination, $offset, $size){
-        $condition = "";
+        $condition = " where status = ". StatusCodes::CLIENT_USER_ACTIVE;
         if($pagination != 0){
-            $condition = "limit ".$offset.",".$size;
+            $condition = " limit ".$offset.",".$size;
         }
 
-        $phql="select a.company_id, b.name, b.contactor, b.service_phone_1 from Favorite a join Company b where a.company_id = b.company_id and user_id = $userid " . $condition;
-        $favorites = $this->modelsManager->executeQuery($phql);
+        $sql="select user_id, username, name, mobile, icon from invo.linkage_clientuser where company_id in (select company_id from invo.linkage_clientuser where user_id = $userid)" . $condition;
+
+        //$user  = new ClientUser();
+
+        // Execute the query
+        $staffs = new Resultset(null, $this, $this->getReadConnection()->query($sql));
+
+        $results = [];
+        foreach($staffs as $staff){
+            $result['staff_id'] = $staff->user_id;
+            $result['username'] = $staff->username;
+            $result['name'] = $staff->name;
+            $result['mobile'] = $staff->mobile;
+            $result['staff_icon'] = $staff->icon;
+
+            array_push($results, $result);
+        }
+
+        return $results;
+
     }
 
+    public function getRoleId($userid){
+        if(!$this->isUserRegistered($userid)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $user = self::findFirst([
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        return $user->user_role->role_id;
+    }
+
+
     public function delStaff($staffId){
+        if(!$this->isUserRegistered($staffId)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
         $staff = self::findFirst([
             'conditions' => 'user_id = :userid:',
             'bind' => ['user_id' => $staffId]

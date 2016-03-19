@@ -29,4 +29,8 @@ class LinkageUtils
     const USER_TRANSPORTER = 3;
     const USER_DRIVER = 4;
 
+    const MESSAGE_TYPE_ADV = 0;
+    const MESSAGE_TYPE_EMPLOYMENT = 1;
+    const MESSAGE_TYPE_NOTICE = 2;
+
 }

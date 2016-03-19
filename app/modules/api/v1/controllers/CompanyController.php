@@ -59,7 +59,7 @@ class CompanyController extends APIControllerBase
         try{
             $user = new ClientUser();
             if(!$user->isAdmin($this->cid)){
-                return $this->respondError(ErrorCodes::USER_NOT_ADMIN, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOT_ADMIN]);
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
             $companyId = $user->getCompanyidByUserid($this->cid);
@@ -100,7 +100,7 @@ class CompanyController extends APIControllerBase
         try{
             $user = new ClientUser();
             if(!$user->isAdmin($this->cid)){
-                return $this->respondError(ErrorCodes::USER_NOT_ADMIN, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOT_ADMIN]);
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
             $companyId = $user->getCompanyidByUserid($this->cid);
