@@ -22,4 +22,8 @@ class StatusCodes
     const COMPANY_USER_PENDING = 2;
     const COMPANY_USER_BANNED = 3;
     const COMPANY_USER_DELETED = 4;
+
+    const FAVORITE_ACTIVE = 0;
+    const FAVORITE_INACTIVE = 1;
+    const FAVORITE_DELETE = 2;
 }

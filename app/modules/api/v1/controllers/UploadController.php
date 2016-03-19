@@ -20,6 +20,12 @@ class UploadController extends APIControllerBase
 {
     private $upyun;
 
+    /**
+     * @title("uploadfiles")
+     * @description("Upload multiple files")
+     * @requestExample("POST /upload/upload")
+     * @response("Data object or Error object")
+     */
     public function uploadFilesAction()
     {
         $this->upyun = Di::getDefault()->get(Services::UPYUN);
@@ -40,6 +46,12 @@ class UploadController extends APIControllerBase
         return $this->respondArray(['file' => $FileNames]);
     }
 
+    /**
+     * @title("usericon")
+     * @description("Upload User icon")
+     * @requestExample("POST /upload/usericon")
+     * @response("Data object or Error object")
+     */
     public function userIconAction()
     {
         $this->upyun = Di::getDefault()->get(Services::UPYUN);
@@ -62,7 +74,13 @@ class UploadController extends APIControllerBase
         return $this->respondArray(['icon' => $fileName]);
     }
 
-    public function companyIconAction()
+    /**
+     * @title("register4invitecode")
+     * @description("Upload company logo")
+     * @requestExample("POST /upload/companylogo")
+     * @response("Data object or Error object")
+     */
+    public function companyLogoAction()
     {
         $this->upyun = Di::getDefault()->get(Services::UPYUN);
 

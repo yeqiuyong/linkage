@@ -11,8 +11,10 @@ namespace Multiple\API\Controllers;
 use Multiple\Core\Exception\Exception;
 use Multiple\Core\APIControllerBase;
 use Multiple\Core\Constants\ErrorCodes;
+
 use Multiple\Models\ClientUser;
 use Multiple\Models\Company;
+use Multiple\Models\Favorite;
 
 class ProfileController extends APIControllerBase
 {
@@ -108,6 +110,7 @@ class ProfileController extends APIControllerBase
         try{
             $user = new ClientUser();
             $user->updateProfile($this->cid, $info);
+
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
@@ -163,13 +166,13 @@ class ProfileController extends APIControllerBase
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
 
-        if(!isset($newPassword) || !isset($oldPassword)){
-            return $this->respondError(ErrorCodes::USER_PASSWORD_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_PASSWORD_NULL]);
+        if(!isset($mobile)){
+            return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
         }
 
         try{
             $user = new ClientUser();
-            $user->updatePasswordByID($this->cid, $newPassword);
+            $user->updateMobileByID($this->cid, $mobile);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -178,26 +181,32 @@ class ProfileController extends APIControllerBase
         return $this->respondOK();
     }
 
-    /**
-     * @title("addCompany")
-     * @description("Add user company")
-     * @requestExample("POST /profile/addcompany")
-     * @response("Data object or Error object")
-     */
-    public function addCompanyAction(){
-
-    }
 
     /**
-     * @title("modCompany")
-     * @description("Modify user company")
-     * @requestExample("POST /profile/forgotpassword")
+     * @title("favlist")
+     * @description("User favirate")
+     * @requestExample("POST /profile/favlist")
      * @response("Data object or Error object")
      */
-    public function modCompanyAction(){
+    public function favlistAction(){
+        $pagination = $this->request->getPost('pagination');
+        $offset = $this->request->getPost('offset');
+        $size = $this->request->getPost('size');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try {
+            $favorite = new Favorite();
+            $myFavorites = $favorite->getList($this->cid, $pagination, $offset, $size);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($myFavorites);
 
     }
-
-
 
 }

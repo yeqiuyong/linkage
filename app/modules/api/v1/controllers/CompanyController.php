@@ -28,7 +28,7 @@ class CompanyController extends APIControllerBase
         $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
-    public function modcompany4recheck(){
+    public function modCompany4Recheck(){
         $name = $this->request->getPost('name');
         $contact_name = $this->request->getPost('contact_name');
         $address = $this->request->getPost('address');
@@ -71,9 +71,10 @@ class CompanyController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
+        return $this->respondOK();
     }
 
-    public function modcompany(){
+    public function modCompany(){
         $contact_name = $this->request->getPost('contact_name');
         $address = $this->request->getPost('address');
         $email = $this->request->getPost('email');
@@ -110,5 +111,8 @@ class CompanyController extends APIControllerBase
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
+
+        return $this->respondOK();
     }
+
 }

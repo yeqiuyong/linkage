@@ -8,6 +8,7 @@
 
 namespace Multiple\Models;
 
+use Multiple\Core\Constants\StatusCodes;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Validator\Email as EmailValidator;
@@ -54,7 +55,7 @@ class ClientUser extends Model
         if($this->save() == false){
             $message = '';
             foreach ($this->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ",";
             }
             $this->logger->fatal($message);
 
@@ -84,7 +85,7 @@ class ClientUser extends Model
         if($this->save() == false){
             $message = '';
             foreach ($this->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ",";
             }
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
@@ -111,7 +112,7 @@ class ClientUser extends Model
         if($user->update() == false){
             $message = '';
             foreach ($user->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ",";
             }
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
@@ -138,7 +139,7 @@ class ClientUser extends Model
         if($user->update() == false){
             $message = '';
             foreach ($user->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ",";
             }
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
@@ -163,7 +164,7 @@ class ClientUser extends Model
         if($user->update() == false){
             $message = '';
             foreach ($user->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ",";
             }
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
@@ -328,6 +329,37 @@ class ClientUser extends Model
         return $user->username;
     }
 
+    public function getStaffs($userid, $pagination, $offset, $size){
+        $condition = "";
+        if($pagination != 0){
+            $condition = "limit ".$offset.",".$size;
+        }
+
+        $phql="select a.company_id, b.name, b.contactor, b.service_phone_1 from Favorite a join Company b where a.company_id = b.company_id and user_id = $userid " . $condition;
+        $favorites = $this->modelsManager->executeQuery($phql);
+    }
+
+    public function delStaff($staffId){
+        $staff = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['user_id' => $staffId]
+        ]);
+
+        $staff->status = StatusCodes::CLIENT_USER_INACTIVE;
+        $staff->update_time = time();
+
+        if($staff->update() == false){
+            $message = '';
+            foreach ($staff->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function isPasswordValidate($userid, $password){
         $security = Di::getDefault()->get(Services::SECURITY);
 
@@ -361,7 +393,7 @@ class ClientUser extends Model
     }
 
     private function isUserNameRegistered($username){
-        $users = self::findFirst([
+        $users = self::find([
             'conditions' => 'username = :username:',
             'bind' => ['username' => $username]
         ]);

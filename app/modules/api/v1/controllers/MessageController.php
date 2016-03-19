@@ -1,10 +1,11 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: joe
- * Date: 25/1/16
- * Time: 10:25 AM
+ * User: uni
+ * Date: 16/3/18
+ * Time: 下午8:39
  */
+
 
 namespace Multiple\API\Controllers;
 
@@ -15,25 +16,32 @@ use Multiple\Core\APIControllerBase;
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\ErrorCodes;
 
-use Multiple\Models\ClientUser;
+use Multiple\Models\Notice;
 
 
 /**
  * @resource("User")
  */
-class UserController extends APIControllerBase
+class MessageController extends APIControllerBase
 {
 
     private $logger;
 
-    public function initialize(){
+    public function initialize()
+    {
         parent::initialize();
 
         $this->logger = Di::getDefault()->get(Services::LOGGER);
 
     }
 
-    public function staff(){
+    /**
+     * @title("list")
+     * @description("User message list")
+     * @requestExample("POST /message/list")
+     * @response("Data object or Error object")
+     */
+    public function listAction(){
         $pagination = $this->request->getPost('pagination');
         $offset = $this->request->getPost('offset');
         $size = $this->request->getPost('size');
@@ -43,42 +51,42 @@ class UserController extends APIControllerBase
         }
 
         try {
-            $user = new ClientUser();
-
-            if(!$user->isAdmin($this->cid)){
-                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
-            }
-
-            $staffs = $user->getStaffs($this->cid, $pagination, $offset, $size);
+            $notice = new Notice();
+            $myFavorites = $notice->getList($this->cid, $pagination, $offset, $size);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($staffs);
+        return $this->respondArray($myFavorites);
+
     }
 
-    public function delStaff(){
-        $staffId = $this->request->getPost('staff_cid');
+    /**
+     * @title("detail")
+     * @description("User message detail")
+     * @requestExample("POST /message/detail")
+     * @response("Data object or Error object")
+     */
+    public function detailAction(){
+        $pagination = $this->request->getPost('pagination');
+        $offset = $this->request->getPost('offset');
+        $size = $this->request->getPost('size');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
 
         try {
-            $user = new ClientUser();
-
-            if(!$user->isAdmin($this->cid)){
-                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
-            }
-
-            $user->delStaff($this->cid, $staffId);
+            $favorite = new Favorite();
+            $myFavorites = $favorite->getList($this->cid, $pagination, $offset, $size);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this-$this->respondOK();
+        return $this->respondArray($myFavorites);
+
     }
 
 }
