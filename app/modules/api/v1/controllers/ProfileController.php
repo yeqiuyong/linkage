@@ -47,7 +47,7 @@ class ProfileController extends APIControllerBase
                 'username' => isset($userInfo['username']) ? $userInfo['username'] : '',
                 'realname' => isset($userInfo['realname']) ? $userInfo['realname'] : '',
                 'mobile' => $userInfo['mobile'],
-                'user_icon' => $userInfo['icon'],
+                'user_icon' => isset($userInfo['icon']) ? $userInfo['icon'] : '',
                 'is_admin' => $isAdmin,
             ];
 
