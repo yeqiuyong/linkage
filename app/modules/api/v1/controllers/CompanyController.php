@@ -9,6 +9,7 @@
 
 namespace Multiple\API\Controllers;
 
+use Multiple\Core\Constants\StatusCodes;
 use Multiple\Models\Company;
 use Phalcon\Di;
 
@@ -28,17 +29,17 @@ class CompanyController extends APIControllerBase
         $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
-    public function modCompany4Recheck(){
-        $name = $this->request->getPost('name');
-        $contact_name = $this->request->getPost('contact_name');
-        $address = $this->request->getPost('address');
-        $email = $this->request->getPost('email');
-        $home_page = $this->request->getPost('home_page');
-        $description = $this->request->getPost('description');
-        $phone_1 = $this->request->getPost('phone_1');
-        $phone_2 = $this->request->getPost('phone_2');
-        $phone_3 = $this->request->getPost('phone_3');
-        $phone_4 = $this->request->getPost('phone_4');
+    public function modCompany4RecheckAction(){
+        $name = $this->request->getPost('name', 'string');
+        $contact_name = $this->request->getPost('contact_name', 'string');
+        $address = $this->request->getPost('address', 'string');
+        $email = $this->request->getPost('email', 'string');
+        $home_page = $this->request->getPost('home_page', 'string');
+        $description = $this->request->getPost('description', 'string');
+        $phone_1 = $this->request->getPost('phone_1', 'string');
+        $phone_2 = $this->request->getPost('phone_2', 'string');
+        $phone_3 = $this->request->getPost('phone_3', 'string');
+        $phone_4 = $this->request->getPost('phone_4', 'string');
 
         $info = [
         'contact_name' => $contact_name,
@@ -58,7 +59,7 @@ class CompanyController extends APIControllerBase
 
         try{
             $user = new ClientUser();
-            if(!$user->isAdmin($this->cid)){
+            if(!$user->isAdmin($this->cid) || $user->getStatus($this->cid) != StatusCodes::CLIENT_USER_PENDING){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -74,16 +75,16 @@ class CompanyController extends APIControllerBase
         return $this->respondOK();
     }
 
-    public function modCompany(){
-        $contact_name = $this->request->getPost('contact_name');
-        $address = $this->request->getPost('address');
-        $email = $this->request->getPost('email');
-        $home_page = $this->request->getPost('home_page');
-        $description = $this->request->getPost('description');
-        $phone_1 = $this->request->getPost('phone_1');
-        $phone_2 = $this->request->getPost('phone_2');
-        $phone_3 = $this->request->getPost('phone_3');
-        $phone_4 = $this->request->getPost('phone_4');
+    public function modCompanyAction(){
+        $contact_name = $this->request->getPost('contact_name', 'string');
+        $address = $this->request->getPost('address', 'string');
+        $email = $this->request->getPost('email', 'string');
+        $home_page = $this->request->getPost('home_page', 'string');
+        $description = $this->request->getPost('description', 'string');
+        $phone_1 = $this->request->getPost('phone_1', 'string');
+        $phone_2 = $this->request->getPost('phone_2', 'string');
+        $phone_3 = $this->request->getPost('phone_3', 'string');
+        $phone_4 = $this->request->getPost('phone_4', 'string');
 
         $info = [
             'contact_name' => $contact_name,

@@ -399,6 +399,19 @@ class ClientUser extends Model
         }
     }
 
+    public function getStatus($userid){
+        $user = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        if(isset($user->user_id)){
+            return $user->status;
+        }else{
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+    }
+
     public function isPasswordValidate($userid, $password){
         $security = Di::getDefault()->get(Services::SECURITY);
 
