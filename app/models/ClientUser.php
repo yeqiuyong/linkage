@@ -295,14 +295,14 @@ class ClientUser extends Model
 
         return [
             'username' => $user->username,
-            'realname' => $user->name,
+            'realname' => isset($user->name) ? $user->name : '',
             'mobile' => $user->mobile,
-            'email' => $user->email,
-            'gender' => $user->gender,
-            'birthday' => $user->birthday,
-            'identity' => $user->identity,
-            'icon' => $user->icon,
-            'company_id' =>$user->company_id,
+            'email' => isset($user->email) ? $user->email : '',
+            'gender' => isset($user->gender) ? $user->gender : '',
+            'birthday' => isset($user->birthday) ? $user->birthday : '',
+            'identity' => isset($user->identity_id) ? $user->identity_id : '',
+            'icon' => isset($user->icon) ? $user->icon : '',
+            'company_id' => $user->company_id,
         ];
     }
 
