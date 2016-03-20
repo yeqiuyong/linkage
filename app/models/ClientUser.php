@@ -127,12 +127,12 @@ class ClientUser extends Model
     public function updatePasswordByID($userid, $password){
         $security = Di::getDefault()->get(Services::SECURITY);
 
-        if(!$this->isUserRegistered($userid)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
+//        if(!$this->isUserRegistered($userid)){
+//            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+//        }
 
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
+            'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
 
