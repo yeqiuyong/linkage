@@ -157,7 +157,7 @@ class ClientUser extends Model
         }
 
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
+            'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
 
