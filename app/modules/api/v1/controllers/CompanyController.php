@@ -16,7 +16,6 @@ use Phalcon\Di;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Exception\Exception;
 use Multiple\Core\APIControllerBase;
-use Multiple\Core\Auth\UsernameAdaptor;
 use Multiple\Core\Constants\Services;
 use Multiple\Models\ClientUser;
 

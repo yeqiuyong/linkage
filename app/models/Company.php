@@ -159,7 +159,7 @@ class Company extends Model
             $company->service_phone_2 = $info['phone_2'];
         }
 
-        if(empty($info['phone_3'])){
+        if(!empty($info['phone_3'])){
             $company->service_phone_3 = $info['phone_3'];
         }
 
