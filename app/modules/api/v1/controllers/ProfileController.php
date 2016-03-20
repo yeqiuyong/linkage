@@ -91,12 +91,12 @@ class ProfileController extends APIControllerBase
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
 
-        $username = $this->request->getPost('username');
-        $name = $this->request->getPost('realname');
-        $email = $this->request->getPost('email');
-        $gender = $this->request->getPost('gender');
-        $birthday = $this->request->getPost('birthday');
-        $identity = $this->request->getPost('identity');
+        $username = $this->request->getPost('username', 'string');
+        $name = $this->request->getPost('realname', 'string');
+        $email = $this->request->getPost('email', 'string');
+        $gender = $this->request->getPost('gender', 'string');
+        $birthday = $this->request->getPost('birthday', 'int');
+        $identity = $this->request->getPost('identity', 'string');
 
         $info = [
             'username' => $username,
