@@ -104,7 +104,7 @@ class RegisterController extends FrontendControllerBase
             $this->db->begin();
 
             $companyID = (int)$cn - LinkageUtils::INVITE_SECRET;
-            return $this->responseJsonError(ErrorCodes::COMPANY_NOTFOUND, $companyID);
+            
             $company = new Company();
             if($company->isCompanyExist($companyID)){
                 return $this->responseJsonError(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
