@@ -151,7 +151,7 @@
             url: "<?php echo $this->url->get('register/register') ?>",
             data: "cn="+cn+"&mobile="+mobile+"&password="+pwd+"&ctype="+userType+"&verify_code="+verifyCode,
             success:function(data){
-                if(data.code==0){
+                if(data.code == 0){
                     window.location.href=data.url;
                 }else{
                     alert(data.message);

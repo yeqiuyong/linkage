@@ -30,7 +30,7 @@ class FrontendControllerBase extends ControllerBase
     }
 
     public function responseJsonData(Array $data = []){
-        $response = array("result" => 0, "reason" => "");
+        $response = array("code" => 0,  'stackTrace' => '', "message" => "");
         return $this->response->setJsonContent(array_merge($response, $data));
     }
 }
