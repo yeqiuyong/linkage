@@ -42,11 +42,11 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function register4adminAction(){
-        $mobile = $this->request->getPost('mobile', String);
-        $password = $this->request->getPost('password', String);
-        $ctype = $this->request->getPost('ctype', String);
-        $verifyCode = $this->request->getPost('verify_code');
-        $companyName = $this->request->getPost('company_name', String);
+        $mobile = $this->request->getPost('mobile', 'string');
+        $password = $this->request->getPost('password', 'string');
+        $ctype = $this->request->getPost('ctype', 'string');
+        $verifyCode = $this->request->getPost('verify_code', 'int');
+        $companyName = $this->request->getPost('company_name', 'string');
 
         if(!isset($mobile)){
             return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
@@ -70,7 +70,7 @@ class SessionController extends APIControllerBase
 
         $key = LinkageUtils::VERIFY_PREFIX.$mobile;
         if(!$this->redis->get($key)){
-            if($verifyCode != '9394'){
+            if($verifyCode != 9394){
                 return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
             }
         }else{
@@ -119,9 +119,9 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function register4invitecodeAction(){
-        $mobile = $this->request->getPost('mobile');
-        $password = $this->request->getPost('password');
-        $ctype = $this->request->getPost('ctype');
+        $mobile = $this->request->getPost('mobile', 'string');
+        $password = $this->request->getPost('password', 'string');
+        $ctype = $this->request->getPost('ctype', 'string');
         $inviteCode = $this->request->getPost('invite_code');
 
         if(!isset($mobile)){
