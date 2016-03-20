@@ -234,7 +234,7 @@ class ClientUser extends Model
         }
 
         if(!empty($info['identity'])){
-            $user->identity = $info['identity'];
+            $user->identity_id = $info['identity'];
         }
 
         if($user->update() == false){
