@@ -289,8 +289,8 @@ class ClientUser extends Model
         }
 
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
-            'bind' => ['userid' => $userid]
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
         ]);
 
         return [
@@ -308,8 +308,8 @@ class ClientUser extends Model
 
     public function getCompanyidByUserid($userid){
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
-            'bind' => ['userid' => $userid]
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
         ]);
 
         if(!isset($user->company_id)){
@@ -321,8 +321,8 @@ class ClientUser extends Model
 
     public function getUserNameByUserid($userid){
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
-            'bind' => ['userid' => $userid]
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
         ]);
 
         if(!isset($user->username)){
@@ -380,7 +380,7 @@ class ClientUser extends Model
         }
 
         $staff = self::findFirst([
-            'conditions' => 'user_id = :userid:',
+            'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $staffId]
         ]);
 
@@ -401,7 +401,7 @@ class ClientUser extends Model
 
     public function getStatus($userid){
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
+            'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
 
@@ -416,8 +416,8 @@ class ClientUser extends Model
         $security = Di::getDefault()->get(Services::SECURITY);
 
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
-            'bind' => ['userid' => $userid]
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
         ]);
 
         return $security->checkHash($password, $user->password);
@@ -425,8 +425,8 @@ class ClientUser extends Model
 
     public function isAdmin($userid){
         $user = self::findFirst([
-            'conditions' => 'user_id = :userid:',
-            'bind' => ['userid' => $userid]
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
         ]);
 
         $roleId = $user->user_role->role_id;
@@ -455,8 +455,8 @@ class ClientUser extends Model
 
     private function isUserRegistered($userid){
         $users = self::find([
-            'conditions' => 'user_id = :userid:',
-            'bind' => ['userid' => $userid]
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
         ]);
 
         return sizeof($users) > 0 ? true : false;
