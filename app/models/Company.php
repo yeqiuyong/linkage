@@ -74,7 +74,7 @@ class Company extends Model
         }
 
         if(!empty($info['contact_name'])){
-            $company->contact_name = $info['contact_name'];
+            $company->contactor = $info['contact_name'];
         }
 
         if(!empty($info['address'])){
