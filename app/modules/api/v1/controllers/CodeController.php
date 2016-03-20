@@ -42,7 +42,7 @@ class CodeController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function verifycodeAction(){
-        $mobile = $this->request->getPost('mobile');
+        $mobile = $this->request->getPost('mobile', 'string');
 
         if(!isset($mobile)){
             return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
@@ -76,7 +76,7 @@ class CodeController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function invitecodeAction(){
-        $mobile = $this->request->getPost('mobile');
+        $mobile = $this->request->getPost('mobile', 'string');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::USER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ID_NULL]);
