@@ -180,14 +180,14 @@ class Company extends Model
     }
 
     public function updateIconById($companyId, $logo){
-        if(!$this->isCompanyExist($companyId)){
-            throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
-        }
-
         $company = self::findFirst([
             'conditions' => 'company_id = :companyID:',
             'bind' => ['companyID' => $companyId]
         ]);
+
+        if(!isset($company->company_id)){
+            throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+        }
 
         $company->logo = $logo;
         $company->update_time = time();
@@ -210,6 +210,9 @@ class Company extends Model
             'bind' => ['companyID' => $companyId]
         ]);
 
+        if(!isset($company->company_id)){
+            throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+        }
 
         return [
             'name' => $company->name,

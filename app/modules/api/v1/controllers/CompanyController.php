@@ -28,6 +28,32 @@ class CompanyController extends APIControllerBase
         $this->logger = Di::getDefault()->get(Services::LOGGER);
     }
 
+    public function informationAction(){
+        $companyId = $this->request->getPost('company_id', 'string');
+
+        try{
+            $company = new Company();
+            $information = $company->getCompanyInformation($companyId);
+
+            $result = [
+                'logo' => isset($information['logo']) ? $information['logo'] : '',
+                'company_id' => $companyId,
+                'company_name' => $information['name'],
+                'contact_name' => isset($information['contactor']) ? $information['contactor'] : '',
+                'contact_address' => isset($information['address']) ? $information['address'] : '',
+                'contact_phone' => isset($information['service_phone_1']) ? $information['service_phone_1'] : '',
+                'contact_description' => isset($information['description']) ? $information['description'] : '',
+                'order_num' => 0,
+            ];
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($result);
+    }
+
+
     public function modCompany4RecheckAction(){
         $name = $this->request->getPost('name', 'string');
         $contact_name = $this->request->getPost('contact_name', 'string');
