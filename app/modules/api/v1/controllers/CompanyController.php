@@ -53,7 +53,7 @@ class CompanyController extends APIControllerBase
         'phone_4' => $phone_4,
         ];
 
-        if(isset($name)){
+        if(!isset($name)){
             return $this->respondError(ErrorCodes::USER_COMPANY_NAME_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_COMPANY_NAME_NULL]);
         }
 
