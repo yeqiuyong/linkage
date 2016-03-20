@@ -94,19 +94,19 @@ class Company extends Model
         }
 
         if(!empty($info['phone_1'])){
-            $company->phone_1 = $info['phone_1'];
+            $company->service_phone_1 = $info['phone_1'];
         }
 
         if(!empty($info['phone_2'])){
-            $company->phone_2 = $info['phone_2'];
+            $company->service_phone_2 = $info['phone_2'];
         }
 
         if(!empty($info['phone_3'])){
-            $company->phone_3 = $info['phone_3'];
+            $company->service_phone_3 = $info['phone_3'];
         }
 
         if(!empty($info['phone_4'])){
-            $company->phone_4 = $info['phone_4'];
+            $company->service_phone_4 = $info['phone_4'];
         }
 
         if($company->update() == false){

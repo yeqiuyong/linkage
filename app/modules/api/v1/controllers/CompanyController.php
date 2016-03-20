@@ -42,15 +42,15 @@ class CompanyController extends APIControllerBase
         $phone_4 = $this->request->getPost('phone_4', 'string');
 
         $info = [
-        'contact_name' => $contact_name,
-        'address' => $address,
-        'email' => $email,
+            'contact_name' => $contact_name,
+            'address' => $address,
+            'email' => $email,
             'home_page' => $home_page,
-        'description' => $description,
-        'phone_1' => $phone_1,
-        'phone_2' => $phone_2,
-        'phone_3' => $phone_3,
-        'phone_4' => $phone_4,
+            'description' => $description,
+            'phone_1' => $phone_1,
+            'phone_2' => $phone_2,
+            'phone_3' => $phone_3,
+            'phone_4' => $phone_4,
         ];
 
         if(!isset($name)){
