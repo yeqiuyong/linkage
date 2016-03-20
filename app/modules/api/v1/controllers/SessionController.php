@@ -42,11 +42,11 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function register4adminAction(){
-        $mobile = $this->request->getPost('mobile');
-        $password = $this->request->getPost('password');
-        $ctype = $this->request->getPost('ctype');
+        $mobile = $this->request->getPost('mobile', String);
+        $password = $this->request->getPost('password', String);
+        $ctype = $this->request->getPost('ctype', String);
         $verifyCode = $this->request->getPost('verify_code');
-        $companyName = $this->request->getPost('company_name');
+        $companyName = $this->request->getPost('company_name', String);
 
         if(!isset($mobile)){
             return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
@@ -81,7 +81,7 @@ class SessionController extends APIControllerBase
         }
 
         $companyType = $ctype == '0' ? LinkageUtils::COMPANY_MANUFACTURE : LinkageUtils::COMPANY_TRANSPORTER;
-        $role = $ctype == '1' ? LinkageUtils::USER_ADMIN_MANUFACTURE : LinkageUtils::USER_ADMIN_TRANSPORTER;
+        $role = $ctype == '0' ? LinkageUtils::USER_ADMIN_MANUFACTURE : LinkageUtils::USER_ADMIN_TRANSPORTER;
         try{
             // Start a transaction
             $this->db->begin();
