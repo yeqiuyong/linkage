@@ -14,8 +14,6 @@ use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 use Multiple\Core\BackendControllerBase;
 use Multiple\Models\ClientUser;
 
-
-
 class ClientUserController extends BackendControllerBase
 {
     public function initialize(){
@@ -98,23 +96,35 @@ class ClientUserController extends BackendControllerBase
     }
 
     public function informationAction(){
-        $userID = $this->request->getQuery('id', 'int'); // POST
+        $userid = $this->request->getQuery('id', 'int'); // POST
 
-        $user = ClientUser::findFirst([
-            'conditions' => 'user_id = :user_id:',
-            'bind' => ['user_id' => $userID]
-        ]);
+        $user = new ClientUser();
+        $information = $user->getUserInfomation($userid);
 
         $this->view->setVars(
             array(
-                'username' => $user->username,
-                'realname' => $user->name,
-                'mobile' => $user->mobile,
-                'email' => $user->email,
-                'profile_name' => $user->profile->profile_name,
-                'update_time' =>date('Y-m-d',$user->update_time),
+                'username' => $information['username'],
+                'realname' => $information['realname'],
+                'mobile' => $information['mobile'],
+                'email' => $information['email'],
+                'profile_name' => $information['role'],
+                'update_time' =>date('Y-m-d', $information['update_time']),
             )
         );
+    }
+
+    public function editorAction(){
+
+    }
+
+    public function changeStatusAction(){
+        $userid = $this->request->getPost('id', 'int'); // POST
+        $status = $this->request->getPost('status', 'int'); // POST
+
+        $user = new ClientUser();
+        $user->updateStatus($userid, $status);
+
+        return $this->response->setJsonContent('ok');
     }
 
 }

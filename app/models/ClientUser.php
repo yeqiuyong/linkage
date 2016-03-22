@@ -250,6 +250,27 @@ class ClientUser extends Model
 
     }
 
+    public function updateStatus($userid, $status){
+        $user = self::findFirst([
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        $user->status = $status;
+        $user->update_time = time();
+
+        if($user->update() == false){
+            $message = '';
+            foreach ($user->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function getSecretByName($username){
         $user = self::findFirst([
             'conditions' => 'username = :username:',
@@ -303,6 +324,8 @@ class ClientUser extends Model
             'identity' => isset($user->identity_id) ? $user->identity_id : '',
             'icon' => isset($user->icon) ? $user->icon : '',
             'company_id' => $user->company_id,
+            'role' => $user->profile->profile_name,
+            'update_time' => $user->update_time,
         ];
     }
 
