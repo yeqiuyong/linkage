@@ -112,7 +112,7 @@ class Company extends Model
         if($company->update() == false){
             $message = '';
             foreach ($company->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ',';
             }
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
@@ -170,7 +170,7 @@ class Company extends Model
         if($company->update() == false){
             $message = '';
             foreach ($company->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ",";
             }
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
@@ -195,7 +195,32 @@ class Company extends Model
         if($company->update() == false){
             $message = '';
             foreach ($company->getMessages() as $msg) {
-                $message .= (String)$msg;
+                $message .= (String)$msg . ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
+    public function updateStatus($companyId, $status){
+        $company = self::findFirst([
+            'conditions' => 'company_id = :companyId:',
+            'bind' => ['companyId' => $companyId]
+        ]);
+
+        if(!isset($company->company_id)){
+            throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+        }
+
+        $company->status = $status;
+        $company->update_time = time();
+
+        if($company->update() == false){
+            $message = '';
+            foreach ($company->getMessages() as $msg) {
+                $message .= (String)$msg . ',';
             }
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
@@ -245,7 +270,7 @@ class Company extends Model
         return sizeof($companies) > 0 ? true : false;
     }
 
-    private function isCompanyRegistered($companyName){
+    public function isCompanyRegistered($companyName){
         $companies = self::find([
             'conditions' => 'name = :name:',
             'bind' => ['name' => $companyName]

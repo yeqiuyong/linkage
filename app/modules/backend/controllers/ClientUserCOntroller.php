@@ -9,10 +9,12 @@
 
 namespace Multiple\Backend\Controllers;
 
+use Multiple\Core\Exception\Exception;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 use Multiple\Core\BackendControllerBase;
 use Multiple\Models\ClientUser;
+use Multiple\Models\Company;
 
 class ClientUserController extends BackendControllerBase
 {
@@ -121,10 +123,22 @@ class ClientUserController extends BackendControllerBase
         $userid = $this->request->getPost('id', 'int'); // POST
         $status = $this->request->getPost('status', 'int'); // POST
 
-        $user = new ClientUser();
-        $user->updateStatus($userid, $status);
+        try{
+            $user = new ClientUser();
+            $user->updateStatus($userid, $status);
 
-        return $this->response->setJsonContent('ok');
+            if($user->isAdmin($userid)){
+                $companyId = $user->getCompanyidByUserid($userid);
+
+                $company = new Company();
+                $company->updateStatus($companyId, $status);
+            }
+
+        }catch (Exception $e){
+            return$this->responseJsonError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->responseJsonOK();
     }
 
 }

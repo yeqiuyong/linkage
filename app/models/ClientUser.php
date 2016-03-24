@@ -127,14 +127,14 @@ class ClientUser extends Model
     public function updatePasswordByID($userid, $password){
         $security = Di::getDefault()->get(Services::SECURITY);
 
-//        if(!$this->isUserRegistered($userid)){
-//            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-//        }
-
         $user = self::findFirst([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         $user->password = $security->hash($password);
         $user->update_time = time();
@@ -152,14 +152,14 @@ class ClientUser extends Model
     }
 
     public function updateMobileByID($userid, $mobile){
-        if(!$this->isUserRegistered($userid)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
-
         $user = self::findFirst([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         $user->mobile = $mobile;
         $user->update_time = time();
@@ -177,14 +177,14 @@ class ClientUser extends Model
     }
 
     public function updateIconById($userid, $icon){
-        if(!$this->isUserRegistered($userid)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
-
         $user = self::findFirst([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         $user->icon = $icon;
         $user->update_time = time();
@@ -202,14 +202,14 @@ class ClientUser extends Model
     }
 
     public function updateProfile($userid, $info = array()){
-        if(!$this->isUserRegistered($userid)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
-
         $user = self::findFirst([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         //$user->mobile = empty($info['mobile']) ? $user->mobile : $info['mobile'];
 
@@ -256,6 +256,10 @@ class ClientUser extends Model
             'bind' => ['user_id' => $userid]
         ]);
 
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
         $user->status = $status;
         $user->update_time = time();
 
@@ -277,6 +281,10 @@ class ClientUser extends Model
             'bind' => ['username' => $username]
         ]);
 
+        if(!isset($user->$user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
         $password = $user == null ? '' : $user->password;
         $id = $user == null ? '' : $user->user_id;
 
@@ -288,6 +296,10 @@ class ClientUser extends Model
             'conditions' => 'mobile = :mobile:',
             'bind' => ['mobile' => $mobile]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         $password = $user == null ? '' : $user->password;
         $id = $user == null ? '' : $user->user_id;
@@ -301,18 +313,22 @@ class ClientUser extends Model
             'bind' => ['identity' => $identity]
         ]);
 
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
         return $user;
     }
 
     public function getUserInfomation($userid){
-        if(!$this->isUserRegistered($userid)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
-
         $user = self::findFirst([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         return [
             'username' => $user->username,
@@ -335,8 +351,8 @@ class ClientUser extends Model
             'bind' => ['user_id' => $userid]
         ]);
 
-        if(!isset($user->company_id)){
-            throw new DataBaseException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
         }
 
         return $user->company_id;
@@ -384,28 +400,28 @@ class ClientUser extends Model
     }
 
     public function getRoleId($userid){
-        if(!$this->isUserRegistered($userid)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
-
         $user = self::findFirst([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         return $user->user_role->role_id;
     }
 
 
     public function delStaff($staffId){
-        if(!$this->isUserRegistered($staffId)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
-
         $staff = self::findFirst([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $staffId]
         ]);
+
+        if(!isset($staff->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         $staff->status = StatusCodes::CLIENT_USER_INACTIVE;
         $staff->update_time = time();
@@ -428,11 +444,11 @@ class ClientUser extends Model
             'bind' => ['user_id' => $userid]
         ]);
 
-        if(isset($user->user_id)){
-            return $user->status;
-        }else{
+        if(!isset($user->user_id)){
             throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
         }
+
+        return $user->status;
     }
 
     public function isPasswordValidate($userid, $password){
@@ -443,6 +459,10 @@ class ClientUser extends Model
             'bind' => ['user_id' => $userid]
         ]);
 
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
         return $security->checkHash($password, $user->password);
     }
 
@@ -451,6 +471,10 @@ class ClientUser extends Model
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
         ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
 
         $roleId = $user->user_role->role_id;
 
@@ -467,7 +491,7 @@ class ClientUser extends Model
         return sizeof($users) > 0 ? true : false;
     }
 
-    private function isUserNameRegistered($username){
+    public function isUserNameRegistered($username){
         $users = self::find([
             'conditions' => 'username = :username:',
             'bind' => ['username' => $username]
@@ -476,7 +500,7 @@ class ClientUser extends Model
         return sizeof($users) > 0 ? true : false;
     }
 
-    private function isUserRegistered($userid){
+    public function isUserRegistered($userid){
         $users = self::find([
             'conditions' => 'user_id = :user_id:',
             'bind' => ['user_id' => $userid]
