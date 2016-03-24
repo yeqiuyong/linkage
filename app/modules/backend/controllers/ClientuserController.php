@@ -16,7 +16,7 @@ use Multiple\Core\BackendControllerBase;
 use Multiple\Models\ClientUser;
 use Multiple\Models\Company;
 
-class ClientUserController extends BackendControllerBase
+class ClientuserController extends BackendControllerBase
 {
     public function initialize(){
         $this->tag->setTitle('Welcome');
