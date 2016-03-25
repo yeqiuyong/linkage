@@ -263,7 +263,7 @@ CREATE TABLE `linkage_order` (
   `take_time` INT(11) COMMENT '货柜接货时间',
   `delivery_address` VARCHAR(400) COMMENT '货柜收货地址',
   `delivery_time` INT(11) COMMENT '货柜收货时间',
-  `cargos_rent_expire` INT(11) COMMENT '柜组到期日',
+  `is_transfer_port` TINYINT(4) COMMENT '是否转关。0否；1是',
   `memo` TEXT COMMENT '特殊事项',
   `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '订单生成日期',
   `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '订单修改日期',
@@ -279,7 +279,9 @@ DROP TABLE IF EXISTS `linkage_order_export`;
 CREATE TABLE `linkage_order_export` (
   `order_id` CHAR(64)  NOT NULL DEFAULT '',
   `so` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '',
-  `customs_in` INT(11) COMMENT '禁关时间',
+  `so_images` VARCHAR(400) NOT NULL DEFAULT '' COMMENT '',
+  `customs_in` INT(11) COMMENT '截关时间',
+  `port` VARCHAR(400) COMMENT '提货港口',
   `ship_company` VARCHAR(120) COMMENT '头程公司',
   `ship_name` VARCHAR(120) COMMENT '头程船名',
   `ship_schedule_no` VARCHAR(64) COMMENT '头程班次',
@@ -294,10 +296,11 @@ CREATE TABLE `linkage_order_export` (
 DROP TABLE IF EXISTS `linkage_order_import`;
 CREATE TABLE `linkage_order_import` (
   `order_id` CHAR(64)  NOT NULL DEFAULT '',
+  `cargos_rent_expire` INT(11) COMMENT '柜组到期日',
   `bill_no` CHAR(64)  NOT NULL DEFAULT '提单号',
   `customs_broker` VARCHAR(120) COMMENT '报关行联系人',
   `customshouse_contact` VARCHAR(30) COMMENT '报关行联系电话',
-  `cargo_company` VARCHAR(120) COMMENT '二柜公司',
+  `cargo_company` VARCHAR(120) COMMENT '二程公司',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -322,21 +325,38 @@ CREATE TABLE `linkage_order_self_cargo` (
   `order_id` CHAR(64)  NOT NULL DEFAULT '',
   `is_customs_declare` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '是否须要报关。0不需要，1须要',
   `customs_in` INT(11) COMMENT '报关时间',
-  `customs_out` INT(11) COMMENT '报关结束时间',
+  `cargo_take_time` INT(11) COMMENT '报关结束时间',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 --
--- Table structure for table `linkage_import_order_2_cargo`
+-- Table structure for table `linkage_order_2_cargo`
 --
-DROP TABLE IF EXISTS `linkage_import_order_2_cargo`;
-CREATE TABLE `linkage_import_order_2_cargo` (
+DROP TABLE IF EXISTS `linkage_order_2_cargo`;
+CREATE TABLE `linkage_order_2_cargo` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `order_id` CHAR(64)  NOT NULL DEFAULT '订单号',
-  `cargo_no` CHAR(64)  NOT NULL DEFAULT '柜号',
+  `order_id` CHAR(64)  NOT NULL DEFAULT '' COMMENT '订单号',
+  `cargo_no` CHAR(64)  NOT NULL DEFAULT '' COMMENT '柜号',
+  `cargo_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '柜型',
   PRIMARY KEY (`id`),
   UNIQUE KEY (`order_id`, `cargo_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Table structure for table `linkage_order_comment`
+--
+DROP TABLE IF EXISTS `linkage_order_comment`;
+CREATE TABLE `linkage_order_comment` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `order_id` CHAR(64)  NOT NULL DEFAULT '' COMMENT '订单号',
+  `score` TINYINT(4)  NOT NULL DEFAULT '0' COMMENT '星级评分',
+  `comment` TEXT DEFAULT NULL COMMENT '评论',
+  `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '订单生成日期',
+  `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '订单修改日期',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
@@ -351,7 +371,7 @@ CREATE TABLE `linkage_driver_task` (
   `license` VARCHAR(16) DEFAULT '' COMMENT '车牌号',
   `cargo_no` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '货柜号',
   `cargo_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '货柜类型',
-  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0:未委派，1：委派司机，2：到港提柜，3：运柜出港，4：送达卸货(入口)/到达载柜（出口），5：返港还柜,6：拒绝任务',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0打单、1提柜、2送柜、3待装货、4还柜途中、5进入码头、6已卸柜',
   `is_accept` TINYINT(4) NOT NULL DEFAULT 1 COMMENT '司机是否接受订单。0:拒绝，1:接受',
   `reject_reason` VARCHAR(400) COMMENT '拒绝接受任务理由',
   `memo` TEXT COMMENT '其它说明',
@@ -368,7 +388,7 @@ DROP TABLE IF EXISTS `linkage_driver_task_history`;
 CREATE TABLE `linkage_driver_task_history` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `task_id` INT(11) UNSIGNED NOT NULL,
-  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0:未委派，1：委派司机，2：到港提柜，3：运柜出港，4：送达卸货(入口)/到达载柜（出口），5：返港还柜,6：拒绝任务',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0打单、1提柜、2送柜、3待装货、4还柜途中、5进入码头、6已卸柜',
   `memo` TEXT COMMENT '其它说明',
   `image` VARCHAR(400) COMMENT '司机拍照。图片链接地址',
   `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务生成日期',
