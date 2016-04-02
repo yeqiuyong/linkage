@@ -33,4 +33,9 @@ class LinkageUtils
     const MESSAGE_TYPE_EMPLOYMENT = 1;
     const MESSAGE_TYPE_NOTICE = 2;
 
+    const ORDER_TYPE_EXPORT = 0;
+    const ORDER_TYPE_IMPORT = 1;
+    const ORDER_TYPE_INLAND = 2;
+    const ORDER_TYPE_SELF = 3;
+
 }

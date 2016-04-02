@@ -339,6 +339,7 @@ CREATE TABLE `linkage_order_2_cargo` (
   `order_id` CHAR(64)  NOT NULL DEFAULT '' COMMENT '订单号',
   `cargo_no` CHAR(64)  NOT NULL DEFAULT '' COMMENT '柜号',
   `cargo_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '柜型',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '产',
   PRIMARY KEY (`id`),
   UNIQUE KEY (`order_id`, `cargo_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

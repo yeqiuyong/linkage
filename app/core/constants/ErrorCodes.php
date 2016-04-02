@@ -69,6 +69,9 @@ class ErrorCodes
     const COMPANY_DEUPLICATE = 5001;
     const COMPANY_NOTFOUND = 5002;
 
+    //Order mangement
+    const ORDER_TRANSPORTER_NULL = 6001;
+
     public static $MESSAGE = [
         // General
         self::GEN_SYSTEM => "系统通用错误",

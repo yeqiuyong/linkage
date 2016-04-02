@@ -23,6 +23,13 @@ class StatusCodes
     const COMPANY_USER_BANNED = 3;
     const COMPANY_USER_DELETED = 4;
 
+    const ORDER_PLACE = 0;
+    const ORDER_HANDLING = 1;
+    const ORDER_REJECT = 2;
+    const ORDER_HANDLED = 3;
+    const ORDER_CANCEL = 4;
+    const ORDER_DELETED = 5;
+
     const FAVORITE_ACTIVE = 0;
     const FAVORITE_INACTIVE = 1;
     const FAVORITE_DELETE = 2;
@@ -30,5 +37,6 @@ class StatusCodes
     const COMPLAIN_HANDLING = 0;
     const COMPLAIN_HANDLED= 1;
     const COMPLAIN_DELETED = 2;
+
 
 }
