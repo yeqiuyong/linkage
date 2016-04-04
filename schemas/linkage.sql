@@ -253,10 +253,12 @@ DROP TABLE IF EXISTS `linkage_order`;
 CREATE TABLE `linkage_order` (
   `order_id` CHAR(64)  NOT NULL DEFAULT '',
   `type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '码头出口0,码头进口1,内陆柜2,自备柜3',
-  `manufacture_id` INT(11) unsigned NOT NULL DEFAULT 0 COMMENT '订单委托厂商',
-  `transporter_id` INT(11) unsigned NOT NULL DEFAULT 0 COMMENT '接单承运商',
+  `manufacture_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '订单委托厂商',
+  `transporter_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '接单承运商',
+  `manufacture_contact_id` INT(11) UNSIGNED DEFAULT NULL COMMENT '厂商下单联系人ID',
   `manufacture_contact_name` VARCHAR(120) COMMENT '厂商联系人',
   `manufacture_contact_tel` VARCHAR(30) COMMENT '厂商联系电话',
+  `transporter_contact_id` INT(11) UNSIGNED DEFAULT NULL COMMENT '承运商接单联系人ID',
   `transporter_contact_name` VARCHAR(120) COMMENT '承运商联系人',
   `transporter_contact_tel` VARCHAR(30) COMMENT '承运商联系电话',
   `take_address` VARCHAR(400) COMMENT '货柜接货地址',
@@ -297,7 +299,8 @@ DROP TABLE IF EXISTS `linkage_order_import`;
 CREATE TABLE `linkage_order_import` (
   `order_id` CHAR(64)  NOT NULL DEFAULT '',
   `cargos_rent_expire` INT(11) COMMENT '柜组到期日',
-  `bill_no` CHAR(64)  NOT NULL DEFAULT '提单号',
+  `bill_no` CHAR(64)  NOT NULL DEFAULT '' COMMENT '提单号',
+  `cargo_no` VARCHAR(400) DEFAULT NULL COMMENT '柜号',
   `customs_broker` VARCHAR(120) COMMENT '报关行联系人',
   `customshouse_contact` VARCHAR(30) COMMENT '报关行联系电话',
   `cargo_company` VARCHAR(120) COMMENT '二程公司',
@@ -337,11 +340,9 @@ DROP TABLE IF EXISTS `linkage_order_2_cargo`;
 CREATE TABLE `linkage_order_2_cargo` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `order_id` CHAR(64)  NOT NULL DEFAULT '' COMMENT '订单号',
-  `cargo_no` CHAR(64)  NOT NULL DEFAULT '' COMMENT '柜号',
+  `cargo_no` CHAR(64)  DEFAULT '' COMMENT '柜号',
   `cargo_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '柜型',
-  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '产',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY (`order_id`, `cargo_no`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 

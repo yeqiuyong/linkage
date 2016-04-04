@@ -26,13 +26,13 @@ class OrderExport extends Model
     public function add($orderId, $so, $soImages, $customsIn, $port, $shipCompany, $shipName, $shipSchedule, $isBookCargo){
         $this->order_id = $orderId;
         $this->so = $so;
-        $this->soImages = $soImages;
-        $this->customsIn = $customsIn;
+        $this->so_images = $soImages;
+        $this->customs_in = $customsIn;
         $this->port = $port;
-        $this->shipCompany = $shipCompany;
-        $this->shipName = $shipName;
-        $this->shipSchedule = $shipSchedule;
-        $this->isBookCargo = $isBookCargo;
+        $this->ship_company = $shipCompany;
+        $this->ship_name = $shipName;
+        $this->ship_schedule_no = $shipSchedule;
+        $this->is_book_cargo = $isBookCargo;
 
         if($this->save() == false){
             $message = '';

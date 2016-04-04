@@ -22,10 +22,9 @@ class OrderCargo extends Model
         $this->setSource("linkage_order_2_cargo");
     }
 
-    public function add($orderId, $cargoType, $no){
+    public function add($orderId, $cargoType){
         $this->order_id = $orderId;
         $this->cargo_type = $cargoType;
-        $this->cargo_no = $orderId . (String)$no;
 
         if($this->save() == false){
             $message = '';

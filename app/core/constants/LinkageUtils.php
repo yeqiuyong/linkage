@@ -38,4 +38,16 @@ class LinkageUtils
     const ORDER_TYPE_INLAND = 2;
     const ORDER_TYPE_SELF = 3;
 
+    const CARGO_TYPE_GP_20 = 0;
+    const CARGO_TYPE_GP_40 = 1;
+    const CARGO_TYPE_HQ_40 = 2;
+    const CARGO_TYPE_HQ_45 = 3;
+    const CARGO_TYPE_OT_20 = 4;
+    const CARGO_TYPE_OT_40 = 5;
+    const CARGO_TYPE_FR_20 = 6;
+    const CARGO_TYPE_FR_40 = 7;
+    const CARGO_TYPE_FR_45 = 8;
+    const CARGO_TYPE_R_20 = 9;
+    const CARGO_TYPE_R_40 = 10;
+
 }
