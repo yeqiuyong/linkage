@@ -143,7 +143,7 @@
     function render(func, mydiv,  pageindex, page){
         //var myfunc = func.substring(4);
         var strtable = '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-        strtable += '<thead><tr> <th>编号</th>  <th>用户名</th> <th>电话</th> <th>注册时间</th> <th>状态</th> <th>操作</th> </tr> </thead>';
+        strtable += '<thead><tr> <th>编号</th> <th>角色</th>  <th>用户名</th> <th>电话</th> <th>注册时间</th> <th>状态</th> <th>操作</th> </tr> </thead>';
 
         var register_time = new Date();
         for (var i = 0; i < page.items.length; i++) {
@@ -154,6 +154,7 @@
 
             strtable += "<tr>";
             strtable += "<td>" + num + "</td>";
+            strtable += "<td>" + page.items[i].rolename + "</td>";
             strtable += "<td>" + page.items[i].username + "</td>";
             strtable += "<td>" + page.items[i].mobile + "</td>";
             strtable += "<td>" + register_time.toLocaleDateString() + "</td>";
@@ -165,6 +166,7 @@
                 case '1': strtable += '<span class="label-default label">Inactive</span>'; break;
                 case '2': strtable += '<span class="label-warning label">Pending</span>'; break;
                 case '3': strtable += '<span class="label-default label-danger">Banned</span>'; break;
+                case '4': strtable += '<span class="label-default label-danger">Delete</span>'; break;
                 default : strtable += '<span class="label-success label label-default">Active</span>';
             }
             strtable += '</td>';
@@ -176,7 +178,7 @@
             strtable += '</a>';
             strtable += '<div class="btn-group">';
             strtable += '<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
-            strtable += '<i class="glyphicon glyphicon-edit"></i><span class="hidden-sm hidden-xs"> admin</span>';
+            strtable += '<i class="glyphicon glyphicon-edit"></i><span class="hidden-sm hidden-xs"> 状态</span>';
             strtable += '<span class="caret"></span>';
             strtable += '</button>';
             strtable += '<ul class="dropdown-menu">';

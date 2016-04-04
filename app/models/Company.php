@@ -229,6 +229,40 @@ class Company extends Model
         }
     }
 
+    public function updateStaffStatus($companyId, $status){
+        $phql="update status from Multiple\Models\ClientUser set status = ".$status." where company_id = ".$companyId;
+        $this->modelsManager->executeQuery($phql);
+    }
+
+    public function getCompaniesByType($type){
+        $results = [];
+
+        $conditions = "type = :type:";
+        $parameters = array(
+            "type" => $type
+        );
+        $companies = self::find(
+            array(
+                $conditions,
+                "bind" => $parameters
+            )
+        );
+
+        foreach ($companies as $company) {
+            $result = [];
+            $result['id'] = $company->company_id;
+            $result['name'] = $company->name;
+            $result['contact'] = $company->contactor;
+            $result['phone'] = $company->service_phone_1;
+            $result['create_time'] = $company->create_time;
+            $result['status'] = $company->status;
+
+            array_push($results,$result);
+        }
+
+        return $results;
+    }
+
     public function getCompanyInformation($companyId){
         $company = self::findFirst([
             'conditions' => 'company_id = :companyID:',

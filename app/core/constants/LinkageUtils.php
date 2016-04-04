@@ -23,11 +23,11 @@ class LinkageUtils
     const COMPANY_MANUFACTURE = 0;
     const COMPANY_TRANSPORTER = 1;
 
-    const USER_ADMIN_MANUFACTURE = 0;
-    const USER_MANUFACTURE = 1;
-    const USER_ADMIN_TRANSPORTER = 2;
-    const USER_TRANSPORTER = 3;
-    const USER_DRIVER = 4;
+    const USER_ADMIN_MANUFACTURE = 1;
+    const USER_MANUFACTURE = 2;
+    const USER_ADMIN_TRANSPORTER = 3;
+    const USER_TRANSPORTER = 4;
+    const USER_DRIVER = 5;
 
     const MESSAGE_TYPE_ADV = 0;
     const MESSAGE_TYPE_EMPLOYMENT = 1;

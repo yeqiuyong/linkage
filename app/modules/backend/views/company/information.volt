@@ -51,9 +51,9 @@
                         <li>
                             <strong>类型:</strong> <small>{{ type }}</small> <br>
                         </li>
-                        <li>
-                            <strong>企业代号:</strong> <small>{{ code }}</small> <br>
-                        </li>
+                        {#<li>#}
+                            {#<strong>企业代号:</strong> <small>{{ code }}</small> <br>#}
+                        {#</li>#}
                         <li>
                             <strong>联系人:</strong> <small>{{ contactor }}</small> <br>
                         </li>

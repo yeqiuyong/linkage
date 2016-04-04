@@ -144,14 +144,19 @@
             strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
             strtable += '查看';
             strtable += '</a>';
-            strtable += '<a class="btn btn-info" href="#">';
-            strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
-            strtable += '编辑';
-            strtable += '</a>';
-            strtable += '<a class="btn btn-danger" href="#">';
-            strtable += '<i class="glyphicon glyphicon-trash icon-white"></i>';
-            strtable += '删除';
-            strtable += '</a>';
+            strtable += '<div class="btn-group">';
+            strtable += '<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
+            strtable += '<i class="glyphicon glyphicon-edit"></i><span class="hidden-sm hidden-xs"> 状态</span>';
+            strtable += '<span class="caret"></span>';
+            strtable += '</button>';
+            strtable += '<ul class="dropdown-menu">';
+            strtable += '<li class="divider"></li>';
+            strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 0' + ', ' + func + ' ,' +  pageindex  + ')">Active</a></li>';
+            strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 1' + ', ' + func + ' ,' +  pageindex  + ')">Inactive</a></li>';
+            strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 3' + ', ' + func + ' ,' +  pageindex  + ')">Banned</a></li>';
+            strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 4' + ', ' + func + ' ,' +  pageindex  + ')">Delete</a></li>';
+            strtable += '</ul>';
+            strtable += '</div>';
             strtable += '</td>';
 
             strtable += "</tr>";
@@ -178,7 +183,20 @@
     }
 
     function loadCompanyInfo(id){
-        window.location.href = "<?php echo $this->url->get('admin/company/information').'?id=2' ?>";
+        window.location.href = "<?php echo $this->url->get('admin/company/information').'?id="+ id +"' ?>";
+    }
+
+    function changeStatus(id, status, func, pageindex){
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('admin/company/changestatus') ?>",
+            data: "id="+id+"&status="+status+"&pageindex="+pageindex,
+            success: function () {
+                func(pageindex);
+            }
+        });
+
     }
 
     loadManufactures(pageindexinit);

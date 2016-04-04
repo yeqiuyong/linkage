@@ -399,6 +399,28 @@ class ClientUser extends Model
 
     }
 
+    public function getUsersByCompanyId($companyId){
+        $users = self::find([
+            'conditions' => 'company_id = :company_id:',
+            'bind' => ['company_id' => $companyId]
+        ]);
+
+        $results = [];
+        foreach ($users as $user) {
+            $result = [];
+            $result['id'] = $user->user_id;
+            $result['user'] = $user->username;
+            $result['realname'] = $user->name;
+            $result['mobile'] = $user->mobile;
+            $result['status'] = $user->status;
+
+            array_push($results,$result);
+        }
+
+        return $results;
+
+    }
+
     public function getRoleId($userid){
         $user = self::findFirst([
             'conditions' => 'user_id = :user_id:',
@@ -412,6 +434,18 @@ class ClientUser extends Model
         return $user->user_role->role_id;
     }
 
+    public function getStatus($userid){
+        $user = self::findFirst([
+            'conditions' => 'user_id = :user_id:',
+            'bind' => ['user_id' => $userid]
+        ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        return $user->status;
+    }
 
     public function delStaff($staffId){
         $staff = self::findFirst([
@@ -436,19 +470,6 @@ class ClientUser extends Model
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
-    }
-
-    public function getStatus($userid){
-        $user = self::findFirst([
-            'conditions' => 'user_id = :user_id:',
-            'bind' => ['user_id' => $userid]
-        ]);
-
-        if(!isset($user->user_id)){
-            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
-        }
-
-        return $user->status;
     }
 
     public function isPasswordValidate($userid, $password){
