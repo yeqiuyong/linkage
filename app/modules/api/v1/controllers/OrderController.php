@@ -663,7 +663,7 @@ class OrderController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($orders);
+        return $this->respondArray(['orders' => $orders]);
 
     }
 
@@ -697,15 +697,15 @@ class OrderController extends APIControllerBase
                 $orderDetail = $orderExport->getDetail4Transporter($orderId);
             }
 
-            //Get Cargos Information
-            $orderCargo = new OrderCargo();
-            $cargos = $orderCargo->getCargosByOrderId($orderId);
-            $orderDetail['cargos'] = $cargos;
-
-            //Get Driver Tasks
-            $driverTask = new DriverTask();
-            $tasks = $driverTask->getTaskByOrderId($orderId);
-            $orderDetail['tasks'] = $tasks;
+//            //Get Cargos Information
+//            $orderCargo = new OrderCargo();
+//            $cargos = $orderCargo->getCargosByOrderId($orderId);
+//            $orderDetail['cargos'] = $cargos;
+//
+//            //Get Driver Tasks
+//            $driverTask = new DriverTask();
+//            $tasks = $driverTask->getTaskByOrderId($orderId);
+//            $orderDetail['tasks'] = $tasks;
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());

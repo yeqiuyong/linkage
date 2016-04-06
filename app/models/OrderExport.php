@@ -47,11 +47,11 @@ class OrderExport extends Model
     }
 
     public function getDetail4Manufacture($orderId){
-        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderExport c where a.transporter_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $phql="select c.* from Multiple\Models\Order a left join Multiple\Models\OrderExport c where a.order_id = c.order_id and a.order_id = $orderId";
         $order = $this->modelsManager->executeQuery($phql);
 
         $orderDetail = [
-            'company_id' => $order->transporter_id,
+            'company_id' => $order[0]->transporter_id,
             'company_name' => $order->company_name,
             'take_address' => $order->take_address,
             'take_time' => $order->take_time,
@@ -59,7 +59,7 @@ class OrderExport extends Model
             'delivery_time' => $order->delivery_time,
             'is_transfer_port' => $order->is_transfer_port,
             'memo' => $order->memo,
-            'so' => $order->so,
+            'so' => $order[0]->so,
             'so_images' => $order->so_images,
             'ship_company' => $order->ship_company,
             'ship_name' => $order->ship_name,
@@ -71,7 +71,7 @@ class OrderExport extends Model
     }
 
     public function getDetail4Transporter($orderId){
-        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderExport c where a.manufacture_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderExport c where a.manufacture_id = b.company_id and a.order_id = c.order_id and a.order_id = '".$orderId."'";
         $order = $this->modelsManager->executeQuery($phql);
 
         $orderDetail = [

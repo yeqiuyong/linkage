@@ -68,10 +68,10 @@ class Order extends Model
             throw new UserOperationException(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
         }
 
-        $this->update_time = time();
-        $this->status = $status;
+        $order->update_time = time();
+        $order->status = $status;
 
-        if($this->update() == false){
+        if($order->update() == false){
             $message = '';
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg . ",";
@@ -91,11 +91,11 @@ class Order extends Model
         }
 
         if($status == 1){
-            $condition .= " and status in (0, 1, 2)";
+            $condition .= " and a.status in (0, 1, 2)";
         }else if($status == 2){
-            $condition .= " and status in (3, 4)";
+            $condition .= " and a.status in (3, 4)";
         }else{
-            $condition .= " and status not in (5)";
+            $condition .= " and a.status not in (5)";
         }
 
         if(!$pagination){

@@ -46,7 +46,7 @@ class OrderImport extends Model
 
 
     public function getDetail4Manufacture($orderId){
-        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderImport c where a.transporter_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderImport c where a.transporter_id = b.company_id and a.order_id = c.order_id and a.order_id = '".$orderId."'";
         $order = $this->modelsManager->executeQuery($phql);
 
         $orderDetail = [
@@ -70,7 +70,7 @@ class OrderImport extends Model
     }
 
     public function getDetail4Transporter($orderId){
-        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderImport c where a.manufacture_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderImport c where a.manufacture_id = b.company_id and a.order_id = c.order_id and a.order_id = '".$orderId."'";
         $order = $this->modelsManager->executeQuery($phql);
 
         $orderDetail = [

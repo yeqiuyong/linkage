@@ -28,7 +28,7 @@ class ClientUser extends Model
     public function initialize(){
         $this->setSource("linkage_clientuser");
 
-        $this->hasMany('user_id', 'Multiple\Models\ClientUserRole', 'user_id', array(  'alias' => 'user_role',
+        $this->hasOne('user_id', 'Multiple\Models\ClientUserRole', 'user_id', array(  'alias' => 'user_role',
             'reusable' => true ));
 
         $this->BelongsTo('company_id', 'Multiple\Models\Company', 'company_id', array(  'alias' => 'company',
@@ -405,7 +405,7 @@ class ClientUser extends Model
     }
 
     public function getStaffs($userid, $pagination, $offset, $size){
-        $condition = " where status = ". StatusCodes::CLIENT_USER_ACTIVE;
+        $condition = " and status = ". StatusCodes::CLIENT_USER_ACTIVE;
         if($pagination != 0){
             $condition = " limit ".$offset.",".$size;
         }
