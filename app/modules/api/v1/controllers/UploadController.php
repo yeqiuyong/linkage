@@ -106,4 +106,29 @@ class UploadController extends APIControllerBase
         return $this->respondArray(['icon' => $fileName]);
     }
 
+    /**
+     * @title("uploadfiles")
+     * @description("Upload multiple files")
+     * @requestExample("POST /upload/upload")
+     * @response("Data object or Error object")
+     */
+    public function soAction()
+    {
+        $this->upyun = Di::getDefault()->get(Services::UPYUN);
+
+        $FileNames = '';
+        // Check if the user has uploaded files
+        if ($this->request->hasFiles()) {
+            try{
+                foreach ($this->request->getUploadedFiles() as $file) {
+                    $FileNames .= $this->upyun->uploadImage($file).';';
+                }
+            }catch (UploadException $e){
+                $this->respondError($e->getCode(), $e->getMessage());
+            }
+
+        }
+
+        return $this->respondArray(['so' => $FileNames]);
+    }
 }

@@ -46,4 +46,52 @@ class OrderExport extends Model
         }
     }
 
+    public function getDetail4Manufacture($orderId){
+        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderExport c where a.transporter_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $order = $this->modelsManager->executeQuery($phql);
+
+        $orderDetail = [
+            'company_id' => $order->transporter_id,
+            'company_name' => $order->company_name,
+            'take_address' => $order->take_address,
+            'take_time' => $order->take_time,
+            'delivery_address' => $order->delivery_address,
+            'delivery_time' => $order->delivery_time,
+            'is_transfer_port' => $order->is_transfer_port,
+            'memo' => $order->memo,
+            'so' => $order->so,
+            'so_images' => $order->so_images,
+            'ship_company' => $order->ship_company,
+            'ship_name' => $order->ship_name,
+            'ship_schedule_no' => $order->ship_schedule_no,
+            'is_book_cargo' => $order->is_book_cargo,
+        ];
+
+        return $orderDetail;
+    }
+
+    public function getDetail4Transporter($orderId){
+        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderExport c where a.manufacture_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $order = $this->modelsManager->executeQuery($phql);
+
+        $orderDetail = [
+            'company_id' => $order->manufacture_id,
+            'company_name' => $order->company_name,
+            'take_address' => $order->take_address,
+            'take_time' => $order->take_time,
+            'delivery_address' => $order->delivery_address,
+            'delivery_time' => $order->delivery_time,
+            'is_transfer_port' => $order->is_transfer_port,
+            'memo' => $order->memo,
+            'so' => $order->so,
+            'so_images' => $order->so_images,
+            'ship_company' => $order->ship_company,
+            'ship_name' => $order->ship_name,
+            'ship_schedule_no' => $order->ship_schedule_no,
+            'is_book_cargo' => $order->is_book_cargo,
+        ];
+
+        return $orderDetail;
+    }
+
 }

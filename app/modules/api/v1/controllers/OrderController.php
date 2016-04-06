@@ -9,7 +9,6 @@
 
 namespace Multiple\API\Controllers;
 
-use Multiple\Models\Company;
 use Phalcon\Di;
 
 use Multiple\Core\Exception\Exception;
@@ -19,13 +18,15 @@ use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Constants\StatusCodes;
 
-use Multiple\Models\Notice;
 use Multiple\Models\ClientUser;
 use Multiple\Models\Order;
 use Multiple\Models\OrderExport;
 use Multiple\Models\OrderImport;
 use Multiple\Models\OrderSelf;
 use Multiple\Models\OrderCargo;
+use Multiple\Models\Company;
+use Multiple\Models\DriverTask;
+use Multiple\Models\OrderComment;
 
 
 /**
@@ -81,7 +82,7 @@ class OrderController extends APIControllerBase
             $this->db->begin();
 
             $user = new ClientUser();
-            $mInfo = $user->getUserInfomation($this->cid);
+            $mUserInfo = $user->getUserInfomation($this->cid);
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -89,7 +90,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mInfo['company_id'], $tCompanyId, $this->cid, $mInfo['realname'], $mInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderExport = new OrderExport();
             $orderExport->add($orderId, $so, $soImages, $customsIn, $port, $shipCompany, $shipName, $shipSchedule, $isBookCargo);
@@ -158,7 +159,7 @@ class OrderController extends APIControllerBase
             $this->db->begin();
 
             $user = new ClientUser();
-            $mInfo = $user->getUserInfomation($this->cid);
+            $mUserInfo = $user->getUserInfomation($this->cid);
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -166,7 +167,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mInfo['company_id'], $tCompanyId, $this->cid, $mInfo['realname'], $mInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderImport = new OrderImport();
             $orderImport->add($orderId, $rentExpire, $billNo, $cargoNo, $cargoCompany, $customBroker, $customContact);
@@ -232,7 +233,7 @@ class OrderController extends APIControllerBase
             $this->db->begin();
 
             $user = new ClientUser();
-            $mInfo = $user->getUserInfomation($this->cid);
+            $mUserInfo = $user->getUserInfomation($this->cid);
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -240,7 +241,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mInfo['company_id'], $tCompanyId, $this->cid, $mInfo['realname'], $mInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderSelf = new OrderSelf();
             $orderSelf->add($orderId, $customsIn, $cargoTakeTime, $isCustomsDeclare);
@@ -324,7 +325,7 @@ class OrderController extends APIControllerBase
             $order->updateStatus($rejectOrderId, StatusCodes::ORDER_DELETED);
 
             $user = new ClientUser();
-            $mInfo = $user->getUserInfomation($this->cid);
+            $mUserInfo = $user->getUserInfomation($this->cid);
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -332,7 +333,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mInfo['company_id'], $tCompanyId, $this->cid, $mInfo['realname'], $mInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderExport = new OrderExport();
             $orderExport->add($orderId, $so, $soImages, $customsIn, $port, $shipCompany, $shipName, $shipSchedule, $isBookCargo);
@@ -414,7 +415,7 @@ class OrderController extends APIControllerBase
             $order->updateStatus($rejectOrderId, StatusCodes::ORDER_DELETED);
 
             $user = new ClientUser();
-            $mInfo = $user->getUserInfomation($this->cid);
+            $mUserInfo = $user->getUserInfomation($this->cid);
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -422,7 +423,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mInfo['company_id'], $tCompanyId, $this->cid, $mInfo['realname'], $mInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderImport = new OrderImport();
             $orderImport->add($orderId, $rentExpire, $billNo, $cargoNo, $cargoCompany, $customBroker, $customContact);
@@ -501,7 +502,7 @@ class OrderController extends APIControllerBase
             $order->updateStatus($rejectOrderId, StatusCodes::ORDER_DELETED);
 
             $user = new ClientUser();
-            $mInfo = $user->getUserInfomation($this->cid);
+            $mUserInfo = $user->getUserInfomation($this->cid);
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -509,7 +510,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mInfo['company_id'], $tCompanyId, $this->cid, $mInfo['realname'], $mInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderSelf = new OrderSelf();
             $orderSelf->add($orderId, $customsIn, $cargoTakeTime, $isCustomsDeclare);
@@ -627,7 +628,6 @@ class OrderController extends APIControllerBase
 
         return $this->respondOK();
 
-
     }
 
     /**
@@ -652,7 +652,12 @@ class OrderController extends APIControllerBase
             $role = $user->getRoleId($this->cid);
             $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
 
-            $orders = $this->getOrderList($this->cid, $isManufacture, $type, $status, $pagination, $offset, $size);
+            $order = new Order();
+            if($isManufacture){
+                $orders = $order->getOrders4Manufacture($this->cid, $type, $status, $pagination, $offset, $size);
+            }else{
+                $orders = $order->getOrders4Transporter($this->cid, $type, $status, $pagination, $offset, $size);
+            }
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -669,7 +674,44 @@ class OrderController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function detail4exportAction(){
+        $orderId = $this->request->getPost('order_id', 'string');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($orderId)){
+            return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
+        }
+
+        try {
+            $user = new  ClientUser();
+            $role = $user->getRoleId($this->cid);
+            $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
+
+            //Get Order Detail
+            $orderExport = new OrderExport();
+            if($isManufacture){
+                $orderDetail = $orderExport->getDetail4Manufacture($orderId);
+            }else{
+                $orderDetail = $orderExport->getDetail4Transporter($orderId);
+            }
+
+            //Get Cargos Information
+            $orderCargo = new OrderCargo();
+            $cargos = $orderCargo->getCargosByOrderId($orderId);
+            $orderDetail['cargos'] = $cargos;
+
+            //Get Driver Tasks
+            $driverTask = new DriverTask();
+            $tasks = $driverTask->getTaskByOrderId($orderId);
+            $orderDetail['tasks'] = $tasks;
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($orderDetail);
 
     }
 
@@ -680,7 +722,44 @@ class OrderController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function detail4importAction(){
+        $orderId = $this->request->getPost('order_id', 'string');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($orderId)){
+            return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
+        }
+
+        try {
+            $user = new  ClientUser();
+            $role = $user->getRoleId($this->cid);
+            $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
+
+            //Get Order Detail
+            $orderImport = new OrderImport();
+            if($isManufacture){
+                $orderDetail = $orderImport->getDetail4Manufacture($orderId);
+            }else{
+                $orderDetail = $orderImport->getDetail4Transporter($orderId);
+            }
+
+            //Get Cargos Information
+            $orderCargo = new OrderCargo();
+            $cargos = $orderCargo->getCargosByOrderId($orderId);
+            $orderDetail['cargos'] = $cargos;
+
+            //Get Driver Tasks
+            $driverTask = new DriverTask();
+            $tasks = $driverTask->getTaskByOrderId($orderId);
+            $orderDetail['tasks'] = $tasks;
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($orderDetail);
 
     }
 
@@ -691,18 +770,44 @@ class OrderController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function detail4selfAction(){
+        $orderId = $this->request->getPost('order_id', 'string');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
 
-    }
+        if(empty($orderId)){
+            return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
+        }
 
-    /**
-     * @title("process")
-     * @description("Order process")
-     * @requestExample("POST /order/process")
-     * @response("Data object or Error object")
-     */
-    public function processAction(){
+        try {
+            $user = new  ClientUser();
+            $role = $user->getRoleId($this->cid);
+            $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
 
+            //Get Order Detail
+            $orderExport = new OrderExport();
+            if($isManufacture){
+                $orderDetail = $orderExport->getDetail4Manufacture($orderId);
+            }else{
+                $orderDetail = $orderExport->getDetail4Transporter($orderId);
+            }
+
+            //Get Cargos Information
+            $orderCargo = new OrderCargo();
+            $cargos = $orderCargo->getCargosByOrderId($orderId);
+            $orderDetail['cargos'] = $cargos;
+
+            //Get Driver Tasks
+            $driverTask = new DriverTask();
+            $tasks = $driverTask->getTaskByOrderId($orderId);
+            $orderDetail['tasks'] = $tasks;
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($orderDetail);
 
     }
 
@@ -713,59 +818,29 @@ class OrderController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function commentAction(){
+        $orderId = $this->request->getPost('order_id', 'string');
+        $score = $this->request->getPost('score', 'int');
+        $comment = $this->request->getPost('comment', 'string');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($orderId)){
+            return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
+        }
+
+        try {
+            $orderComment = new OrderComment();
+            $orderComment->add($orderId, $score, $comment);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
 
     }
-
-    private function getOrderList($userid, $isManufacture, $type = -1, $status, $pagination = 0,  $offset = 0, $size = 10){
-        if($type == -1){
-            $condition = " and a.manufacture_contact_id = $userid ";
-        }else{
-            $condition = " and a.manufacture_contact_id = $userid and type = $type";
-        }
-
-        if($status == 1){
-            $condition .= " and status in (0, 1, 2)";
-        }else if($status == 2){
-            $condition .= " and status in (3, 4)";
-        }else{
-            $condition .= " and status not in (5)";
-        }
-
-        if(!$pagination){
-            $limit = " limit $offset, $size";
-        }else{
-            $limit = "";
-        }
-
-        if($isManufacture){
-            $phql="select a.order_id, a.manufacture_id as company_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id ".$condition.$limit;
-        }else{
-            $phql="select a.order_id, a.transporter_id as company_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id ".$condition.$limit;
-
-        }
-        $lists = $this->modelsManager->executeQuery($phql);
-
-        $orders = [];
-        foreach($lists as $list){
-            $order = [
-                'order_id' => $list->order_id,
-                'type' => 0,
-                'status' => $list->status,
-                'company_id' => $list->company_id,
-                'company_name' => $list->company_name,
-                'create_time' => $list->create_time,
-                'update_time' => $list->update_time,
-
-            ];
-
-            array_push($orders, $order);
-        }
-
-        return $orders;
-    }
-
-
 
     private function genOrderId($userid){
         list($tmp1, $tmp2) = explode(' ', microtime());

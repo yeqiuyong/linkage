@@ -42,4 +42,49 @@ class OrderSelf extends Model
         }
     }
 
+
+    public function getDetail4Manufacture($orderId){
+        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderSelf c where a.transporter_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $order = $this->modelsManager->executeQuery($phql);
+
+        $orderDetail = [
+            'company_id' => $order->transporter_id,
+            'company_name' => $order->company_name,
+            'take_address' => $order->take_address,
+            'take_time' => $order->take_time,
+            'delivery_address' => $order->delivery_address,
+            'delivery_time' => $order->delivery_time,
+            'is_transfer_port' => $order->is_transfer_port,
+            'memo' => $order->memo,
+            'is_customs_declare' => $order->is_customs_declare,
+            'customs_in' => $order->customs_in,
+            'cargo_take_time' => $order->cargo_take_time,
+
+        ];
+
+        return $orderDetail;
+    }
+
+    public function getDetail4Transporter($orderId){
+        $phql="select a.*, b.name as company_name, c.* from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderSelf c where a.manufacture_id = b.company_id and a.order_id = c.order_id and order_id = '".$orderId."'";
+        $order = $this->modelsManager->executeQuery($phql);
+
+        $orderDetail = [
+            'company_id' => $order->manufacture_id,
+            'company_name' => $order->company_name,
+            'take_address' => $order->take_address,
+            'take_time' => $order->take_time,
+            'delivery_address' => $order->delivery_address,
+            'delivery_time' => $order->delivery_time,
+            'is_transfer_port' => $order->is_transfer_port,
+            'memo' => $order->memo,
+            'is_customs_declare' => $order->is_customs_declare,
+            'customs_in' => $order->customs_in,
+            'cargo_take_time' => $order->cargo_take_time,
+
+        ];
+
+        return $orderDetail;
+    }
+
 }

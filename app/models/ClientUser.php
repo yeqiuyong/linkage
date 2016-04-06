@@ -97,6 +97,39 @@ class ClientUser extends Model
         }
     }
 
+    public function registerDriver($mobile, $password, $status, $companyID, $name, $gender, $icon){
+        $security = Di::getDefault()->get(Services::SECURITY);
+
+        if($this->isMobileRegistered($mobile)){
+            throw new UserOperationException(ErrorCodes::USER_MOBILE_DUPLICATE, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_DUPLICATE]);
+        }
+
+        $now = time();
+
+        $this->username = $mobile;
+        $this->mobile = $mobile;
+        $this->name = $name;
+        $this->password = $security->hash($password);
+        $this->company_id = $companyID;
+        $this->gender = $gender;
+        $this->icon = $icon;
+
+        $this->create_time = $now;
+        $this->update_time = $now;
+        $this->status = $status;
+
+        if($this->save() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function updatePasswordByMobile($mobile, $password){
         $security = Di::getDefault()->get(Services::SECURITY);
 
@@ -281,7 +314,7 @@ class ClientUser extends Model
             'bind' => ['username' => $username]
         ]);
 
-        if(!isset($user->$user_id)){
+        if(!isset($user->user_id)){
             throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
         }
 

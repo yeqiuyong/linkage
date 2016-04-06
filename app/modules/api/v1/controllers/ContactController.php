@@ -21,6 +21,14 @@ use Multiple\Models\Contact;
 
 class ContactController extends APIControllerBase
 {
+    private $logger;
+
+    public function initialize(){
+        parent::initialize();
+
+        $this->logger = Di::getDefault()->get(Services::LOGGER);
+    }
+
     /**
      * @title("verifyCode")
      * @description("Get password verify code")
@@ -38,11 +46,11 @@ class ContactController extends APIControllerBase
 
         try{
             $user = new ClientUser();
-            $user->getUserInfomation($this->cid);
+            $userInfo = $user->getUserInfomation($this->cid);
 
-            $mobile = empty($mobile) ? $user['mobile'] : $mobileTmp;
-            $email = empty($emailTmp) ? $user['email'] : $emailTmp;
-            $name = empty($user['name']) ? $user['username'] : $user['name'];
+            $mobile = empty($mobile) ? $userInfo['mobile'] : $mobileTmp;
+            $email = empty($emailTmp) ? $userInfo['email'] : $emailTmp;
+            $name = empty($userInfo['name']) ? $userInfo['username'] : $userInfo['name'];
 
             $contact = new Contact();
             $contact->add($name, $mobile, $email, $contact);

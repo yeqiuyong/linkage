@@ -71,13 +71,13 @@ class ProfileController extends APIControllerBase
 
         try{
             $user = new ClientUser();
-            $info = $user->getUserInfomation($this->cid);
+            $userInfo = $user->getUserInfomation($this->cid);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($info);
+        return $this->respondArray($userInfo);
     }
 
     /**

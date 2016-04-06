@@ -238,10 +238,16 @@ DROP TABLE IF EXISTS `linkage_car`;
 CREATE TABLE `linkage_car` (
   `car_id`  INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `comapny_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
-  `driver_id` INT(11) UNSIGNED DEFAULT NULL ,
-  `license` VARCHAR(16) NOT NULL COMMENT '车牌号',
   `car_type` VARCHAR(100) DEFAULT NULL COMMENT '车类型',
-  `memo` VARCHAR(128) DEFAULT NULL COMMENT '其它说明',
+  `license` VARCHAR(16) NOT NULL COMMENT '车牌号',
+  `engine_no` VARCHAR(16) DEFAULT NULL COMMENT '发动机号',
+  `frame_no` VARCHAR(16) DEFAULT NULL COMMENT '车架号',
+  `examine_date` INT(11) DEFAULT NULL COMMENT '年审日期',
+  `maintain_date` INT(11) DEFAULT NULL COMMENT '二级维保日期',
+  `traffic_insure_date` INT(11) DEFAULT NULL COMMENT '交强险日期',
+  `business_insure_date` INT(11) DEFAULT NULL COMMENT '商业保险日期',
+  `insure_company` VARCHAR(256) DEFAULT NULL COMMENT '保险公司',
+  `memo` VARCHAR(400) DEFAULT NULL COMMENT '其它说明',
   PRIMARY KEY (`car_id`),
   UNIQUE KEY (`license`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -362,6 +368,18 @@ CREATE TABLE `linkage_order_comment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Table structure for table `user_role`
+--
+DROP TABLE IF EXISTS `linkage_driver`;
+CREATE TABLE `linkage_car` (
+  `driver_id`  INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `car_id` INT(11) UNSIGNED DEFAULT NULL ,
+  `license` VARCHAR(16) NOT NULL COMMENT '车牌号',
+  PRIMARY KEY (`driver_id`),
+  UNIQUE KEY (`license`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
 -- Table structure for table `linkage_driver_task`
 --
 DROP TABLE IF EXISTS `linkage_driver_task`;
@@ -369,7 +387,8 @@ CREATE TABLE `linkage_driver_task` (
   `task_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `order_id` INT(11) UNSIGNED NOT NULL,
   `order_type` TINYINT(4) UNSIGNED NOT NULL COMMENT '码头出口0,码头进口1,内陆柜2,自备柜3',
-  `driver_id` INT(11) UNSIGNED NOT NULL,
+  `company_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '承运商公司id',
+  `driver_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '承运商司机id',
   `license` VARCHAR(16) DEFAULT '' COMMENT '车牌号',
   `cargo_no` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '货柜号',
   `cargo_type` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '货柜类型',
@@ -377,7 +396,7 @@ CREATE TABLE `linkage_driver_task` (
   `is_accept` TINYINT(4) NOT NULL DEFAULT 1 COMMENT '司机是否接受订单。0:拒绝，1:接受',
   `reject_reason` VARCHAR(400) COMMENT '拒绝接受任务理由',
   `memo` TEXT COMMENT '其它说明',
-  `image` VARCHAR(400) COMMENT '司机拍照。图片链接地址',
+  `image` VARCHAR(400) DEFAULT NULL COMMENT '司机拍照。图片链接地址',
   `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务生成日期',
   `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务修改日期',
   PRIMARY KEY (`task_id`)
