@@ -697,15 +697,15 @@ class OrderController extends APIControllerBase
                 $orderDetail = $orderExport->getDetail4Transporter($orderId);
             }
 
-//            //Get Cargos Information
-//            $orderCargo = new OrderCargo();
-//            $cargos = $orderCargo->getCargosByOrderId($orderId);
-//            $orderDetail['cargos'] = $cargos;
-//
-//            //Get Driver Tasks
-//            $driverTask = new DriverTask();
-//            $tasks = $driverTask->getTaskByOrderId($orderId);
-//            $orderDetail['tasks'] = $tasks;
+            //Get Cargos Information
+            $orderCargo = new OrderCargo();
+            $cargos = $orderCargo->getCargosByOrderId($orderId);
+            $orderDetail['cargos'] = $cargos;
+
+            //Get Driver Tasks
+            $driverTask = new DriverTask();
+            $tasks = $driverTask->getTaskByOrderId($orderId);
+            $orderDetail['tasks'] = $tasks;
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -786,11 +786,11 @@ class OrderController extends APIControllerBase
             $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
 
             //Get Order Detail
-            $orderExport = new OrderExport();
+            $orderSelf = new OrderSelf();
             if($isManufacture){
-                $orderDetail = $orderExport->getDetail4Manufacture($orderId);
+                $orderDetail = $orderSelf->getDetail4Manufacture($orderId);
             }else{
-                $orderDetail = $orderExport->getDetail4Transporter($orderId);
+                $orderDetail = $orderSelf->getDetail4Transporter($orderId);
             }
 
             //Get Cargos Information
