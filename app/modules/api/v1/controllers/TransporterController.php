@@ -69,19 +69,24 @@ class TransporterController extends APIControllerBase
             $driverTask = new DriverTask();
             $driverOrderCnts = $driverTask->getOrderNumber($userInfo['company_id']);
 
+            $result = [];
             foreach($drivers as $myDriver){
+                $myDriver['order_num'] = 0;
                 foreach($driverOrderCnts as $driverOrderCnt){
                     if($myDriver['driver_id'] == $driverOrderCnt['driver_id']){
                         $myDriver['order_num'] = $driverOrderCnt['order_num'];
+                        break;
                     }
                 }
+
+                array_push($result, $myDriver);
             }
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray(['drivers' => $drivers]);
+        return $this->respondArray(['drivers' => $result]);
 
     }
 
@@ -199,14 +204,14 @@ class TransporterController extends APIControllerBase
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
-            $driver = new ClientUser();
-            $driver->updateStatus($driver_id, StatusCodes::CLIENT_USER_DELETED);
+            $driver = new Driver();
+            $driverDetail = $driver->getDriverDetail($driver_id);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray($driverDetail);
     }
 
     /**

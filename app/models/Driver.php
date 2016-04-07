@@ -16,6 +16,7 @@ use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 
 
 class Driver extends Model
@@ -44,7 +45,7 @@ class Driver extends Model
     }
 
     public function getDriversByCompanyId($companyId){
-        $phql="select a.*, b.* from Multiple\Models\ClientUser a join Multiple\Models\Driver b where a.user_id = b.user_id and a.company_id = $companyId and a.status =".StatusCodes::CLIENT_USER_ACTIVE;
+        $phql="select a.user_id, a.name, a.mobile, a.icon, b.license from Multiple\Models\ClientUser a join Multiple\Models\Driver b where a.user_id = b.driver_id and a.company_id = $companyId and a.status =".StatusCodes::CLIENT_USER_ACTIVE;
         $drivers = $this->modelsManager->executeQuery($phql);
 
         $results = [];
@@ -62,21 +63,21 @@ class Driver extends Model
     }
 
     public function getDriverDetail($driverId){
-        $phql="select a.*, b.* from Multiple\Models\ClientUser a join Multiple\Models\Driver b where a.user_id = b.user_id and a.driver_id = $driverId and a.status =".StatusCodes::CLIENT_USER_ACTIVE;
-        $drivers = $this->modelsManager->executeQuery($phql);
+        $phql="select a.user_id, a.name, a.mobile, a.gender, a.icon, b.license from Multiple\Models\ClientUser a join Multiple\Models\Driver b where a.user_id = b.driver_id and b.driver_id = $driverId and a.status =".StatusCodes::CLIENT_USER_ACTIVE;
+        $driver = $this->modelsManager->executeQuery($phql);
 
-        $results = [];
-        foreach ($drivers as $driver) {
-            $result['driver_id'] = $driver->user_id;
-            $result['driver_name'] = $driver->name;
-            $result['driver_mobile'] = $driver->mobile;
-            $result['driver_icon'] = $driver->icon;
-            $result['license'] = $driver->license;
-
-            array_push($results, $result);
+        if(sizeof($driver) == 0){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
         }
 
-        return $results;
+        $result['driver_id'] = $driver[0]->user_id;
+        $result['driver_name'] = $driver[0]->name;
+        $result['driver_mobile'] = $driver[0]->mobile;
+        $result['gender'] = $driver[0]->gender;
+        $result['driver_icon'] = $driver[0]->icon;
+        $result['license'] = $driver[0]->license;
+
+        return $result;
     }
 
 }
