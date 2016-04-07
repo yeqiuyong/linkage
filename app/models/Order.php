@@ -169,4 +169,13 @@ class Order extends Model
         return $orders;
     }
 
+    public function isOrderExist($orderId){
+        $orders = self::find([
+            'conditions' => 'order_id = :order_id:',
+            'bind' => ['order_id' => $orderId]
+        ]);
+
+        return (sizeof($orders) == 0) ? false : true;
+    }
+
 }

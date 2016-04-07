@@ -373,7 +373,7 @@ class ClientUser extends Model
             'identity' => isset($user->identity_id) ? $user->identity_id : '',
             'icon' => isset($user->icon) ? $user->icon : '',
             'company_id' => $user->company_id,
-            'role' => $user->profile->profile_name,
+            'role' => $user->user_role->role->rolename,
             'update_time' => $user->update_time,
         ];
     }

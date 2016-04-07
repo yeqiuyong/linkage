@@ -29,6 +29,12 @@ class LinkageUtils
     const USER_TRANSPORTER = 4;
     const USER_DRIVER = 5;
 
+    const ROLE_ADMIN_MANUFACTURE = '厂商管理员';
+    const ROLE_MANUFACTURE = '厂商';
+    const ROLE_ADMIN_TRANSPORTER = '承运商管理员';
+    const ROLE_TRANSPORTER = '承运商';
+    const ROLE_DRIVER = '司机';
+
     const MESSAGE_TYPE_ADV = 0;
     const MESSAGE_TYPE_EMPLOYMENT = 1;
     const MESSAGE_TYPE_NOTICE = 2;

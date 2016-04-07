@@ -59,8 +59,8 @@ class TransporterController extends APIControllerBase
             $user = new ClientUser();
             $userInfo = $user->getUserInfomation($this->cid);
 
-            if($userInfo['role'] != ''){
-
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
             $driver = new Driver();
@@ -111,10 +111,14 @@ class TransporterController extends APIControllerBase
             $this->db->begin();
 
             $transporterAdmin = new ClientUser();
-            $companyID = $transporterAdmin->getCompanyidByUserid($this->cid);
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
 
             $driver = new ClientUser();
-            $driver->registerDriver($mobile, $mobile, StatusCodes::CLIENT_USER_ACTIVE, $companyID, $name, $gender, $icon);
+            $driver->registerDriver($mobile, $mobile, StatusCodes::CLIENT_USER_ACTIVE, $transporterInfo['company_id'], $name, $gender, $icon);
             $driverId = $driver->user_id;
 
             $userRole = new ClientUserRole();
@@ -153,6 +157,13 @@ class TransporterController extends APIControllerBase
         }
 
         try{
+            $transporterAdmin = new ClientUser();
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $driver = new ClientUser();
             $driver->updateStatus($driver_id, StatusCodes::CLIENT_USER_DELETED);
 
@@ -170,7 +181,6 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function driverDetailAction(){
-
         $driver_id = $this->request->getPost('driver_id', 'int');
 
         if(!isset($this->cid)){
@@ -182,6 +192,13 @@ class TransporterController extends APIControllerBase
         }
 
         try{
+            $transporterAdmin = new ClientUser();
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $driver = new ClientUser();
             $driver->updateStatus($driver_id, StatusCodes::CLIENT_USER_DELETED);
 

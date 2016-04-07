@@ -371,12 +371,12 @@ CREATE TABLE `linkage_order_comment` (
 -- Table structure for table `user_role`
 --
 DROP TABLE IF EXISTS `linkage_driver`;
-CREATE TABLE `linkage_car` (
+CREATE TABLE `linkage_driver` (
   `driver_id`  INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `car_id` INT(11) UNSIGNED DEFAULT NULL ,
   `license` VARCHAR(16) NOT NULL COMMENT '车牌号',
-  PRIMARY KEY (`driver_id`),
-  UNIQUE KEY (`license`)
+  PRIMARY KEY (`driver_id`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --

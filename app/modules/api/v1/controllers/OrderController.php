@@ -831,6 +831,12 @@ class OrderController extends APIControllerBase
         }
 
         try {
+            $order = new Order();
+            $isOrderExist = $order->isOrderExist($orderId);
+            if(!$isOrderExist){
+                return $this->respondError(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
+            }
+
             $orderComment = new OrderComment();
             $orderComment->add($orderId, $score, $comment);
 
