@@ -58,6 +58,35 @@ class Order extends Model
         }
     }
 
+    public function accept($orderId, $transporter_id, $transporter_name, $transporter_tel){
+        $order = self::findFirst([
+            'conditions' => 'order_id = :order_id:',
+            'bind' => ['order_id' => $orderId]
+        ]);
+
+        if(!isset($order->order_id)){
+            throw new UserOperationException(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
+        }
+
+        $order->transporter_contact_id = $transporter_id;
+        $order->transporter_contact_name = $transporter_name;
+        $order->transporter_contact_tel = $transporter_tel;
+
+        $order->update_time = time();
+        $order->status = StatusCodes::ORDER_HANDLING;
+
+        if($order->update() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function updateStatus($orderId, $status){
         $order = self::findFirst([
             'conditions' => 'order_id = :order_id:',

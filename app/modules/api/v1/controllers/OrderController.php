@@ -545,6 +545,41 @@ class OrderController extends APIControllerBase
     }
 
     /**
+     * @title("accept")
+     * @description("Accept order")
+     * @requestExample("POST /order/accept")
+     * @response("Data object or Error object")
+     */
+    public function acceptAction(){
+        $orderId = $this->request->getPost('order_id', 'string');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($orderId)){
+            return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
+        }
+
+        try {
+            $user = new ClientUser();
+            $userInfo = $user->getUserInfomation($this-cid);
+
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $order = new Order();
+            $order->accept($orderId, $this->cid, $userInfo['name'], $userInfo['mobile']);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+    }
+
+    /**
      * @title("confirm")
      * @description("Confirm order")
      * @requestExample("POST /order/confirm")
