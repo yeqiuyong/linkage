@@ -9,7 +9,13 @@
 
 namespace Multiple\Models;
 
+use Phalcon\Di;
 use Phalcon\Mvc\Model;
+
+use Multiple\Core\Constants\Services;
+use Multiple\Core\Constants\StatusCodes;
+use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Exception\DataBaseException;
 
 
 class DriverTask extends Model
@@ -17,6 +23,33 @@ class DriverTask extends Model
     public function initialize(){
         $this->setSource("linkage_driver_task");
 
+    }
+
+    public function add($orderId, $orderType, $companyId, $driverId, $carId, $cargoNo, $cargoType){
+        $now = time();
+
+        $this->order_id = $orderId;
+        $this->order_type = $orderType;
+        $this->company_id = $companyId;
+        $this->driver_id = $driverId;
+        $this->car_id = $carId;
+        $this->cargo_no = $cargoNo;
+        $this->cargo_type = $cargoType;
+
+        $this->create_time = $now;
+        $this->update_time = $now;
+        $this->status = StatusCodes::TASK_RECEIPT;
+
+        if($this->save() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
     }
 
     public function getTaskByOrderId($orderId){

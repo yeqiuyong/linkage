@@ -9,6 +9,7 @@
 
 namespace Multiple\API\Controllers;
 
+use Multiple\Models\Order;
 use Phalcon\Di;
 
 use Multiple\Core\APIControllerBase;
@@ -42,7 +43,46 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function dispatchAction(){
+        $orderId = $this->request->getPost('order_id', 'string');
+        $dispatchJson = $this->request->getPost('dispatch_info');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($orderId)){
+            return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
+        }
+
+        if(empty($dispatchJson)){
+            return $this->respondError(ErrorCodes::ORDER_DISPATCH_INFO_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_DISPATCH_INFO_NULL]);
+        }
+
+
+        $dispatchInfo = json_decode($dispatchJson, true);
+
+        try {
+            $order = new Order();
+            $orderInfo = $order->getOrderInfo($orderId);
+
+            $cargos = $dispatchInfo['cargos'];
+            foreach($cargos as $cargo){
+                $driverTask = new DriverTask();
+                $driverTask->add($orderId,
+                    $orderInfo['type'],
+                    $orderInfo['transporter_id'],
+                    $cargo['driver_id'],
+                    $cargo['car_id'],
+                    $cargo['cargo_no'],
+                    $cargo['cargo_type']
+                );
+            }
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
     }
 
     /**

@@ -30,6 +30,16 @@ class StatusCodes
     const ORDER_CANCEL = 4;
     const ORDER_DELETED = 5;
 
+    const TASK_RECEIPT = 0;
+    const TASK_PRINT_ORDER = 1;
+    const TASK_TAKE_CARGO = 2;
+    const TASK_SEND_CARGO = 3;
+    const TASK_SET_GOODS = 4;
+    const TASK_RETURN_CARGO = 5;
+    const TASK_ACCESS_PORT = 6;
+    const TASK_OFF_CARGO = 7;
+    const TASK_COMPLETE = 8;
+
     const CAR_ACTIVE = 0;
     const CAR_INACTIVE = 1;
     const CAR_DELETED = 2;

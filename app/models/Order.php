@@ -83,6 +83,22 @@ class Order extends Model
         }
     }
 
+    public function getOrderInfo($orderId){
+        $order = self::findFirst([
+            'conditions' => 'order_id = :order_id:',
+            'bind' => ['order_id' => $orderId]
+        ]);
+
+        if(!isset($order->order_id)){
+            throw new UserOperationException(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
+        }
+
+        return ['type' => $order->type,
+            'manufacture_id' => $order->manufacture_id,
+            'transporter_id' => $order->transporter_id,
+        ];
+    }
+
     public function getOrders4Manufacture($userid, $type = -1, $status, $pagination = 0,  $offset = 0, $size = 10){
         if($type == -1){
             $condition = " and a.manufacture_contact_id = $userid ";

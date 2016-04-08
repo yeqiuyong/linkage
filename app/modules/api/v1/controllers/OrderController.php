@@ -90,7 +90,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, LinkageUtils::ORDER_TYPE_EXPORT, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderExport = new OrderExport();
             $orderExport->add($orderId, $so, $soImages, $customsIn, $port, $shipCompany, $shipName, $shipSchedule, $isBookCargo);
@@ -167,7 +167,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, LinkageUtils::ORDER_TYPE_IMPORT, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderImport = new OrderImport();
             $orderImport->add($orderId, $rentExpire, $billNo, $cargoNo, $cargoCompany, $customBroker, $customContact);
@@ -241,7 +241,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, LinkageUtils::ORDER_TYPE_SELF, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderSelf = new OrderSelf();
             $orderSelf->add($orderId, $customsIn, $cargoTakeTime, $isCustomsDeclare);
@@ -333,7 +333,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, LinkageUtils::ORDER_TYPE_EXPORT, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderExport = new OrderExport();
             $orderExport->add($orderId, $so, $soImages, $customsIn, $port, $shipCompany, $shipName, $shipSchedule, $isBookCargo);
@@ -423,7 +423,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, LinkageUtils::ORDER_TYPE_IMPORT, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderImport = new OrderImport();
             $orderImport->add($orderId, $rentExpire, $billNo, $cargoNo, $cargoCompany, $customBroker, $customContact);
@@ -510,7 +510,7 @@ class OrderController extends APIControllerBase
             $orderId = $this->genOrderId($this->cid);
 
             $order = new Order();
-            $order->add($orderId, StatusCodes::ORDER_PLACE, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
+            $order->add($orderId, LinkageUtils::ORDER_TYPE_SELF, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderSelf = new OrderSelf();
             $orderSelf->add($orderId, $customsIn, $cargoTakeTime, $isCustomsDeclare);

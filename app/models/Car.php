@@ -26,7 +26,7 @@ class Car extends Model
     public function add($companyId, $license, $engineNo, $frameNo, $applyDate, $examineDate, $maintainDate, $trafficInsureDate, $businessInsureDate, $insureCompany, $memo){
         $now = time();
 
-        $this->comapny_id = $companyId;
+        $this->company_id = $companyId;
         $this->license = $license;
         $this->engine_no = $engineNo;
         $this->frame_no = $frameNo;

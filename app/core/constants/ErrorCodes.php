@@ -75,6 +75,7 @@ class ErrorCodes
     const ORDER_ID_NULL = 6001;
     const ORDER_NOT_FOUND = 6002;
     const ORDER_TRANSPORTER_NULL = 6003;
+    const ORDER_DISPATCH_INFO_NULL = 6004;
 
     public static $MESSAGE = [
         // General
@@ -137,10 +138,11 @@ class ErrorCodes
         self:: COMPANY_DEUPLICATE => "注册公司已存在",
         self:: COMPANY_NOTFOUND => "公司查找失败",
 
-        // Order mangement
+        // Order management
         self:: ORDER_ID_NULL => "订单ID为空",
         self:: ORDER_NOT_FOUND => "订单不存在",
         self:: ORDER_TRANSPORTER_NULL => "订单运营商为空",
+        self:: ORDER_DISPATCH_INFO_NULL => "订单分配信息为空",
 
     ];
 
