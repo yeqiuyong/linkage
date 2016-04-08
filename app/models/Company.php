@@ -41,7 +41,7 @@ class Company extends Model
         $this->contactor = '';
         $this->address = '';
         $this->service_phone_1 = '';
-        $this->status = StatusCodes::COMPANY_USER_PENDING;
+        $this->status = StatusCodes::COMPANY_PENDING;
 
         $this->create_time = $now;
         $this->update_time = $now;

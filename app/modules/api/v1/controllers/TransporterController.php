@@ -22,6 +22,7 @@ use Multiple\Models\ClientUser;
 use Multiple\Models\ClientUserRole;
 use Multiple\Models\Driver;
 use Multiple\Models\DriverTask;
+use Multiple\Models\Car;
 
 class TransporterController extends APIControllerBase
 {
@@ -151,13 +152,13 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function delDriverAction(){
-        $driver_id = $this->request->getPost('driver_id', 'int');
+        $driverId = $this->request->getPost('driver_id', 'int');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
 
-        if(!isset($driver_id)){
+        if(!isset($driverId)){
             return $this->respondError(ErrorCodes::USER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ID_NULL]);
         }
 
@@ -170,7 +171,7 @@ class TransporterController extends APIControllerBase
             }
 
             $driver = new ClientUser();
-            $driver->updateStatus($driver_id, StatusCodes::CLIENT_USER_DELETED);
+            $driver->updateStatus($driverId, StatusCodes::CLIENT_USER_DELETED);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -186,13 +187,13 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function driverDetailAction(){
-        $driver_id = $this->request->getPost('driver_id', 'int');
+        $driverId = $this->request->getPost('driver_id', 'int');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
 
-        if(!isset($driver_id)){
+        if(!isset($driverId)){
             return $this->respondError(ErrorCodes::USER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ID_NULL]);
         }
 
@@ -205,7 +206,7 @@ class TransporterController extends APIControllerBase
             }
 
             $driver = new Driver();
-            $driverDetail = $driver->getDriverDetail($driver_id);
+            $driverDetail = $driver->getDriverDetail($driverId);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -221,7 +222,26 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function carsAction(){
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
 
+        try {
+            $user = new ClientUser();
+            $userInfo = $user->getUserInfomation($this->cid);
+
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $car = new Car();
+            $cars = $car->getCarsByCompanyId($userInfo['company_id']);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray(['cars' => $cars]);
     }
 
     /**
@@ -231,7 +251,37 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function addCarAction(){
+        $license = $this->request->getPost('license', 'string');
+        $engineNo = $this->request->getPost('engine_no', 'string');
+        $frameNo = $this->request->getPost('frame_no', 'string');
+        $applyDate = $this->request->getPost('apply_date', 'int');
+        $examineDate = $this->request->getPost('examine_date', 'int');
+        $maintainDate = $this->request->getPost('maintain_date', 'int');
+        $trafficInsureDate = $this->request->getPost('traffic_insure_date', 'int');
+        $businessInsureDate = $this->request->getPost('business_insure_date', 'int');
+        $insureCompany = $this->request->getPost('insure_company', 'string');
+        $memo = $this->request->getPost('memo', 'string');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try {
+            $user = new ClientUser();
+            $userInfo = $user->getUserInfomation($this->cid);
+
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $car = new Car();
+            $car->add($userInfo['company_id'], $license, $engineNo, $frameNo, $applyDate, $examineDate, $maintainDate, $trafficInsureDate, $businessInsureDate, $insureCompany, $memo);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
     }
 
     /**
@@ -241,7 +291,32 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function delCarAction(){
+        $carId = $this->request->getPost('car_id', 'int');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(!isset($carId)){
+            return $this->respondError(ErrorCodes::USER_CAR_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_CAR_ID_NULL]);
+        }
+
+        try{
+            $transporterAdmin = new ClientUser();
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $car = new Car();
+            $car->updateStatus($carId, StatusCodes::CAR_DELETED);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
     }
 
     /**
@@ -251,7 +326,32 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function carDetailAction(){
+        $carId = $this->request->getPost('car_id', 'int');
 
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(!isset($carId)){
+            return $this->respondError(ErrorCodes::USER_CAR_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_CAR_ID_NULL]);
+        }
+
+        try{
+            $transporterAdmin = new ClientUser();
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $car = new Car();
+            $carDetail = $car->getCarDetail($carId);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($carDetail);
     }
 
 }

@@ -237,17 +237,21 @@ CREATE TABLE `linkage_company` (
 DROP TABLE IF EXISTS `linkage_car`;
 CREATE TABLE `linkage_car` (
   `car_id`  INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `comapny_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `company_id` INT(11) UNSIGNED NOT NULL DEFAULT 0,
   `car_type` VARCHAR(100) DEFAULT NULL COMMENT '车类型',
   `license` VARCHAR(16) NOT NULL COMMENT '车牌号',
   `engine_no` VARCHAR(16) DEFAULT NULL COMMENT '发动机号',
   `frame_no` VARCHAR(16) DEFAULT NULL COMMENT '车架号',
+  `apply_date` INT(11) DEFAULT NULL COMMENT '上牌日期',
   `examine_date` INT(11) DEFAULT NULL COMMENT '年审日期',
   `maintain_date` INT(11) DEFAULT NULL COMMENT '二级维保日期',
   `traffic_insure_date` INT(11) DEFAULT NULL COMMENT '交强险日期',
   `business_insure_date` INT(11) DEFAULT NULL COMMENT '商业保险日期',
   `insure_company` VARCHAR(256) DEFAULT NULL COMMENT '保险公司',
   `memo` VARCHAR(400) DEFAULT NULL COMMENT '其它说明',
+  `create_time` INT(11) NOT NULL DEFAULT 0,
+  `update_time` INT(11) NOT NULL DEFAULT 0,
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;2 pending; 3 banned; 4 deleted',
   PRIMARY KEY (`car_id`),
   UNIQUE KEY (`license`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -63,6 +63,8 @@ class ErrorCodes
     const USER_TYPE_ERROR = 4019;
     const USER_ID_NULL = 4020;
     const USER_COMPLAIN_CONTENT_NULL = 4021;
+    const USER_CAR_ID_NULL = 4022;
+    const USER_CAR_NOT_FOUND = 4023;
 
 
     //Company mangement
@@ -128,6 +130,8 @@ class ErrorCodes
         self:: USER_ID_NULL => "用户ID为空",
         self:: USER_MOBILE_NOTFOUND => "用户电话不存在",
         self:: USER_COMPLAIN_CONTENT_NULL => "投诉内容为空",
+        self:: USER_CAR_ID_NULL => "汽车编码为空",
+        self:: USER_CAR_NOT_FOUND => "汽车不存在",
 
         // Company management
         self:: COMPANY_DEUPLICATE => "注册公司已存在",
