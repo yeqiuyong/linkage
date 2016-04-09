@@ -26,7 +26,7 @@ class Notice extends Model
         if($pagination){
             $notices = self::find([
                 'conditions' => 'type = :type: AND status = 0',
-                'bind' => ['type' => LinkageUtils::NOTICE_TYPE_ADV],
+                'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV],
                 'order' => 'create_time DESC',
                 'offset' => $offset,
                 'limit' => $size,
@@ -35,7 +35,7 @@ class Notice extends Model
         }else{
             $notices = self::find([
                 'conditions' => 'type = :type: AND status = 0',
-                'bind' => ['type' => LinkageUtils::NOTICE_TYPE_ADV],
+                'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV],
                 'order' => 'create_time DESC',
             ]);
         }
@@ -46,7 +46,7 @@ class Notice extends Model
             $result['icon'] = $notice->link;
             $result['title'] = $notice->title;
             $result['description'] = $notice->description;
-            $result['creation_time'] = $notice->creation_time;
+            $result['creation_time'] = $notice->create_time;
 
             array_push($results, $result);
         }
@@ -54,11 +54,11 @@ class Notice extends Model
         return $results;
     }
 
-    public function getMsg($type, $roleId, $pagination, $offset, $size){
+    public function getMsg($roleId, $pagination, $offset, $size){
         if($pagination){
             $notices = self::find([
                 'conditions' => 'client_type = :client_type: AND type = :type: AND status = 0',
-                'bind' => ['client_type' => $roleId, 'type' => $type],
+                'bind' => ['client_type' => $roleId, 'type' => LinkageUtils::MESSAGE_TYPE_NOTICE],
                 'order' => 'create_time DESC',
                 'offset' => $offset,
                 'limit' => $size,
@@ -67,7 +67,7 @@ class Notice extends Model
         }else{
             $notices = self::find([
                 'conditions' => 'client_type = :client_type: AND type = :type: AND status = 0',
-                'bind' => ['client_type' => $roleId, 'type' => $type],
+                'bind' => ['client_type' => $roleId, 'type' => LinkageUtils::MESSAGE_TYPE_NOTICE],
                 'order' => 'create_time DESC',
             ]);
         }
@@ -78,7 +78,7 @@ class Notice extends Model
             $result['icon'] = $notice->image;
             $result['title'] = $notice->title;
             $result['description'] = $notice->description;
-            $result['creation_time'] = $notice->creation_time;
+            $result['creation_time'] = $notice->create_time;
 
             array_push($results, $result);
         }
@@ -98,7 +98,7 @@ class Notice extends Model
                 'icon' => $notice->image,
                 'title' => $notice->title,
                 'description' => $notice->description,
-                'creation_time' => $notice->creation_time,
+                'creation_time' => $notice->create_time,
 
             ];
         }else{

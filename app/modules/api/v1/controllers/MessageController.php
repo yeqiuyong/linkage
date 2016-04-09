@@ -57,7 +57,7 @@ class MessageController extends APIControllerBase
             $roleId = $user->getRoleId($this->cid);
 
             $notice = new Notice();
-            $messages = $notice->getMsg(LinkageUtils::MESSAGE_TYPE_NOTICE, $roleId, $pagination, $offset, $size);
+            $messages = $notice->getMsg($roleId, $pagination, $offset, $size);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
