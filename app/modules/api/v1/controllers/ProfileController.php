@@ -73,6 +73,9 @@ class ProfileController extends APIControllerBase
             $user = new ClientUser();
             $userInfo = $user->getUserInfomation($this->cid);
 
+            unset($userInfo['role_id']);
+            unset($userInfo['status']);
+
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
