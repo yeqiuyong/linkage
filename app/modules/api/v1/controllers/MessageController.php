@@ -57,7 +57,7 @@ class MessageController extends APIControllerBase
             $roleId = $user->getRoleId($this->cid);
 
             $notice = new Notice();
-            $messages = $notice->getList(LinkageUtils::MESSAGE_TYPE_NOTICE, $roleId, $pagination, $offset, $size);
+            $messages = $notice->getMsg(LinkageUtils::MESSAGE_TYPE_NOTICE, $roleId, $pagination, $offset, $size);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -82,7 +82,7 @@ class MessageController extends APIControllerBase
 
         try {
             $notice = new Notice();
-            $message = $notice->getDetail($messageId);
+            $message = $notice->getMsgDetail($messageId);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());

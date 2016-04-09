@@ -10,6 +10,7 @@ namespace Multiple\Models;
 
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\LinkageUtils;
@@ -293,6 +294,70 @@ class Company extends Model
             'logo' => $company->logo,
         ];
 
+    }
+
+    public function getManufactures($pagination, $offset = 0, $size = 10){
+        if($pagination){
+            $condition = [
+                'conditions' => 'type = :type: and status = :status:',
+                'bind' => ['type' => LinkageUtils::COMPANY_MANUFACTURE,
+                    'status' => StatusCodes::COMPANY_ACTIVE,
+                ],
+            ];
+        }else{
+            $condition = [
+                'conditions' => 'type = :type: and status = :status:',
+                'bind' => ['type' => LinkageUtils::COMPANY_MANUFACTURE,
+                    'status' => StatusCodes::COMPANY_ACTIVE,
+                ],
+                'limit' => $size,
+                'offset' => $offset,
+            ];
+        }
+
+        $results = [];
+        $manufactures = self::find($condition);
+        foreach ($manufactures as $manufacture) {
+            $result = [];
+            $result['company_id'] = $manufacture->company_id;
+            $result['company_name'] = $manufacture->name;
+            $result['contact_name'] = isset($manufacture->contactor) ? $manufacture->contactor : '';
+            $result['contact_address'] = isset($manufacture->address) ? $manufacture->address : '';
+            $result['contact_phone'] = isset($manufacture->service_phone_1) ? $manufacture->service_phone_1 : '';
+            $result['description'] = isset($manufacture->description) ? $manufacture->description : '';
+
+            array_push($results,$result);
+        }
+
+        return $results;
+
+    }
+
+    public function getTransporters($pagination, $offset = 0, $size = 10){
+        $condition = '';
+        if($pagination){
+            $condition = "limit $offset, $size";
+        }
+
+        $sql = "select a.company_id, a.name, a.contactor, a.address, a.service_phone_1, a.description, a.status, b.order_num from linkage_company a left join (select count(1) as order_num, transporter_id as company_id from linkage_order b group by b.transporter_id) b on a.company_id = b.company_id where a.status=0 ".$condition;
+        $transporters = new Resultset(null, $this, $this->getReadConnection()->query($sql));
+
+        $results = [];;
+        foreach ($transporters as $transporter) {
+            $result = [];
+            $result['company_id'] = $transporter->company_id;
+            $result['company_name'] = $transporter->name;
+            $result['contact_name'] = isset($transporter->contactor) ? $transporter->contactor : '';
+            $result['contact_address'] = isset($transporter->address) ? $transporter->address : '';
+            $result['contact_phone'] = isset($transporter->service_phone_1) ? $transporter->service_phone_1 : '';
+            $result['description'] = isset($transporter->description) ? $transporter->description : '';
+            $result['score'] = 5;
+            $result['order_num'] = isset($transporter->order_num) ? $transporter->order_num : 0;
+
+            array_push($results,$result);
+        }
+
+        return $results;
     }
 
     public function isCompanyExist($companyID){

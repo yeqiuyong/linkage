@@ -8,6 +8,8 @@
 
 namespace Multiple\API\Controllers;
 
+use Multiple\Models\Notice;
+use Multiple\Models\Order;
 use Phalcon\Di;
 
 use Multiple\Core\Auth\MobileAdaptor;
@@ -191,15 +193,50 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function loginAction(){
-        $mobile = $this->request->getPost('mobile');
-        $password = $this->request->getPost('password');
+        $mobile = $this->request->getPost('mobile', 'string');
+        $password = $this->request->getPost('password', 'string');
+        $pagination = $this->request->getPost('pagination', 'int');
+        $offset = $this->request->getPost('offset', 'int');
+        $size = $this->request->getPost('size', 'size');
 
         try {
             $authManager = $this->di->get(Services::AUTH_MANAGER);
             $session = $authManager->loginWithMobilePassword(MobileAdaptor::NAME, $mobile, $password);
             $userid = $session->getIdentity();
 
+            $user = new ClientUser();
+            $company = new Company();
+
+            $userInfo = $user->getUserInfomation($userid);
+            if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_MANUFACTURE || $userInfo['role'] == LinkageUtils::ROLE_MANUFACTURE){
+                $companies = $company->getManufactures($pagination, $offset, $size);
+            }else if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] == LinkageUtils::ROLE_TRANSPORTER){
+                $companies = $company->getTransporters($pagination, $offset, $size);
+            }else{
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $roleId = (int)$userInfo['role_id'];
+
+            $notice = new Notice();
+            $advs = $notice->getAdv();
+
             $response = $this->getTokenResponse($userid, $mobile, $password);
+
+            $response['ctype'] = $roleId - 1;
+            $response['icon'] = $userInfo['icon'];
+            $response['username'] = $userInfo['username'];
+            $response['name'] = $userInfo['realname'];
+            $response['gender'] = $userInfo['gender'];
+            $response['mobile'] = $userInfo['mobile'];
+            $response['email'] = $userInfo['email'];
+            $response['birthday'] = $userInfo['birthday'];
+            $response['company_id'] = $userInfo['company_id'];
+            $response['status'] = $userInfo['status'];
+
+            $response['companies'] = $companies;
+
+            $response['advertes'] = $advs;
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());

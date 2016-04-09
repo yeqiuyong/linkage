@@ -374,6 +374,8 @@ class ClientUser extends Model
             'icon' => isset($user->icon) ? $user->icon : '',
             'company_id' => $user->company_id,
             'role' => $user->user_role->role->rolename,
+            'role_id' => $user->user_role->role_id,
+            'status' => $user->status,
             'update_time' => $user->update_time,
         ];
     }
@@ -410,10 +412,7 @@ class ClientUser extends Model
             $condition = " limit ".$offset.",".$size;
         }
 
-        $sql="select user_id, username, name, mobile, icon from invo.linkage_clientuser where company_id in (select company_id from invo.linkage_clientuser where user_id = $userid)" . $condition;
-
-        //$user  = new ClientUser();
-
+        $sql="select user_id, username, name, mobile, icon from linkage_clientuser where company_id in (select company_id from linkage_clientuser where user_id = $userid)" . $condition;
         // Execute the query
         $staffs = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 
@@ -536,7 +535,7 @@ class ClientUser extends Model
 
     }
 
-    private function isMobileRegistered($mobile){
+    public function isMobileRegistered($mobile){
         $users = self::find([
             'conditions' => 'mobile = :mobile:',
             'bind' => ['mobile' => $mobile]

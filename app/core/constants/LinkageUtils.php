@@ -56,4 +56,8 @@ class LinkageUtils
     const CARGO_TYPE_R_20 = 9;
     const CARGO_TYPE_R_40 = 10;
 
+    const NOTICE_TYPE_MESSAGE = 0;
+    const NOTICE_TYPE_ADV = 1;
+    const NOTICE_TYPE_NOTICE = 2;
+
 }

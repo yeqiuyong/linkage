@@ -12,6 +12,7 @@ namespace Multiple\Models;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
 
+use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Exception\DataBaseException;
 
@@ -21,7 +22,39 @@ class Notice extends Model
         $this->setSource("linkage_notice");
     }
 
-    public function getList($type, $roleId, $pagination, $offset, $size){
+    public function getAdv($pagination = 0, $offset = 0, $size = 10){
+        if($pagination){
+            $notices = self::find([
+                'conditions' => 'type = :type: AND status = 0',
+                'bind' => ['type' => LinkageUtils::NOTICE_TYPE_ADV],
+                'order' => 'create_time DESC',
+                'offset' => $offset,
+                'limit' => $size,
+
+            ]);
+        }else{
+            $notices = self::find([
+                'conditions' => 'type = :type: AND status = 0',
+                'bind' => ['type' => LinkageUtils::NOTICE_TYPE_ADV],
+                'order' => 'create_time DESC',
+            ]);
+        }
+
+        $results = [];
+        foreach($notices as $notice){
+            $result['type'] = $notice->type;
+            $result['icon'] = $notice->link;
+            $result['title'] = $notice->title;
+            $result['description'] = $notice->description;
+            $result['creation_time'] = $notice->creation_time;
+
+            array_push($results, $result);
+        }
+
+        return $results;
+    }
+
+    public function getMsg($type, $roleId, $pagination, $offset, $size){
         if($pagination){
             $notices = self::find([
                 'conditions' => 'client_type = :client_type: AND type = :type: AND status = 0',
@@ -42,7 +75,7 @@ class Notice extends Model
         $results = [];
         foreach($notices as $notice){
             $result['type'] = $notice->type;
-            $result['icon'] = $notice->link;
+            $result['icon'] = $notice->image;
             $result['title'] = $notice->title;
             $result['description'] = $notice->description;
             $result['creation_time'] = $notice->creation_time;
@@ -53,7 +86,7 @@ class Notice extends Model
         return $results;
     }
 
-    public function getDetail($noticeId){
+    public function getMsgDetail($noticeId){
         $notice = self::findFirst([
             'conditions' => 'id = :notice_id:',
             'bind' => ['notice_id' => $noticeId]
@@ -62,7 +95,7 @@ class Notice extends Model
         if(isset($notice->id)){
             return [
                 'type' => $notice->type,
-                'icon' => $notice->link,
+                'icon' => $notice->image,
                 'title' => $notice->title,
                 'description' => $notice->description,
                 'creation_time' => $notice->creation_time,

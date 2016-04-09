@@ -50,7 +50,7 @@ class CodeController extends APIControllerBase
 
         try{
             $key = LinkageUtils::VERIFY_PREFIX.$mobile;
-            $expire = 60;
+            $expire = 60 * 5;
             $verify_code =  rand(1000, 9999);
 
             $msg = "［］您的校验码是：".$verify_code."。1分钟内有效。如非本人操作忽略此短信。";
