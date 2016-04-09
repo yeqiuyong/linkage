@@ -42,11 +42,9 @@ class Notice extends Model
 
         $results = [];
         foreach($notices as $notice){
-            $result['type'] = $notice->type;
-            $result['icon'] = $notice->link;
             $result['title'] = $notice->title;
-            $result['description'] = $notice->description;
-            $result['creation_time'] = $notice->create_time;
+            $result['link'] = $notice->link;
+            $result['icon'] = $notice->image;
 
             array_push($results, $result);
         }
