@@ -48,6 +48,10 @@ class StatusCodes
     const FAVORITE_INACTIVE = 1;
     const FAVORITE_DELETE = 2;
 
+    const ADDRESS_ACTIVE = 0;
+    const ADDRESS_INACTIVE = 1;
+    const ADDRESS_DELETE = 2;
+
     const COMPLAIN_HANDLING = 0;
     const COMPLAIN_HANDLED= 1;
     const COMPLAIN_DELETED = 2;

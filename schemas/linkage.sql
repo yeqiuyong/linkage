@@ -439,6 +439,39 @@ CREATE TABLE `linkage_contact` (
 
 
 --
+-- Table structure for table `contact`
+--
+DROP TABLE IF EXISTS `linkage_user_address`;
+CREATE TABLE `linkage_user_address` (
+  `address_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id`  INT(11) UNSIGNED NOT NULL DEFAULT 0,
+  `title` VARCHAR(400)  NOT NULL DEFAULT '' COMMENT '',
+  `address` VARCHAR(400) NOT NULL DEFAULT '' COMMENT '',
+  `memo` TEXT DEFAULT NULL COMMENT '',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '是否处理。0:有效；1:无效;2 删除',
+  `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务生成日期',
+  `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '任务修改日期',
+  PRIMARY KEY (`address_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+
+--
+-- Table structure for table 'linkage_user_favorite'
+--
+DROP TABLE IF EXISTS `linkage_user_favorite`;
+CREATE TABLE `linkage_user_favorite` (
+  `favorite_id` INT(11) NOT NULL auto_increment,
+  `user_id` INT(11) NOT NULL DEFAULT 0 COMMENT '收藏者id',
+  `company_id` INT(11) NOT NULL DEFAULT 0 COMMENT '收藏公司id',
+  `create_time` INT(11)  NOT NULL DEFAULT 0,
+  `update_time` INT(11)  NOT NULL DEFAULT 0,
+  `status` INT NOT NULL DEFAULT 0 COMMENT '0 有效，1 无效,2 删除',
+  PRIMARY KEY  (`favorite_id`),
+  UNIQUE KEY (`user_id`, `company_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
 -- Table structure for table 'linkage_banner'
 --
 DROP TABLE IF EXISTS `linkage_banner`;
@@ -499,20 +532,6 @@ CREATE TABLE `linkage_invite_code` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Table structure for table 'linkage_user_favorite'
---
-DROP TABLE IF EXISTS `linkage_user_favorite`;
-CREATE TABLE `linkage_user_favorite` (
-  `id` INT(11) NOT NULL auto_increment,
-  `user_id` INT(11) NOT NULL DEFAULT 0 COMMENT '收藏者id',
-  `company_id` INT(11) NOT NULL DEFAULT 0 COMMENT '收藏公司id',
-  `create_time` INT(11)  NOT NULL DEFAULT 0,
-  `update_time` INT(11)  NOT NULL DEFAULT 0,
-  `status` INT NOT NULL DEFAULT 0 COMMENT '0 有效，1 无效,2 删除',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY (`user_id`, `company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Table structure for table 'linkage_user_sys_set'

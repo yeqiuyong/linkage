@@ -65,11 +65,15 @@ class ErrorCodes
     const USER_COMPLAIN_CONTENT_NULL = 4021;
     const USER_CAR_ID_NULL = 4022;
     const USER_CAR_NOT_FOUND = 4023;
+    const USER_FAVORITE_NOT_FOUND = 4024;
+    const USER_ADDRESS_INPUT_ERROR = 4025;
+    const USER_ADDRESS_NOT_FOUND = 4026;
 
 
     //Company mangement
-    const COMPANY_DEUPLICATE = 5001;
-    const COMPANY_NOTFOUND = 5002;
+    const COMPANY_ID_NULL = 5001;
+    const COMPANY_DEUPLICATE = 5002;
+    const COMPANY_NOTFOUND = 5003;
 
     //Order mangement
     const ORDER_ID_NULL = 6001;
@@ -133,8 +137,12 @@ class ErrorCodes
         self:: USER_COMPLAIN_CONTENT_NULL => "投诉内容为空",
         self:: USER_CAR_ID_NULL => "汽车编码为空",
         self:: USER_CAR_NOT_FOUND => "汽车不存在",
+        self:: USER_FAVORITE_NOT_FOUND => "收藏公司不存在",
+        self:: USER_ADDRESS_INPUT_ERROR => "用户地址簿输入错误",
+        self:: USER_ADDRESS_NOT_FOUND => "用户收藏地址不存在",
 
         // Company management
+        self:: COMPANY_ID_NULL => "公司ID为空",
         self:: COMPANY_DEUPLICATE => "注册公司已存在",
         self:: COMPANY_NOTFOUND => "公司查找失败",
 

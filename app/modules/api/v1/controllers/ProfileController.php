@@ -15,6 +15,7 @@ use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Models\ClientUser;
 use Multiple\Models\Company;
 use Multiple\Models\Favorite;
+use Multiple\Models\UserAddress;
 
 class ProfileController extends APIControllerBase
 {
@@ -187,14 +188,14 @@ class ProfileController extends APIControllerBase
 
     /**
      * @title("favlist")
-     * @description("User favirate")
+     * @description("User favorite")
      * @requestExample("POST /profile/favlist")
      * @response("Data object or Error object")
      */
     public function favlistAction(){
-        $pagination = $this->request->getPost('pagination');
-        $offset = $this->request->getPost('offset');
-        $size = $this->request->getPost('size');
+        $pagination = $this->request->getPost('pagination', 'int');
+        $offset = $this->request->getPost('offset', 'int');
+        $size = $this->request->getPost('size', 'int');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
@@ -209,6 +210,151 @@ class ProfileController extends APIControllerBase
         }
 
         return $this->respondArray($myFavorites);
+
+    }
+
+    /**
+     * @title("addfavorite")
+     * @description("User favirate")
+     * @requestExample("POST /profile/favlist")
+     * @response("Data object or Error object")
+     */
+    public function addFavoriteAction(){
+        $companyId = $this->request->getPost('company_id', 'int');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($companyId)){
+            return $this->respondError(ErrorCodes::COMPANY_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_ID_NULL]);
+        }
+
+        try {
+            $favorite = new Favorite();
+            $favorite->add($this->cid, $companyId);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+
+    }
+
+    /**
+     * @title("addfavorite")
+     * @description("User favirate")
+     * @requestExample("POST /profile/favlist")
+     * @response("Data object or Error object")
+     */
+    public function delFavoriteAction(){
+        $companyId = $this->request->getPost('company_id', 'int');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($companyId)){
+            return $this->respondError(ErrorCodes::COMPANY_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_ID_NULL]);
+        }
+
+        try {
+            $favorite = new Favorite();
+            $favorite->delFavorite($this->cid, $companyId);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+
+    }
+
+
+    /**
+     * @title("addrlist")
+     * @description("User address")
+     * @requestExample("POST /profile/addrlist")
+     * @response("Data object or Error object")
+     */
+    public function addrlistAction(){
+        $pagination = $this->request->getPost('pagination', 'int');
+        $offset = $this->request->getPost('offset', 'int');
+        $size = $this->request->getPost('size', 'int');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try {
+            $userAddress = new UserAddress();
+            $myAddresses = $userAddress->getList($this->cid, $pagination, $offset, $size);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray(['addresses' => $myAddresses]);
+
+    }
+
+    /**
+     * @title("addAddr")
+     * @description("User Address")
+     * @requestExample("POST /profile/addAddr")
+     * @response("Data object or Error object")
+     */
+    public function addAddrAction(){
+        $title = $this->request->getPost('title', 'string');
+        $address = $this->request->getPost('address', 'string');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($title) || empty($address)){
+            return $this->respondError(ErrorCodes::USER_ADDRESS_INPUT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_ADDRESS_INPUT_ERROR]);
+        }
+
+        try {
+            $mAddress = new UserAddress();
+            $mAddress->add($this->cid, $title, $address);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+
+    }
+
+    /**
+     * @title("addfavorite")
+     * @description("User favirate")
+     * @requestExample("POST /profile/favlist")
+     * @response("Data object or Error object")
+     */
+    public function delAddrAction(){
+        $addressId = $this->request->getPost('address_id', 'int');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($addressId)){
+            return $this->respondError(ErrorCodes::USER_ADDRESS_INPUT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_ADDRESS_INPUT_ERROR]);
+        }
+
+        try {
+            $mAddress = new UserAddress();
+            $mAddress->delFavorite($this->cid, $addressId);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
 
     }
 
