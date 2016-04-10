@@ -209,7 +209,7 @@ class ProfileController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($myFavorites);
+        return $this->respondArray(['companies' => $myFavorites]);
 
     }
 

@@ -85,7 +85,7 @@ class Favorite extends Model
 //        $phql="select a.company_id, b.name, b.contactor, b.service_phone_1, b.logo, c.order_num from Multiple\Models\Favorite a join Multiple\Models\Company b (select count(1) as order_num, transporter_id as company_id from linkage_order t group by t.transporter_id) c where a.company_id = b.company_id and a.company_id = c.and user_id = $userid " . $condition;
 //        $favorites = $this->modelsManager->executeQuery($phql);
 
-        $sql = "select a.company_id, b.name, b.contactor, b.service_phone_1, c.order_num from linkage_user_favorite a left join linkage_company b on a.company_id = b.company_id left join (select count(1) as order_num, t.transporter_id as company_id from linkage_order t group by t.transporter_id) c  on a.company_id = c.company_id and b.status=0 ".$condition;
+        $sql = "select a.company_id, b.name, b.contactor, b.service_phone_1, c.order_num from linkage_user_favorite a left join linkage_company b on a.company_id = b.company_id left join (select count(1) as order_num, t.transporter_id as company_id from linkage_order t group by t.transporter_id) c  on a.company_id = c.company_id where a.status = 0 and b.status=0 ".$condition;
         $favorites = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 
         $companies = [];
