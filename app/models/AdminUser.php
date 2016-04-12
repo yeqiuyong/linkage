@@ -37,7 +37,7 @@ class AdminUser extends Model
         $security = Di::getDefault()->get(Services::SECURITY);
 
         /** @var \User $user */
-        $user = AdminUser::findFirst([
+        $user = self::findFirst([
             'conditions' => 'username = :username:',
             'bind' => ['username' => $username]
         ]);
@@ -55,7 +55,7 @@ class AdminUser extends Model
     public function add($username, $password, $realname, $mobile , $email){
         $security = Di::getDefault()->get(Services::SECURITY);
 
-        $user = AdminUser::findFirst([
+        $user = self::findFirst([
             'conditions' => 'username = :username:',
             'bind' => ['username' => $username]
         ]);
@@ -79,9 +79,12 @@ class AdminUser extends Model
         $this->update_time = $now;
 
         if ($this->save() == false){
-//            foreach ($this->getMessages() as $message) {
-//                echo $message, "\n";
-//            }
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
         }
@@ -90,6 +93,49 @@ class AdminUser extends Model
 
     public function setProfileName($profile_name){
         $this->profile_name = $profile_name;
+    }
+
+    public function getUserByName($userName){
+        $user = self::findFirst([
+            'conditions' => 'username = :username:',
+            'bind' => ['username' => $userName]
+        ]);
+
+        if(!isset($user->user_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        return $user;
+    }
+
+    public function updateProfile($realname, $mobile, $email){
+        $user = self::findFirst([
+            'conditions' => 'username = :username:',
+            'bind' => ['username' => $this->userName]
+        ]);
+
+        if($realname){
+            $user->name = $realname;
+        }
+
+        if($mobile){
+            $user->mobile = $mobile;
+        }
+
+        if($email){
+            $user->email = $email;
+        }
+
+        if ($this->update() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
+        }
     }
 
     public function validation()

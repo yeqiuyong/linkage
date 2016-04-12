@@ -479,6 +479,18 @@ class ClientUser extends Model
         return $user->status;
     }
 
+    public function getNewUserCount(){
+        $y = date("Y");
+        $m = date("m");
+        $d = date("d");
+        $todayTime = mktime(0,0,0,$m,$d,$y);
+
+        $phql="select count(1) as count, b.role_id from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b where a.user_id = b.user_id and a.create_time > $todayTime group by b.role_id";
+        $newUsers = $this->modelsManager->executeQuery($phql);
+
+        return $newUsers;
+    }
+
     public function delStaff($staffId){
         $staff = self::findFirst([
             'conditions' => 'user_id = :user_id:',

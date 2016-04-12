@@ -43,4 +43,22 @@ class ClientUserRole extends Model
         }
     }
 
+    public function getUserCount(){
+        $userCounts = self::count([
+            'column' => 'user_id',
+            'group' => 'role_id',
+            'order' => 'role_id'
+        ]);
+
+        $results = [];
+        foreach ($userCounts as $userCount) {
+            $result['role_id'] = $userCount->role_id;
+            $result['count'] = $userCount->rowcount;
+
+            array_push($results, $result);
+        }
+
+        return $userCounts;
+    }
+
 }

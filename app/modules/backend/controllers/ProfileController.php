@@ -9,6 +9,7 @@
 namespace Multiple\Backend\Controllers;
 
 use Multiple\Core\BackendControllerBase;
+
 use Multiple\Models\AdminUser;
 
 class ProfileController extends BackendControllerBase
@@ -20,19 +21,17 @@ class ProfileController extends BackendControllerBase
     }
 
     public function indexAction(){
-        $user = AdminUser::findFirst([
-            'conditions' => 'username = :username:',
-            'bind' => ['username' => $this->userName]
-        ]);
+        $admin = new AdminUser();
+        $admin->getUserByName($this->userName);
 
         $this->view->setVars(
             array(
                 'username' => $this->userName,
-                'realname' => $user->name,
-                'mobile' => $user->mobile,
-                'email' => $user->email,
-                'profile_name' => $user->profile->profile_name,
-                'update_time' =>date('Y-m-d',$user->update_time),
+                'realname' => $admin->name,
+                'mobile' => $admin->mobile,
+                'email' => $admin->email,
+                'profile_name' => $admin->profile->profile_name,
+                'update_time' =>date('Y-m-d',$admin->update_time),
             )
         );
     }
@@ -42,24 +41,8 @@ class ProfileController extends BackendControllerBase
         $mobile = $this->request->getPost('mobile');
         $email = $this->request->getPost('email');
 
-        $user = AdminUser::findFirst([
-            'conditions' => 'username = :username:',
-            'bind' => ['username' => $this->userName]
-        ]);
-
-        if($realname){
-            $user->name = $realname;
-        }
-
-        if($mobile){
-            $user->mobile = $mobile;
-        }
-
-        if($email){
-            $user->email = $email;
-        }
-
-        $user->update();
+        $user = new AdminUser();
+        $user->updateProfile($realname, $mobile, $email);
 
         return $this->forward('profile/index');
     }

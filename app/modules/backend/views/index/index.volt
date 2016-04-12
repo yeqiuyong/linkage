@@ -25,8 +25,8 @@
                 <i class="glyphicon glyphicon-user blue"></i>
 
                 <div>用户数</div>
-                <div>507</div>
-                <span class="notification">6</span>
+                <div>{{ totalCnt }}</div>
+                <span class="notification">{{ newTotalCnt }}</span>
             </a>
         </div>
 
@@ -35,8 +35,8 @@
                 <i class="glyphicon glyphicon-user green"></i>
 
                 <div>厂商</div>
-                <div>228</div>
-                <span class="notification green">4</span>
+                <div>{{ manufactureCnt }}</div>
+                <span class="notification green">{{ newManufactureCnt }}</span>
             </a>
         </div>
 
@@ -45,8 +45,8 @@
                 <i class="glyphicon glyphicon-user yellow"></i>
 
                 <div>运营商</div>
-                <div>20</div>
-                <span class="notification yellow">20</span>
+                <div>{{ transporterCnt }}</div>
+                <span class="notification yellow">{{ newTransporterCnt }}</span>
             </a>
         </div>
 
@@ -55,61 +55,33 @@
                 <i class="glyphicon glyphicon-user red"></i>
 
                 <div>司机</div>
-                <div>25</div>
-                <span class="notification red">12</span>
+                <div>{{ driverCnt }}</div>
+                <span class="notification red">{{ newDriverCnt }}</span>
             </a>
         </div>
     </div>
 
     <div class="row">
         <div class="box col-md-12">
-            <div class="box-inner">
-                <div class="box-header well">
-                    <h2><i class="glyphicon glyphicon-info-sign"></i> Introduction</h2>
+            <div class="box col-md-12">
+                <div class="box-inner">
+                    <div class="box-header well">
+                        <h2><i class="glyphicon glyphicon-list-alt"></i> Chart with points</h2>
 
-                    <div class="box-icon">
-                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                    class="glyphicon glyphicon-cog"></i></a>
-                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
-                                    class="glyphicon glyphicon-chevron-up"></i></a>
-                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                    class="glyphicon glyphicon-remove"></i></a>
+                        <div class="box-icon">
+                            <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                        class="glyphicon glyphicon-cog"></i></a>
+                            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                        class="glyphicon glyphicon-chevron-up"></i></a>
+                            <a href="#" class="btn btn-close btn-round btn-default"><i
+                                        class="glyphicon glyphicon-remove"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="box-content row">
-                    <div class="col-lg-7 col-md-12">
-                        <h1>Linkage <br>
-                            <small>free, premium quality, responsive, multiple skin admin template.</small>
-                        </h1>
-                        <p>It's a live demo of the template. I have created Charisma to ease the repeat work I have to do on my
-                            projects. Now I re-use Charisma as a base for my admin panel work and I am sharing it with you
-                            :)</p>
-
-                        <p><b>All pages in the menu are functional, take a look at all, please share this with your
-                                followers.</b></p>
-
-                        <p class="center-block download-buttons">
-                            <a href="http://usman.it/free-responsive-admin-template/" class="btn btn-primary btn-lg"><i
-                                        class="glyphicon glyphicon-chevron-left glyphicon-white"></i> Back to article</a>
-                            <a href="http://usman.it/free-responsive-admin-template/" class="btn btn-default btn-lg"><i
-                                        class="glyphicon glyphicon-download-alt"></i> Download Page</a>
-                        </p>
+                    <div class="box-content">
+                        <div id="sincos" class="center" style="height:300px"></div>
+                        <p id="hoverdata">Mouse position at (<span id="x">0</span>, <span id="y">0</span>). <span
+                                    id="clickdata"></span></p>
                     </div>
-
-
-                    <div class="col-lg-5 col-md-12 visible-xs center-text">
-                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                        <!-- Charisma Demo 5 -->
-                        <ins class="adsbygoogle"
-                             style="display:inline-block;width:250px;height:250px"
-                             data-ad-client="ca-pub-5108790028230107"
-                             data-ad-slot="8957582309"></ins>
-                        <script>
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
-                    </div>
-                    <!-- Ads end -->
-
                 </div>
             </div>
         </div>
@@ -143,3 +115,83 @@
         </div>
     </div>
 </div>
+
+
+<!-- chart libraries start -->
+{{ javascript_include('bower_components/flot/excanvas.min.js') }}
+{{ javascript_include('bower_components/flot/jquery.flot.js') }}
+{{  javascript_include('bower_components/flot/jquery.flot.pie.js') }}
+{{  javascript_include('bower_components/flot/jquery.flot.stack.js') }}
+{{  javascript_include('bower_components/flot/jquery.flot.resize.js') }}
+<!-- chart libraries end -->
+
+<script type="text/javascript">
+    if ($("#sincos").length) {
+        var sin = [], cos = [], test=[];
+
+        for (var i = 0; i < 15; i += 0.5) {
+            sin.push([i, Math.sin(i) / i]);
+            cos.push([i, Math.cos(i)]);
+            test.push([i, Math.sin(i)]);
+        }
+
+        var plot = $.plot($("#sincos"),
+                [
+                    { data: sin, label: "sin(x)/x"},
+                    { data: cos, label: "cos(x)" },
+                    { data: test, label: "sin(x)" }
+                ], {
+                    series: {
+                        lines: { show: true  },
+                        points: { show: true }
+                    },
+                    grid: { hoverable: true, clickable: true, backgroundColor: { colors: ["#fff", "#eee"] } },
+                    yaxis: { min: -1.2, max: 1.2 },
+                    colors: ["#539F2E", "#3C67A5", "#3C27A5"]
+                });
+
+        function showTooltip(x, y, contents) {
+            $('<div id="tooltip">' + contents + '</div>').css({
+                position: 'absolute',
+                display: 'none',
+                top: y + 5,
+                left: x + 5,
+                border: '1px solid #fdd',
+                padding: '2px',
+                'background-color': '#dfeffc',
+                opacity: 0.80
+            }).appendTo("body").fadeIn(200);
+        }
+
+        var previousPoint = null;
+        $("#sincos").bind("plothover", function (event, pos, item) {
+            $("#x").text(pos.x.toFixed(2));
+            $("#y").text(pos.y.toFixed(2));
+
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+
+                    $("#tooltip").remove();
+                    var x = item.datapoint[0].toFixed(2),
+                            y = item.datapoint[1].toFixed(2);
+
+                    showTooltip(item.pageX, item.pageY,
+                            item.series.label + " of " + x + " = " + y);
+                }
+            }
+            else {
+                $("#tooltip").remove();
+                previousPoint = null;
+            }
+        });
+
+
+        $("#sincos").bind("plotclick", function (event, pos, item) {
+            if (item) {
+                $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
+                plot.highlight(item.series, item.datapoint);
+            }
+        });
+    }
+</script>
