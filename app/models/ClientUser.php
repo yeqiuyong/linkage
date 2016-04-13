@@ -512,6 +512,48 @@ class ClientUser extends Model
         return $results;
     }
 
+    public function getUserCountPerMon($time){
+        $qryDate = date('Y-m-d',$time);
+        $BeginDate = date('Y-m-01', strtotime($qryDate));
+
+        $yearTime = [
+            strtotime("$BeginDate -0 month"),
+            strtotime("$BeginDate -1 month"),
+            strtotime("$BeginDate -2 month"),
+            strtotime("$BeginDate -3 month"),
+            strtotime("$BeginDate -4 month"),
+            strtotime("$BeginDate -5 month"),
+            strtotime("$BeginDate -6 month"),
+            strtotime("$BeginDate -7 month"),
+            strtotime("$BeginDate -8 month"),
+            strtotime("$BeginDate -9 month"),
+            strtotime("$BeginDate -10 month"),
+            strtotime("$BeginDate -11 month"),
+        ];
+
+        $sql = "select t.type, t.role_id, sum(t.num ) as count from" . "(select a.user_id, b.role_id, 1 as num,"
+            . " case" . " when(create_time >= ". ($yearTime[11]) ." and create_time < ". ($yearTime[10]) .") then '1'"
+            . " when(create_time >= ". ($yearTime[10]) ." and create_time < ". ($yearTime[9]) .") then '2'"
+            . " when(create_time >= ". ($yearTime[9]) ." and create_time < ". ($yearTime[8]) .") then '3'"
+            . " when(create_time >= ". ($yearTime[8]) ." and create_time < ". ($yearTime[7]) .") then '4'"
+            . " when(create_time >= ". ($yearTime[7]) ." and create_time < ". ($yearTime[6]) .") then '5'"
+            . " when(create_time >= ". ($yearTime[6]) ." and create_time < ". ($yearTime[5]) .") then '6'"
+            . " when(create_time >= ". ($yearTime[5]) ." and create_time < ". ($yearTime[4]) .") then '7'"
+            . " when(create_time >= ". ($yearTime[4]) ." and create_time < ". ($yearTime[3]) .") then '8'"
+            . " when(create_time >= ". ($yearTime[3]) ." and create_time < ". ($yearTime[2]) .") then '9'"
+            . " when(create_time >= ". ($yearTime[2]) ." and create_time < ". ($yearTime[1]) .") then '10'"
+            . " when(create_time >= ". ($yearTime[1]) ." and create_time < ". ($yearTime[0]) .") then '11'"
+            . " when(create_time >= ". ($yearTime[0]) ." and create_time < ". $time .") then '12'"
+            . " else '13'" . " end as type from linkage_clientuser a"
+            . " join linkage_user_role b on a.user_id = b.user_id"
+            . " where create_time > ". ($yearTime[11]) ." and create_time <= ". $time
+            . ") t group by t.type, t.role_id";
+
+        $results = new Resultset(null, $this, $this->getReadConnection()->query($sql));
+
+        return $results;
+    }
+
 
     public function delStaff($staffId){
         $staff = self::findFirst([

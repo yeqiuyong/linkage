@@ -109,5 +109,32 @@ class IndexController extends BackendControllerBase
         return $this->response->setJsonContent($countArray);
     }
 
+    public function userCountPerMonAction(){
+        $date = $this->request->getPost('date_offset', 'int'); // POST
+
+        $user = new ClientUser();
+        $userCountsPerMon = $user->getUserCountPerMon($date);
+
+        $manufactureCntsPerMon = [];
+        $transporterCntsPerMon = [];
+        foreach($userCountsPerMon as $countPerMon){
+            if($countPerMon->role_id == LinkageUtils::USER_ADMIN_MANUFACTURE){
+                $manufactureCntPerMon = ['x' => $countPerMon->type, 'y' => $countPerMon->count];
+                array_push($manufactureCntsPerMon, $manufactureCntPerMon);
+            }else if($countPerMon->role_id == LinkageUtils::USER_ADMIN_TRANSPORTER){
+                $transporterCntPerMon = ['x' => $countPerMon->type, 'y' => $countPerMon->count];
+                array_push($transporterCntsPerMon, $transporterCntPerMon);
+            }
+        }
+
+        $countArray = [
+            "offset" => $date,
+            "manufactureCntsPerMon" => $manufactureCntsPerMon,
+            "transporterCntsPerMon" => $transporterCntsPerMon
+        ];
+
+        return $this->response->setJsonContent($countArray);
+    }
+
 
 }

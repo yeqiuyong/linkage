@@ -102,6 +102,46 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="box col-md-12">
+                <div class="box-inner">
+                    <div class="box-header well">
+                        <h2><i class="glyphicon glyphicon-list-alt"></i> 注册用户增长表(月)</h2>
+
+                        <div class="box-icon">
+                            <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                        class="glyphicon glyphicon-cog"></i></a>
+                            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                        class="glyphicon glyphicon-chevron-up"></i></a>
+                            <a href="#" class="btn btn-close btn-round btn-default"><i
+                                        class="glyphicon glyphicon-remove"></i></a>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="control-group col-xs-4 col-md-4 col-xs-offset-8">
+                        <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                            <input id="date-user-per-mon" class="form-control" size="16" type="text" name="user-mon" value="" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            <span class="input-group-addon" onclick="loadUserCountPerMon()"><span class="glyphicon glyphicon-ok-sign blue"></span></span>
+                        </div>
+                        <input type="hidden" id="dtp_input2" value="" /><br/>
+                    </div>
+
+                    <br>
+                    <br>
+
+                    <div class="box-content">
+                        <div id="user-per-mon-chart" class="center" style="height:300px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- content ends -->
 </div><!--/#content.col-md-0-->
 </div><!--/fluid-row-->
@@ -161,6 +201,25 @@
         });
     }
 
+    function loadUserCountPerMon(){
+        var dateStr = $("#date-user-per-mon").prop('value');
+        var dateOffset = Date.parse(new Date()) / 1000;
+
+        if(dateStr != null && dateStr != ''){
+            dateOffset = (Date.parse(new Date(dateStr))) / 1000;
+        }
+
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('admin/index/usercountpermon') ?>",
+            data: {'date_offset':dateOffset },
+            success: function (countArr) {
+                userCountPerMon(countArr);
+            }
+        });
+    }
+
     function userCountPerWeek(countarr){
         if ($("#user-per-week-chart").length) {
             var manufacutres = [], transporters = [];
@@ -176,7 +235,7 @@
             }
 
             for(var i =1 ; i< 8; i++){
-                var myDate = [i, getDateStr(offset, i)];
+                var myDate = [i, getDateStr4Week(offset, i)];
                 myDates.push(myDate);
             }
 
@@ -237,7 +296,87 @@
         }
     }
 
-    function getDateStr(offset, dateCnt) {
+    function userCountPerMon(countarr){
+        if ($("#user-per-mon-chart").length) {
+            var manufacutres = [], transporters = [];
+            var myDates = [];
+            var offset = countarr.offset;
+
+            for (var i = 0; i < countarr.manufactureCntsPerMon.length; i++) {
+                manufacutres.push([countarr.manufactureCntsPerMon[i].x, countarr.manufactureCntsPerMon[i].y]);
+            }
+
+            for (var i = 0; i < countarr.transporterCntsPerMon.length; i++) {
+                transporters.push([countarr.transporterCntsPerMon[i].x, countarr.transporterCntsPerMon[i].y]);
+            }
+
+            var selectMon = getSelectedMon(offset);
+            myDates.push([12, selectMon]);
+            for(var i =11 ; i>0; i--){
+                selectMon = getDateStr4Mon(selectMon);
+                var myDate = [i, selectMon];
+
+                myDates.push(myDate);
+            }
+
+            var plot = $.plot($("#user-per-mon-chart"),
+                    [
+                        { data: manufacutres, label: "Manufacture"},
+                        { data: transporters, label: "Transporter" },
+
+                    ], {
+                        series: {
+                            lines: { show: true  },
+                            points: { show: true }
+                        },
+
+                        xaxis: { ticks: myDates, min: 1, max: 12 },
+                        yaxis: { ticks: 5, min: 0 },
+                        grid: { hoverable: true, clickable: true, backgroundColor: { colors: ["#fff", "#eee"] } },
+
+                        colors: ["#539F2E", "#3C67A5"]
+                    });
+
+            function showTooltip(x, y, contents) {
+                $('<div id="tooltip">' + contents + '</div>').css({
+                    position: 'absolute',
+                    display: 'none',
+                    top: y + 5,
+                    left: x + 5,
+                    border: '1px solid #fdd',
+                    padding: '2px',
+                    'background-color': '#dfeffc',
+                    opacity: 0.80
+                }).appendTo("body").fadeIn(200);
+            }
+
+            var previousPoint = null;
+            $("#user-per-mon-chart").bind("plothover", function (event, pos, item) {
+                $("#x").text(pos.x.toFixed(2));
+                $("#y").text(pos.y.toFixed(2));
+
+                if (item) {
+                    if (previousPoint != item.dataIndex) {
+                        previousPoint = item.dataIndex;
+
+                        $("#tooltip").remove();
+                        var x = item.datapoint[0].toFixed(2),
+                                y = item.datapoint[1].toFixed(2);
+
+                        showTooltip(item.pageX, item.pageY,
+                                "当天" + item.series.label + "注册数量为：" + y);
+                    }
+                }
+                else {
+                    $("#tooltip").remove();
+                    previousPoint = null;
+                }
+            });
+
+        }
+    }
+
+    function getDateStr4Week(offset, dateCnt) {
         var cnt = 7 - dateCnt;
         offset = (offset - cnt * 86400) * 1000;
 
@@ -245,6 +384,39 @@
         newDate.setTime(offset);
 
         return newDate.toLocaleDateString();
+    }
+
+    function getSelectedMon(offset){
+        var today = new Date(offset * 1000);
+
+        var strYear = today.getFullYear();
+        var strMonth = today.getMonth() + 1;
+
+        if(parseInt(strMonth,10) < 10){
+            strMonth="0"+strMonth;
+        }
+
+        return strYear+"-"+strMonth;
+    }
+
+    function getDateStr4Mon(thisMon){
+        var strYear = parseInt(thisMon.substr(0,4),10);
+        var strMonth = parseInt(thisMon.substr(5,7),10);
+
+        if(strMonth - 1 == 0){
+            strYear -= 1;
+            strMonth = 12;
+        } else {
+            strMonth -= 1;
+        }
+        if(strMonth<10){
+            strMonth="0"+strMonth;
+        }
+
+        var monthstr = strYear+"-"+strMonth;
+
+        return monthstr;
+
     }
 
     function initDatePlugin(){
@@ -262,5 +434,6 @@
 
     initDatePlugin();
     loadUserCountPerWeek();
+    loadUserCountPerMon();
 
 </script>
