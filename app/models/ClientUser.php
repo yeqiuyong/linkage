@@ -491,6 +491,28 @@ class ClientUser extends Model
         return $newUsers;
     }
 
+    public function getUserCountPerWeek($time){
+        $time = (int)$time;
+
+        $sql = "select t.type, t.role_id, sum(t.num ) as count from" . "(select a.user_id, b.role_id, 1 as num,"
+            . " case" . " when(create_time > ". ($time - 7*86400) ." and create_time <= ". ($time - 6*86400) .") then '1'"
+            . " when(create_time > ". ($time - 6*86400) ." and create_time <= ". ($time - 5*86400) .") then '2'"
+            . " when(create_time > ". ($time - 5*86400) ." and create_time <= ". ($time - 4*86400) .") then '3'"
+            . " when(create_time > ". ($time - 4*86400) ." and create_time <= ". ($time - 3*86400) .") then '4'"
+            . " when(create_time > ". ($time - 3*86400) ." and create_time <= ". ($time - 2*86400) .") then '5'"
+            . " when(create_time > ". ($time - 2*86400) ." and create_time <= ". ($time - 1*86400) .") then '6'"
+            . " when(create_time > ". ($time - 1*86400) ." and create_time <= ". ($time) .") then '7'"
+            . " else '8'" . " end as type from linkage_clientuser a "
+            . " join linkage_user_role b on a.user_id = b.user_id"
+            . " where create_time > ". ($time - 6*86400) ." and create_time <= ". ($time + 1*86400)
+            . ") t group by t.type, t.role_id";
+
+        $results = new Resultset(null, $this, $this->getReadConnection()->query($sql));
+
+        return $results;
+    }
+
+
     public function delStaff($staffId){
         $staff = self::findFirst([
             'conditions' => 'user_id = :user_id:',

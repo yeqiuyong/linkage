@@ -81,5 +81,33 @@ class IndexController extends BackendControllerBase
         );
     }
 
+    public function userCountPerWeekAction(){
+        $date = $this->request->getPost('date_offset', 'int'); // POST
+
+        $user = new ClientUser();
+        //$userCountsPerWeek = $user->getUserCountPerWeek(1457366142);
+        $userCountsPerWeek = $user->getUserCountPerWeek($date);
+
+        $manufactureCntsPerWeek = [];
+        $transporterCntsPerWeek = [];
+        foreach($userCountsPerWeek as $countPerWeek){
+            if($countPerWeek->role_id == LinkageUtils::USER_ADMIN_MANUFACTURE){
+                $manufactureCntPerWeek = ['x' => $countPerWeek->type, 'y' => $countPerWeek->count];
+                array_push($manufactureCntsPerWeek, $manufactureCntPerWeek);
+            }else if($countPerWeek->role_id == LinkageUtils::USER_ADMIN_TRANSPORTER){
+                $transporterCntPerWeek = ['x' => $countPerWeek->type, 'y' => $countPerWeek->count];
+                array_push($transporterCntsPerWeek, $transporterCntPerWeek);
+            }
+        }
+
+        $countArray = [
+            "offset" => $date,
+            "manufactureCntsPerWeek" => $manufactureCntsPerWeek,
+            "transporterCntsPerWeek" => $transporterCntsPerWeek
+        ];
+
+        return $this->response->setJsonContent($countArray);
+    }
+
 
 }

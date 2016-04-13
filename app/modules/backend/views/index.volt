@@ -9,7 +9,6 @@
         <meta name="description" content="Your invoices">
         <meta name="author" content="Phalcon Team">
 
-
         {{ stylesheet_link('css/bootstrap-cerulean.min.css') }}
 
         {{ stylesheet_link('css/charisma-app.css') }}
@@ -19,6 +18,7 @@
         {{ stylesheet_link('bower_components/colorbox/example3/colorbox.css'  ) }}
         {{ stylesheet_link('bower_components/responsive-tables/responsive-tables.css'  ) }}
         {{ stylesheet_link('bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css'  ) }}
+        {{ stylesheet_link('bower_components/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'  ) }}
         {{ stylesheet_link('css/jquery.noty.css'  ) }}
         {{ stylesheet_link('css/noty_theme_default.css'  ) }}
         {{ stylesheet_link('css/elfinder.min.css'  ) }}
@@ -27,11 +27,11 @@
         {{ stylesheet_link('css/uploadify.css'  ) }}
         {{ stylesheet_link('css/animate.min.css'  ) }}
 
+
         {{ javascript_include('js/jquery.min.js') }}
 
     </head>
     <body>
-        {{ content() }}
 
         {{ javascript_include('js/utils.js') }}
 
@@ -42,6 +42,7 @@
         {{ javascript_include("bower_components/colorbox/jquery.colorbox-min.js")  }}
         {{ javascript_include("bower_components/responsive-tables/responsive-tables.js")  }}
         {{ javascript_include("bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js")  }}
+        {{ javascript_include("bower_components/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js") }}
 
         {{ javascript_include("js/jquery.raty.min.js")  }}
         {{ javascript_include("js/jquery.iphone.toggle.js")  }}
@@ -54,6 +55,7 @@
 
         {{ javascript_include("js/charisma.js")  }}
 
+        {{ content() }}
 
     </body>
 </html>
