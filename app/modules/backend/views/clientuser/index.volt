@@ -148,7 +148,7 @@
         var register_time = new Date();
         for (var i = 0; i < page.items.length; i++) {
             var num = i + 1 ;
-            var id = page.items[i].user_id
+            var id = page.items[i].user_id;
 
             register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 

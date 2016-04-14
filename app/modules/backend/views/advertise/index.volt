@@ -115,6 +115,8 @@
                 strtable += '<thead><tr> <th>标题</th> <th>外部链接</th> <th>描述</th> <th>状态</th> <th>操作</th> </tr> </thead>';
 
                 for (var i = 0; i < page.items.length; i++) {
+                    var id = page.items[i].id;
+
                     strtable += "<tr>";
                     strtable += "<td>" + page.items[i].title + "</td>";
                     strtable += "<td>" + page.items[i].link + "</td>";
@@ -137,10 +139,18 @@
                     strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
                     strtable += '编辑';
                     strtable += '</a>';
-                    strtable += '<a class="btn btn-danger" href="#">';
-                    strtable += '<i class="glyphicon glyphicon-trash icon-white"></i>';
-                    strtable += '删除';
-                    strtable += '</a>';
+                    strtable += '<div class="btn-group">';
+                    strtable += '<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
+                    strtable += '<i class="glyphicon glyphicon-edit"></i><span class="hidden-sm hidden-xs"> 状态</span>';
+                    strtable += '<span class="caret"></span>';
+                    strtable += '</button>';
+                    strtable += '<ul class="dropdown-menu">';
+                    strtable += '<li class="divider"></li>';
+                    strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 0' + ' ,' +  pageindex  + ')">Active</a></li>';
+                    strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 1' + ' ,' +  pageindex  + ')">Inactive</a></li>';
+                    strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 2' + ' ,' +  pageindex  + ')">Delete</a></li>';
+                    strtable += '</ul>';
+                    strtable += '</div>';
                     strtable += '</td>';
 
                     strtable += "</tr>";
@@ -166,6 +176,19 @@
                 $("#adv-table").html(strtable);
             }
         });
+    }
+
+    function changeStatus(id, status, pageindex){
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('admin/advertise/changestatus') ?>",
+            data: "id="+id+"&status="+status+"&pageindex="+pageindex,
+            success: function () {
+                load(pageindex);
+            }
+        });
+
     }
 
     load(pageindexinit);

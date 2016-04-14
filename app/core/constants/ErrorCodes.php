@@ -68,6 +68,7 @@ class ErrorCodes
     const USER_FAVORITE_NOT_FOUND = 4024;
     const USER_ADDRESS_INPUT_ERROR = 4025;
     const USER_ADDRESS_NOT_FOUND = 4026;
+    const USER_ADVERTISE_NOT_FOUND = 4026;
 
 
     //Company mangement
@@ -140,6 +141,7 @@ class ErrorCodes
         self:: USER_FAVORITE_NOT_FOUND => "收藏公司不存在",
         self:: USER_ADDRESS_INPUT_ERROR => "用户地址簿输入错误",
         self:: USER_ADDRESS_NOT_FOUND => "用户收藏地址不存在",
+        self:: USER_ADVERTISE_NOT_FOUND => "广告编码不存在",
 
         // Company management
         self:: COMPANY_ID_NULL => "公司ID为空",

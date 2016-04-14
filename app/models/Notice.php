@@ -17,6 +17,7 @@ use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 
 class Notice extends Model
 {
@@ -63,6 +64,7 @@ class Notice extends Model
         $results = [];
         foreach ($advs as $adv) {
             $result = [];
+            $result['id'] = $adv->id;
             $result['description'] = $adv->description;
             $result['link'] = $adv->link;
             $result['title'] = $adv->title;
@@ -152,6 +154,31 @@ class Notice extends Model
             ];
         }else{
             throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
+        }
+    }
+
+    public function updateStatus($advId, $status){
+        $advertise = self::findFirst([
+            'conditions' => 'id = :id:',
+            'bind' => ['id' => $advId]
+        ]);
+
+        if(!isset($advertise->id)){
+            throw new UserOperationException(ErrorCodes::USER_ADVERTISE_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_ADVERTISE_NOT_FOUND]);
+        }
+
+        $advertise->status = $status;
+        $advertise->update_time = time();
+
+        if($advertise->update() == false){
+            $message = '';
+            foreach ($advertise->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
     }
 

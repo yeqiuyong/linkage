@@ -75,5 +75,21 @@ class AdvertiseController extends BackendControllerBase
 
     }
 
+    public function changeStatusAction(){
+        $advId = $this->request->getPost('id', 'int'); // POST
+        $status = $this->request->getPost('status', 'int'); // POST
+
+        try{
+            $advertise = new Notice();
+            $advertise->updateStatus($advId, $status);
+
+
+
+        }catch (Exception $e){
+            return$this->responseJsonError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->responseJsonOK();
+    }
 
 }
