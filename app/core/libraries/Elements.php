@@ -145,7 +145,15 @@ class Elements extends Component
             'has_child' => true,
             'child_menu' =>[
                 '广告管理' => [
-                    'link' => 'admin/adv/index',
+                    'link' => 'admin/advertise/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                '消息管理' => [
+                    'link' => 'admin/message/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+                'SMS管理' => [
+                    'link' => 'admin/sms/index',
                     'class' => 'nav nav-pills nav-stacked',
                 ],
             ]

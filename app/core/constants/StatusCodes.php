@@ -52,6 +52,10 @@ class StatusCodes
     const ADDRESS_INACTIVE = 1;
     const ADDRESS_DELETE = 2;
 
+    const NOTICE_ACTIVE = 0;
+    const NOTICE_INACTIVE = 1;
+    const NOTICE_DELETE = 2;
+
     const COMPLAIN_HANDLING = 0;
     const COMPLAIN_HANDLED= 1;
     const COMPLAIN_DELETED = 2;

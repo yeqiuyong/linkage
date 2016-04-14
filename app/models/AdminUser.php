@@ -101,7 +101,7 @@ class AdminUser extends Model
             'bind' => ['username' => $userName]
         ]);
 
-        if(!isset($user->user_id)){
+        if(!isset($user->admin_id)){
             throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
         }
 

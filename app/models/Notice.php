@@ -14,6 +14,8 @@ use Phalcon\Mvc\Model;
 
 use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Constants\Services;
+use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Exception\DataBaseException;
 
 class Notice extends Model
@@ -25,8 +27,8 @@ class Notice extends Model
     public function getAdv($pagination = 0, $offset = 0, $size = 10){
         if($pagination){
             $notices = self::find([
-                'conditions' => 'type = :type: AND status = 0',
-                'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV],
+                'conditions' => 'type = :type: AND status = :status:',
+                'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV, 'status' => StatusCodes::NOTICE_ACTIVE],
                 'order' => 'create_time DESC',
                 'offset' => $offset,
                 'limit' => $size,
@@ -34,8 +36,8 @@ class Notice extends Model
             ]);
         }else{
             $notices = self::find([
-                'conditions' => 'type = :type: AND status = 0',
-                'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV],
+                'conditions' => 'type = :type: AND status = :status:',
+                'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV, 'status' => StatusCodes::NOTICE_ACTIVE],
                 'order' => 'create_time DESC',
             ]);
         }
@@ -50,6 +52,55 @@ class Notice extends Model
         }
 
         return $results;
+    }
+
+    public function getAdv4Admin(){
+        $advs = self::find([
+            'conditions' => 'type = :type: AND status != :status:',
+            'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV, 'status' => StatusCodes::NOTICE_DELETE],
+        ]);
+
+        $results = [];
+        foreach ($advs as $adv) {
+            $result = [];
+            $result['description'] = $adv->description;
+            $result['link'] = $adv->link;
+            $result['title'] = $adv->title;
+            $result['status'] = $adv->status;
+
+            array_push($results,$result);
+        }
+
+        return $results;
+    }
+
+    public function addAdv($title, $link, $description, $memo, $image, $creator){
+        $now = time();
+
+        $this->title = $title;
+        $this->link = $link;
+        $this->description = $description;
+        $this->memo = $memo;
+        $this->image = $image;
+        $this->type = LinkageUtils::MESSAGE_TYPE_ADV;
+        $this->status = StatusCodes::NOTICE_ACTIVE;
+        $this->client_type = 0;
+        $this->create_by = $creator;
+
+        $this->create_time = $now;
+        $this->update_time = $now;
+
+        if ($this->save() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
+        }
+
     }
 
     public function getMsg($roleId, $pagination, $offset, $size){

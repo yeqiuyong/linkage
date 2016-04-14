@@ -22,16 +22,16 @@ class ProfileController extends BackendControllerBase
 
     public function indexAction(){
         $admin = new AdminUser();
-        $admin->getUserByName($this->userName);
+        $adminInfo = $admin->getUserByName($this->userName);
 
         $this->view->setVars(
             array(
                 'username' => $this->userName,
-                'realname' => $admin->name,
-                'mobile' => $admin->mobile,
-                'email' => $admin->email,
-                'profile_name' => $admin->profile->profile_name,
-                'update_time' =>date('Y-m-d',$admin->update_time),
+                'realname' => $adminInfo->name,
+                'mobile' => $adminInfo->mobile,
+                'email' => $adminInfo->email,
+                'profile_name' => $adminInfo->profile->profile_name,
+                'update_time' =>date('Y-m-d',$adminInfo->update_time),
             )
         );
     }
