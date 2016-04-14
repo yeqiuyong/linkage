@@ -1,3 +1,7 @@
+
+    {% include "advertise/editor.volt" %}
+
+
 <div id="content" class="col-lg-10 col-sm-10">
     <!-- content starts -->
     <div>
@@ -76,27 +80,6 @@
 
 <!-- Ad ends -->
 
-<hr>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3>Settings</h3>
-            </div>
-            <div class="modal-body">
-                <p>Here settings can be configured...</p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                <a href="#" class="btn btn-primary" data-dismiss="modal">Save changes</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script type="text/javascript">
     var pagesize = 10;
@@ -131,7 +114,7 @@
                     strtable += '</td>';
 
                     strtable += '<td class="center">';
-                    strtable += '<a class="btn btn-success" href="#">';
+                    strtable += '<a class="btn btn-success" href="#" onclick="showInfoModal()">';
                     strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
                     strtable += '查看';
                     strtable += '</a>';
@@ -188,6 +171,24 @@
                 load(pageindex);
             }
         });
+
+    }
+
+    function showInfoModal(id){
+        $('#myModal').modal('show').on('shown',function(){
+            $.ajax({
+                type: "post",
+                dataType:"json",
+                url: "<?php echo $this->url->get('admin/advertise/detail?id=11') ?>",
+                data: {'id' : id},
+                success: function (advertise) {
+                    $("#title-modal").attr("value", advertise.title);//填充内容
+                    $("#link-modal").attr("value", advertise.link);//填充内容
+                    $("#description-modal").attr("value", advertise.description);//填充内容
+                    $("#memo-modal").attr("value", advertise.memo);//填充内容
+                }
+            });
+        })
 
     }
 

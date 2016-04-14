@@ -76,6 +76,30 @@ class Notice extends Model
         return $results;
     }
 
+    public function getAdvById($id){
+        $adv = self::findFirst([
+            'conditions' => 'type = :type: AND id = :id: AND status != :status:',
+            'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV,
+                'status' => StatusCodes::NOTICE_DELETE,
+                'id' => $id,
+            ]
+        ]);
+
+        if(isset($adv->id)){
+            $result['id'] = $adv->id;
+            $result['description'] = $adv->description;
+            $result['link'] = $adv->link;
+            $result['title'] = $adv->title;
+            $result['memo'] = $adv->memo;
+
+        }else{
+            throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
+        }
+
+        return $result;
+
+    }
+
     public function addAdv($title, $link, $description, $memo, $image, $creator){
         $now = time();
 

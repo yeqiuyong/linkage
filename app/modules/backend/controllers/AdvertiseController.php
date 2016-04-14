@@ -57,6 +57,16 @@ class AdvertiseController extends BackendControllerBase
 
     }
 
+    public function detailAction(){
+        $id = $this->request->get('id', 'int'); // POST
+
+        $advertise = new Notice();
+        $adv = $advertise->getAdvById($id);
+
+        return $this->response->setJsonContent($adv);
+
+    }
+
     public function addAction(){
         $title = $this->request->getPost('title', 'string');
         $link = $this->request->getPost('link', 'string');
