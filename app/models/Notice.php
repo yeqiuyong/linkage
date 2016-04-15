@@ -130,51 +130,6 @@ class Notice extends Model
 
     }
 
-    public function updateAdv($id, $title, $link, $description, $memo, $image, $creator){
-        $adv = self::findFirst([
-            'conditions' => 'id = :id:',
-            'bind' => ['id' => $id,]
-        ]);
-
-        if(!isset($adv->id)){
-            throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
-        }
-
-        if(!empty($title)){
-            $adv->title = $title;
-        }
-
-        if(!empty($link)){
-            $adv->link = $link;
-        }
-
-        if(!empty($description)){
-            $adv->description = $description;
-        }
-
-        if(!empty($memo)){
-            $adv->memo = $memo;
-        }
-
-        if(!empty($image)){
-            $adv->image = $image;
-        }
-
-        $adv->create_by = $creator;
-        $adv->update_time = time();
-
-        if ($adv->update() == false){
-            $message = '';
-            foreach ($this->getMessages() as $msg) {
-                $message .= (String)$msg. ',';
-            }
-            $logger = Di::getDefault()->get(Services::LOGGER);
-            $logger->fatal($message);
-
-            throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
-        }
-
-    }
 
     public function getMsg($roleId, $pagination, $offset, $size){
         if($pagination){
@@ -250,12 +205,14 @@ class Notice extends Model
 
             return [
                 'type' => $type,
+                'id' => $notice->id,
                 'icon' => $notice->image,
                 'title' => $notice->title,
                 'description' => $notice->description,
                 'link' => $notice->link,
                 'memo' => $notice->memo,
                 'create_time' => $notice->create_time,
+                'image' => $notice->image,
             ];
         }else{
             throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
@@ -281,6 +238,82 @@ class Notice extends Model
             throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
         }
     }
+
+    public function addMsg($type, $title, $link, $description, $memo, $image, $creator){
+        $now = time();
+
+        $this->type = $type;
+        $this->title = $title;
+        $this->link = $link;
+        $this->description = $description;
+        $this->memo = $memo;
+        $this->image = $image;
+        $this->status = StatusCodes::NOTICE_ACTIVE;
+        $this->client_type = 0;
+        $this->create_by = $creator;
+
+        $this->create_time = $now;
+        $this->update_time = $now;
+
+        if ($this->save() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
+        }
+
+    }
+
+    public function updateNotice($id, $title, $link, $description, $memo, $image, $creator){
+        $adv = self::findFirst([
+            'conditions' => 'id = :id:',
+            'bind' => ['id' => $id,]
+        ]);
+
+        if(!isset($adv->id)){
+            throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
+        }
+
+        if(!empty($title)){
+            $adv->title = $title;
+        }
+
+        if(!empty($link)){
+            $adv->link = $link;
+        }
+
+        if(!empty($description)){
+            $adv->description = $description;
+        }
+
+        if(!empty($memo)){
+            $adv->memo = $memo;
+        }
+
+        if(!empty($image)){
+            $adv->image = $image;
+        }
+
+        $adv->create_by = $creator;
+        $adv->update_time = time();
+
+        if ($adv->update() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
+        }
+
+    }
+
 
     public function updateStatus($advId, $status){
         $advertise = self::findFirst([

@@ -33,8 +33,7 @@
                     <input class="form-control" type="text" name="memo-info-modal" id="memo-info-modal" readonly="readonly"/>
                 </div>
                 <div class="form-group">
-                    <label>图片</label>
-                    <img name="image-info-modal" id="image-info-modal"/>
+                    <img name="image-info-modal" id="image-info-modal" src="" alt="图片"/>
                 </div>
 
             </div>

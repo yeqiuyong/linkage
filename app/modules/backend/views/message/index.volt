@@ -35,7 +35,7 @@
                                 <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
                             </div>
                         </div>
-                        <div id="adv-table" class="box-content">
+                        <div id="msg-table" class="box-content">
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,14 @@
                 <div class="box col-md-12">
                     <div class="box-inner">
                         <div class="box-content">
-                            {{ form('admin/advertise/add', 'role': 'form', 'enctype':'multipart/form-data') }}
+                            {{ form('admin/message/add', 'role': 'form', 'enctype':'multipart/form-data') }}
+                            <div class="form-group">
+                                <label>消息类型</label>
+                                <select name="msg_type" id="msg_type">
+                                    <option value ="1">招聘信息</option>
+                                    <option value ="2">通知</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label>消息标题</label>
                                 {{ text_field('title', 'class': "form-control") }}
@@ -160,7 +167,7 @@
                 strtable += '<li><a href="#" onclick="load('+page.next+')">Next</a></li>';
                 strtable +='</ul>';
 
-                $("#adv-table").html(strtable);
+                $("#msg-table").html(strtable);
             }
         });
     }
@@ -191,12 +198,12 @@
                 dataType:"json",
                 url: "<?php echo $this->url->get('admin/message/detail?id=" + id +"') ?>",
                 data: {'id' : id},
-                success: function (advertise) {
-                    $("#id-editor-modal").attr("value", advertise.id);//填充内容
-                    $("#title-editor-modal").attr("value", advertise.title);//填充内容
-                    $("#link-editor-modal").attr("value", advertise.link);//填充内容
-                    $("#description-editor-modal").attr("value", advertise.description);//填充内容
-                    $("#memo-editor-modal").attr("value", advertise.memo);//填充内容
+                success: function (message) {
+                    $("#id-editor-modal").attr("value", message.id);//填充内容
+                    $("#title-editor-modal").attr("value", message.title);//填充内容
+                    $("#link-editor-modal").attr("value", message.link);//填充内容
+                    $("#description-editor-modal").attr("value", message.description);//填充内容
+                    $("#memo-editor-modal").attr("value", message.memo);//填充内容
                 }
             });
         })
@@ -220,7 +227,11 @@
                     $("#link-info-modal").attr("value", message.link);//填充内容
                     $("#description-info-modal").attr("value", message.description);//填充内容
                     $("#memo-info-modal").attr("value", message.memo);//填充内容
-                    $("#image-info-modal").attr('src',message.image);
+
+                    if(message.image != null && message.image != ''){
+                        $("#image-info-modal").attr('src', message.image);
+                    }
+
                 }
             });
         })

@@ -8,7 +8,7 @@
                 </h4>
             </div>
             <div class="modal-body">
-                {{ form('admin/advertise/update', 'id':'editor-modal-form', 'role': 'form', 'enctype':'multipart/form-data') }}
+                {{ form('admin/message/update', 'id':'editor-modal-form', 'role': 'form', 'enctype':'multipart/form-data') }}
                 <input class="form-control" type="hidden" name="id-editor-modal" id="id-editor-modal"/>
                 <div class="form-group">
                     <label>消息标题</label>

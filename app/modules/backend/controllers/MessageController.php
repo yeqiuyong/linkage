@@ -68,20 +68,21 @@ class MessageController extends BackendControllerBase
     }
 
     public function addAction(){
+        $type = $this->request->getPost('msg_type', 'int');
         $title = $this->request->getPost('title', 'string');
         $link = $this->request->getPost('link', 'string');
         $description = $this->request->getPost('description', 'string');
         $memo = $this->request->getPost('memo', 'string');
 
-        $advertise = new Notice();
+        $message = new Notice();
         $admin = new AdminUser();
 
         $image = $this->upload2Upyun();
         $adminInfo = $admin->getUserByName('admin');
 
-        $advertise->addAdv($title, $link, $description, $memo, $image, $adminInfo->admin_id);
+        $message->addMsg($type, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
 
-        $url = $this->url->get('admin/advertise/index');
+        $url = $this->url->get('admin/message/index');
         return $this->response->redirect($url);
 
     }
@@ -93,15 +94,15 @@ class MessageController extends BackendControllerBase
         $description = $this->request->getPost('description-editor-modal', 'string');
         $memo = $this->request->getPost('memo-editor-modal', 'string');
 
-        $advertise = new Notice();
+        $message = new Notice();
         $admin = new AdminUser();
 
         $image = $this->upload2Upyun();
         $adminInfo = $admin->getUserByName('admin');
 
-        $advertise->updateAdv($id, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
+        $message->updateNotice($id, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
 
-        $url = $this->url->get('admin/advertise/index');
+        $url = $this->url->get('admin/message/index');
         return $this->response->redirect($url);
 
     }

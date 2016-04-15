@@ -99,7 +99,7 @@ class AdvertiseController extends BackendControllerBase
         $image = $this->upload2Upyun();
         $adminInfo = $admin->getUserByName('admin');
 
-        $advertise->updateAdv($id, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
+        $advertise->updateNotice($id, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
 
         $url = $this->url->get('admin/advertise/index');
         return $this->response->redirect($url);
