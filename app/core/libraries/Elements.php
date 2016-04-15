@@ -79,24 +79,10 @@ class Elements extends Component
             'has_child' => false
         ],
         '管理员管理' => [
-            'link' => 'admin/index/index',
-            'class' => 'glyphicon glyphicon-plus',
+            'link' => 'admin/adminuser/index',
+            'class' => 'glyphicon glyphicon-user',
             'profile' => 1,
-            'has_child' => true,
-            'child_menu' =>[
-                '管理员角色' => [
-                    'link' => 'admin/adminuser/role',
-                    'class' => 'nav nav-pills nav-stacked',
-                ],
-                '客户角色' => [
-                    'link' => 'admin/clientuser/role',
-                    'class' => 'nav nav-pills nav-stacked',
-                ],
-                '管理员管理' => [
-                    'link' => 'admin/adminuser/index',
-                    'class' => 'nav nav-pills nav-stacked',
-                ]
-            ]
+            'has_child' => false,
         ],
         '用户管理' => [
             'link' => 'admin/index/index',
@@ -126,10 +112,6 @@ class Elements extends Component
                 ],
                 '入口订单' => [
                     'link' => 'admin/order/import',
-                    'class' => 'nav nav-pills nav-stacked',
-                ],
-                '内陆订单' => [
-                    'link' => 'admin/order/inland',
                     'class' => 'nav nav-pills nav-stacked',
                 ],
                 '自备柜' => [
