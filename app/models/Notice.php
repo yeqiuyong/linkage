@@ -200,12 +200,66 @@ class Notice extends Model
             $result['icon'] = $notice->image;
             $result['title'] = $notice->title;
             $result['description'] = $notice->description;
-            $result['creation_time'] = $notice->create_time;
+            $result['create_time'] = $notice->create_time;
 
             array_push($results, $result);
         }
 
         return $results;
+    }
+
+    public function getMsg4Admin(){
+        $notices = self::find([
+            'conditions' => 'type != :type: AND status != :status:',
+            'bind' => ['type' => LinkageUtils::MESSAGE_TYPE_ADV, 'status' => StatusCodes::NOTICE_DELETE],
+        ]);
+
+        $results = [];
+        foreach ($notices as $notice) {
+            $result = [];
+            $result['id'] = $notice->id;
+            $result['description'] = $notice->description;
+            $result['create_time'] = $notice->create_time;
+            $result['title'] = $notice->title;
+            $result['status'] = $notice->status;
+
+            switch($notice->type){
+                case LinkageUtils::MESSAGE_TYPE_EMPLOYMENT : $result['type'] = "招聘信息";break;
+                case LinkageUtils::MESSAGE_TYPE_NOTICE : $result['type'] = "通知";break;
+                default: $result['type'] = "通知";break;
+            }
+
+            array_push($results,$result);
+        }
+
+        return $results;
+    }
+
+    public function getMsgDetail4Admin($noticeId){
+        $notice = self::findFirst([
+            'conditions' => 'id = :notice_id:',
+            'bind' => ['notice_id' => $noticeId]
+        ]);
+
+        if(isset($notice->id)){
+            switch($notice->type){
+                case LinkageUtils::MESSAGE_TYPE_EMPLOYMENT : $type = "招聘信息";break;
+                case LinkageUtils::MESSAGE_TYPE_NOTICE : $type = "通知";break;
+                default: $type = "通知";break;
+            }
+
+            return [
+                'type' => $type,
+                'icon' => $notice->image,
+                'title' => $notice->title,
+                'description' => $notice->description,
+                'link' => $notice->link,
+                'memo' => $notice->memo,
+                'create_time' => $notice->create_time,
+            ];
+        }else{
+            throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
+        }
     }
 
     public function getMsgDetail($noticeId){
@@ -220,7 +274,7 @@ class Notice extends Model
                 'icon' => $notice->image,
                 'title' => $notice->title,
                 'description' => $notice->description,
-                'creation_time' => $notice->create_time,
+                'create_time' => $notice->create_time,
 
             ];
         }else{
