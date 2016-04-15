@@ -81,7 +81,8 @@ class AdvertiseController extends BackendControllerBase
 
         $advertise->addAdv($title, $link, $description, $memo, $image, $adminInfo->admin_id);
 
-        return $this->forward('advertise/index');
+        $url = $this->url->get('admin/advertise/index');
+        return $this->response->redirect($url);
 
     }
 
@@ -100,7 +101,8 @@ class AdvertiseController extends BackendControllerBase
 
         $advertise->updateAdv($id, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
 
-        return $this->forward('advertise/index');
+        $url = $this->url->get('admin/advertise/index');
+        return $this->response->redirect($url);
 
     }
 

@@ -26,7 +26,7 @@
                 </div>
                 <div class="form-group">
                     <label>图片</label>
-                    <img name="image-info-modal" id="image-info-modal" src="" />
+                    <img name="image-info-modal" id="image-info-modal"/>
                 </div>
 
             </div>
