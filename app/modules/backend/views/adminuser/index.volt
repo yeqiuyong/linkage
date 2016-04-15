@@ -116,6 +116,7 @@
 
                 var register_time = new Date();
                 for (var i = 0; i < page.items.length; i++) {
+                    var id = page.items[i].id;
                     register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 
                     strtable += "<tr>";
@@ -124,7 +125,7 @@
                     strtable += "<td>" + page.items[i].profile_name + "</td>";
 
                     strtable += '<td class="center">';
-                    if(page.items[i].active == 'Y') {
+                    if(page.items[i].status == '0') {
                         strtable += '<span class="label-success label label-default">Active</span>';
                     }else{
                         strtable += '<span class="label label-default">Inactive</span>';
@@ -140,10 +141,18 @@
                     strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
                     strtable += '编辑';
                     strtable += '</a>';
-                    strtable += '<a class="btn btn-danger" href="#">';
-                    strtable += '<i class="glyphicon glyphicon-trash icon-white"></i>';
-                    strtable += '删除';
-                    strtable += '</a>';
+                    strtable += '<div class="btn-group">';
+                    strtable += '<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
+                    strtable += '<i class="glyphicon glyphicon-edit"></i><span class="hidden-sm hidden-xs"> 状态</span>';
+                    strtable += '<span class="caret"></span>';
+                    strtable += '</button>';
+                    strtable += '<ul class="dropdown-menu">';
+                    strtable += '<li class="admin"></li>';
+                    strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 0' + ' ,' +  pageindex  + ')">Active</a></li>';
+                    strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 1' + ' ,' +  pageindex  + ')">Inactive</a></li>';
+                    strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 2' + ' ,' +  pageindex  + ')">Delete</a></li>';
+                    strtable += '</ul>';
+                    strtable += '</div>';
                     strtable += '</td>';
 
                     strtable += "</tr>";
@@ -169,6 +178,26 @@
                 $("#user-table").html(strtable);
             }
         });
+    }
+
+    function changeStatus(id, status, pageindex){
+        if(status == '2'){
+            if(!confirm("确定要删除用户")){
+                return;
+            }
+        }
+
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('admin/adminuser/changestatus') ?>",
+            data: "id="+id+"&status="+status+"&pageindex="+pageindex,
+            success: function () {
+
+                load(pageindex);
+            }
+        });
+
     }
 
     load(pageindexinit);

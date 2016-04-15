@@ -11,6 +11,10 @@ namespace Multiple\Core\Constants;
 
 class StatusCodes
 {
+    const ADMIN_USER_ACTIVE = 0;
+    const ADMIN_USER_INACTIVE = 1;
+    const ADMIN_USER_DELETED = 2;
+
     const CLIENT_USER_ACTIVE = 0;
     const CLIENT_USER_INACTIVE = 1;
     const CLIENT_USER_PENDING = 2;

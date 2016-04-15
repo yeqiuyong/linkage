@@ -35,22 +35,13 @@ class AdminuserController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $results = [];
-        $users = AdminUser::find();
-        foreach ($users as $user) {
-            $result = [];
-            $result['username'] = $user->username;
-            $result['create_time'] = $user->create_time;
-            $result['active'] = $user->active;
-            $result['profile_name'] = $user->profile->profile_name;
-
-            array_push($results,$result);
-        }
+        $adminUser = new AdminUser();
+        $admins = $adminUser->getAdmins();
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
         $paginator = new PaginatorArray(
             array(
-                "data"  => $results,
+                "data"  => $admins,
                 "limit" => 10,
                 "page"  => $pageNum
             )
@@ -71,15 +62,19 @@ class AdminuserController extends BackendControllerBase
         $email = $this->request->getPost('email');
 
         $adminUser = new AdminUser();
-        try{
-            $adminUser->add($username, $password, $realname, $mobile , $email);
-            return $this->forward('adminuser/index');
-        }catch (UserOperationException $e){
-            echo "用户名已经被注册";
-        }catch (DataBaseException $e){
-            echo "数据库错误";
-        }
+        $adminUser->add($username, $password, $realname, $mobile , $email);
 
+        return $this->forward('adminuser/index');
 
+    }
+
+    public function changeStatusAction(){
+        $adminId = $this->request->getPost('id', 'int'); // POST
+        $status = $this->request->getPost('status', 'int'); // POST
+
+        $adminUser = new AdminUser();
+        $adminUser->updateStatus($adminId, $status);
+
+        return $this->responseJsonOK();
     }
 }

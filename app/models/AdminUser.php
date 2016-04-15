@@ -8,6 +8,8 @@
 
 namespace Multiple\Models;
 
+use Multiple\Core\Constants\LinkageUtils;
+use Multiple\Core\Constants\StatusCodes;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Validator\Email as EmailValidator;
@@ -74,7 +76,7 @@ class AdminUser extends Model
         $this->profile_id = 2;
         $this->token = '';
         $this->login = '127.0.0.1';
-        $this->active = 'Y';
+        $this->status = StatusCodes::ADMIN_USER_ACTIVE;
         $this->create_time = $now;
         $this->update_time = $now;
 
@@ -93,6 +95,28 @@ class AdminUser extends Model
 
     public function setProfileName($profile_name){
         $this->profile_name = $profile_name;
+    }
+
+    public function getAdmins(){
+        $results = [];
+        $users = self::find([
+                'conditions' => 'status != :status:',
+                'bind' => ['status' => StatusCodes::ADMIN_USER_DELETED]
+            ]
+        );
+        foreach ($users as $user) {
+            $result = [];
+
+            $result['id'] = $user->admin_id;
+            $result['username'] = $user->username;
+            $result['create_time'] = $user->create_time;
+            $result['status'] = $user->status;
+            $result['profile_name'] = $user->profile->profile_name;
+
+            array_push($results,$result);
+        }
+
+        return $results;
     }
 
     public function getUserByName($userName){
@@ -135,6 +159,32 @@ class AdminUser extends Model
             $logger->fatal($message);
 
             throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
+        }
+    }
+
+
+    public function updateStatus($adminId, $status){
+        $admin = self::findFirst([
+            'conditions' => 'admin_id = :admin_id:',
+            'bind' => ['admin_id' => $adminId]
+        ]);
+
+        if(!isset($admin->admin_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $admin->status = $status;
+        $admin->update_time = time();
+
+        if($admin->update() == false){
+            $message = '';
+            foreach ($admin->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
     }
 

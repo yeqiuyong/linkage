@@ -31,12 +31,12 @@ CREATE TABLE `linkage_adminuser` (
   `loginip` VARCHAR(31) DEFAULT '127.0.0.1',
   `create_time` INT(11) NOT NULL DEFAULT 0,
   `update_time` INT(11) NOT NULL DEFAULT 0,
-  `active` CHAR(1) NOT NULL DEFAULT 'Y',
+  `status` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '0 active;1 inactive;3 deleted',
   PRIMARY KEY (`admin_id`),
   UNIQUE KEY (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1000000 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-INSERT INTO linkage_adminuser ( `username`,`password`,`name`,`mobile`,`email`,`profile_id`,`token`,`loginip`,`create_time`,`update_time`,`active`)
-VALUES ('admin','$2a$08$ItRuZG9iZHOdRwCObXAAaOAwvw0NzzDd/YrGsdgTRFKk8E4mr3uSy','叶秋永','1881655517','yeqiuyong@aliyun.com',1,'','127.0.0.1',1454660363,1454660363,'Y');
+INSERT INTO linkage_adminuser ( `username`,`password`,`name`,`mobile`,`email`,`profile_id`,`token`,`loginip`,`create_time`,`update_time`,`status`)
+VALUES ('admin','$2a$08$ItRuZG9iZHOdRwCObXAAaOAwvw0NzzDd/YrGsdgTRFKk8E4mr3uSy','叶秋永','1881655517','yeqiuyong@aliyun.com',1,'','127.0.0.1',1454660363,1454660363,0);
 
 --
 -- Table structure for table 'admin_profiles'
