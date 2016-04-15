@@ -132,6 +132,26 @@ class AdminUser extends Model
         return $user;
     }
 
+    public function getUserById($adminId){
+        $user = self::findFirst([
+            'conditions' => 'admin_id = :admin_id:',
+            'bind' => ['admin_id' => $adminId]
+        ]);
+
+        if(!isset($user->admin_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $result['id'] = $user->admin_id;
+        $result['username'] = $user->username;
+        $result['realname'] = $user->name;
+        $result['update_time'] = $user->update_time;
+        $result['mobile'] = $user->mobile;
+        $result['email'] = $user->email;
+
+        return $result;
+    }
+
     public function updateProfile($realname, $mobile, $email){
         $user = self::findFirst([
             'conditions' => 'username = :username:',

@@ -4,29 +4,29 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">
-                    广告信息详情
+                    管理员详情
                 </h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>广告标题</label>
-                    <input class="form-control" type="text" name="title-info-modal" id="title-info-modal" readonly="readonly"/>
+                    <label>用户名</label>
+                    <input class="form-control" type="text" name="username-info-modal" id="username-info-modal" readonly="readonly"/>
                 </div>
                 <div class="form-group">
-                    <label>广告链接</label>
-                    <input class="form-control" type="text" name="link-info-modal" id="link-info-modal" readonly="readonly"/>
+                    <label>姓名</label>
+                    <input class="form-control" type="text" name="realname-info-modal" id="realname-info-modal" readonly="readonly"/>
                 </div>
                 <div class="form-group">
-                    <label>广告描述</label>
-                    <input class="form-control" type="text" name="description-info-modal" id="description-info-modal" readonly="readonly"/>
+                    <label>电话</label>
+                    <input class="form-control" type="text" name="mobile-info-modal" id="mobile-info-modal" readonly="readonly"/>
                 </div>
                 <div class="form-group">
-                    <label>其他说明</label>
-                    <input class="form-control" type="text" name="memo-info-modal" id="memo-info-modal" readonly="readonly"/>
+                    <label>电子邮箱</label>
+                    <input class="form-control" type="text" name="email-info-modal" id="email-info-modal" readonly="readonly"/>
                 </div>
                 <div class="form-group">
-                    <label>图片</label>
-                    <img name="image-info-modal" id="image-info-modal"/>
+                    <label>上次登录时间</label>
+                    <input class="form-control" type="text" name="update-info-modal" id="update-info-modal" readonly="readonly"/>
                 </div>
 
             </div>

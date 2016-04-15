@@ -1,3 +1,5 @@
+{% include "adminuser/information.volt" %}
+
 <div id="content" class="col-lg-10 col-sm-10">
     <!-- content starts -->
     <div>
@@ -133,13 +135,9 @@
                     strtable += '</td>';
 
                     strtable += '<td class="center">';
-                    strtable += '<a class="btn btn-success" href="#">';
+                    strtable += '<a class="btn btn-success" href="#" onclick="showInfoModal('+ id +')">';
                     strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
                     strtable += '查看';
-                    strtable += '</a>';
-                    strtable += '<a class="btn btn-info" href="#">';
-                    strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
-                    strtable += '编辑';
                     strtable += '</a>';
                     strtable += '<div class="btn-group">';
                     strtable += '<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
@@ -197,6 +195,28 @@
                 load(pageindex);
             }
         });
+
+    }
+
+    function showInfoModal(id){
+        $('#info-modal').modal('show').on('shown',function(){
+            $.ajax({
+                type: "post",
+                dataType:"json",
+                url: "<?php echo $this->url->get('admin/adminuser/detail?id=" + id +"') ?>",
+                data: {'id' : id},
+                success: function (adminuser) {
+                    var update_time = new Date();
+                    update_time.setTime((parseInt(adminuser.update_time) ) * 1000);
+
+                    $("#username-info-modal").attr("value", adminuser.username);//填充内容
+                    $("#realname-info-modal").attr("value", adminuser.realname);//填充内容
+                    $("#mobile-info-modal").attr("value", adminuser.mobile);//填充内容
+                    $("#email-info-modal").attr("value", adminuser.email);//填充内容
+                    $("#update-info-modal").attr('value', update_time.toDateString());
+                }
+            });
+        })
 
     }
 
