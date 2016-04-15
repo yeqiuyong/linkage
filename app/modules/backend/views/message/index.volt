@@ -55,15 +55,15 @@
                             </div>
                             <div class="form-group">
                                 <label>消息标题</label>
-                                {{ text_field('title', 'class': "form-control") }}
+                                {{ text_field('title', 'class': "form-control", 'required' :"required") }}
                             </div>
                             <div class="form-group">
                                 <label>消息链接</label>
-                                {{ text_field('link', 'class': "form-control") }}
+                                {{ text_field('link', 'class': "form-control", 'required' :"required") }}
                             </div>
                             <div class="form-group">
                                 <label>消息描述</label>
-                                {{ text_field('description', 'class': "form-control") }}
+                                {{ text_field('description', 'class': "form-control", 'required' :"required") }}
                             </div>
                             <div class="form-group">
                                 <label>其他说明</label>

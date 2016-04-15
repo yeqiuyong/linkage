@@ -48,11 +48,11 @@
                             {{ form('admin/advertise/add', 'role': 'form', 'enctype':'multipart/form-data') }}
                             <div class="form-group">
                                 <label>广告标题</label>
-                                {{ text_field('title', 'class': "form-control") }}
+                                {{ text_field('title', 'class': "form-control", 'required' :"required") }}
                             </div>
                             <div class="form-group">
                                 <label>广告链接</label>
-                                {{ text_field('link', 'class': "form-control") }}
+                                {{ text_field('link', 'class': "form-control", 'required' :"required") }}
                             </div>
                             <div class="form-group">
                                 <label>广告描述</label>
@@ -64,7 +64,7 @@
                             </div>
                             <div class="form-group">
                                 <label>图片</label>
-                                {{ file_field('image', 'class': "form-control") }}
+                                {{ file_field('image', 'class': "form-control", 'required' :"required") }}
                             </div>
 
                             {{ submit_button('提交', 'class': 'btn btn-primary') }}

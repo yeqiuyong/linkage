@@ -13,6 +13,8 @@ use Phalcon\Di;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 use Multiple\Core\BackendControllerBase;
+use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Exception\UserOperationException;
 use Multiple\Models\AdminUser;
 use Multiple\Models\Notice;
 
@@ -77,6 +79,12 @@ class AdvertiseController extends BackendControllerBase
         $admin = new AdminUser();
 
         $image = $this->upload2Upyun();
+
+        if(empty($image) || empty($title) || empty($link)){
+            throw new UserOperationException(ErrorCodes::GEN_INPUT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::GEN_INPUT_ERROR]);
+        }
+
+
         $adminInfo = $admin->getUserByName('admin');
 
         $advertise->addAdv($title, $link, $description, $memo, $image, $adminInfo->admin_id);

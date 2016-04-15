@@ -12,6 +12,8 @@ namespace Multiple\Backend\Controllers;
 use Phalcon\Di;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
+use Multiple\Core\Constants\ErrorCodes;
+use Multiple\Core\Exception\UserOperationException;
 use Multiple\Core\BackendControllerBase;
 use Multiple\Models\AdminUser;
 use Multiple\Models\Notice;
@@ -73,6 +75,10 @@ class MessageController extends BackendControllerBase
         $link = $this->request->getPost('link', 'string');
         $description = $this->request->getPost('description', 'string');
         $memo = $this->request->getPost('memo', 'string');
+
+        if(empty($type) || empty($title) || empty($description)){
+            throw new UserOperationException(ErrorCodes::GEN_INPUT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::GEN_INPUT_ERROR]);
+        }
 
         $message = new Notice();
         $admin = new AdminUser();

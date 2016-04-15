@@ -15,7 +15,8 @@ class ErrorCodes
     const GEN_UPLOAD_FILE_NOT_FOUND = 9998;
     const GEN_UPLOAD_FILE_SIZE_ERROR = 9997;
     const GEN_UPLOAD_FILE_TYPE_ERROR = 9996;
-    const GEN_UPLOAD_UPYUN_ERROR = 9996;
+    const GEN_UPLOAD_UPYUN_ERROR = 9995;
+    const GEN_INPUT_ERROR = 9994;
 
     // Data
     const DATA_DUPLICATE = 2001;
@@ -88,6 +89,7 @@ class ErrorCodes
         self::GEN_UPLOAD_FILE_NOT_FOUND => "上存文件不存在",
         self::GEN_UPLOAD_FILE_SIZE_ERROR => "上传文件大小错误",
         self::GEN_UPLOAD_FILE_TYPE_ERROR => "上传文件类型错误",
+        self::GEN_INPUT_ERROR => "输入错误",
 
         // Data
         self:: DATA_DUPLICATE => "数据重复",
