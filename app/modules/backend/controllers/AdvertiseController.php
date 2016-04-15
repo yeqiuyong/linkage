@@ -85,19 +85,31 @@ class AdvertiseController extends BackendControllerBase
 
     }
 
+    public function updateAction(){
+        $id =  $this->request->getPost('id-editor-modal', 'int');
+        $title = $this->request->getPost('title-editor-modal', 'string');
+        $link = $this->request->getPost('link-editor-modal', 'string');
+        $description = $this->request->getPost('description-editor-modal', 'string');
+        $memo = $this->request->getPost('memo-editor-modal', 'string');
+
+        $advertise = new Notice();
+        $admin = new AdminUser();
+
+        $image = $this->upload2Upyun();
+        $adminInfo = $admin->getUserByName('admin');
+
+        $advertise->updateAdv($id, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
+
+        return $this->forward('advertise/index');
+
+    }
+
     public function changeStatusAction(){
         $advId = $this->request->getPost('id', 'int'); // POST
         $status = $this->request->getPost('status', 'int'); // POST
 
-        try{
-            $advertise = new Notice();
-            $advertise->updateStatus($advId, $status);
-
-
-
-        }catch (Exception $e){
-            return$this->responseJsonError($e->getCode(), $e->getMessage());
-        }
+        $advertise = new Notice();
+        $advertise->updateStatus($advId, $status);
 
         return $this->responseJsonOK();
     }

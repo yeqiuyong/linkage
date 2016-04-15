@@ -12,8 +12,6 @@ use Phalcon\Di;
 
 use Multiple\Core\ControllerBase;
 use Multiple\Core\Constants\Services;
-use Multiple\Core\Constants\ErrorCodes;
-use Multiple\Core\Exception\UploadException;
 
 class BackendControllerBase extends ControllerBase
 {
@@ -32,12 +30,13 @@ class BackendControllerBase extends ControllerBase
     {
         $upyun = Di::getDefault()->get(Services::UPYUN);
 
+        $fileName = '';
         // Check if the user has uploaded files
         if ($this->request->hasFiles()) {
             $file = $this->request->getUploadedFiles()[0];
-            $fileName = $upyun->uploadImage($file);
-        }else{
-            throw new UploadException(ErrorCodes::GEN_UPLOAD_FILE_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::GEN_UPLOAD_FILE_NOT_FOUND]);
+            if($file->getSize() > 0){
+                $fileName = "http://".$upyun->uploadImage($file);
+            }
         }
 
         return $fileName;

@@ -91,6 +91,7 @@ class Notice extends Model
             $result['link'] = $adv->link;
             $result['title'] = $adv->title;
             $result['memo'] = $adv->memo;
+            $result['image'] = $adv->image;
 
         }else{
             throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
@@ -117,6 +118,52 @@ class Notice extends Model
         $this->update_time = $now;
 
         if ($this->save() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg. ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_CREATE_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_CREATE_FAIL]);
+        }
+
+    }
+
+    public function updateAdv($id, $title, $link, $description, $memo, $image, $creator){
+        $adv = self::findFirst([
+            'conditions' => 'id = :id:',
+            'bind' => ['id' => $id,]
+        ]);
+
+        if(!isset($adv->id)){
+            throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
+        }
+
+        if(!empty($title)){
+            $adv->title = $title;
+        }
+
+        if(!empty($link)){
+            $adv->link = $link;
+        }
+
+        if(!empty($description)){
+            $adv->description = $description;
+        }
+
+        if(!empty($memo)){
+            $adv->memo = $memo;
+        }
+
+        if(!empty($image)){
+            $adv->image = $image;
+        }
+
+        $adv->create_by = $creator;
+        $adv->update_time = time();
+
+        if ($adv->update() == false){
             $message = '';
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg. ',';

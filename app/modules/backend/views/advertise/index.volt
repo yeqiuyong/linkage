@@ -1,5 +1,6 @@
+{% include "advertise/editor.volt" %}
 
-    {% include "advertise/editor.volt" %}
+{% include "advertise/information.volt" %}
 
 
 <div id="content" class="col-lg-10 col-sm-10">
@@ -114,11 +115,11 @@
                     strtable += '</td>';
 
                     strtable += '<td class="center">';
-                    strtable += '<a class="btn btn-success" href="#" onclick="showInfoModal()">';
+                    strtable += '<a class="btn btn-success" href="#" onclick="showInfoModal('+ id +')">';
                     strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
                     strtable += '查看';
                     strtable += '</a>';
-                    strtable += '<a class="btn btn-info" href="#">';
+                    strtable += '<a class="btn btn-info" href="#" onclick="showEditorModal('+ id +')">';
                     strtable += '<i class="glyphicon glyphicon-edit icon-white"></i>';
                     strtable += '编辑';
                     strtable += '</a>';
@@ -162,6 +163,12 @@
     }
 
     function changeStatus(id, status, pageindex){
+        if(status == '2'){
+            if(!confirm("确定要删除广告")){
+                return;
+            }
+        }
+
         $.ajax({
             type: "post",
             dataType:"json",
@@ -174,18 +181,38 @@
 
     }
 
-    function showInfoModal(id){
-        $('#myModal').modal('show').on('shown',function(){
+    function showEditorModal(id){
+        $('#editor-modal').modal('show').on('shown',function(){
             $.ajax({
                 type: "post",
                 dataType:"json",
-                url: "<?php echo $this->url->get('admin/advertise/detail?id=11') ?>",
+                url: "<?php echo $this->url->get('admin/advertise/detail?id=" + id +"') ?>",
                 data: {'id' : id},
                 success: function (advertise) {
-                    $("#title-modal").attr("value", advertise.title);//填充内容
-                    $("#link-modal").attr("value", advertise.link);//填充内容
-                    $("#description-modal").attr("value", advertise.description);//填充内容
-                    $("#memo-modal").attr("value", advertise.memo);//填充内容
+                    $("#id-editor-modal").attr("value", advertise.id);//填充内容
+                    $("#title-editor-modal").attr("value", advertise.title);//填充内容
+                    $("#link-editor-modal").attr("value", advertise.link);//填充内容
+                    $("#description-editor-modal").attr("value", advertise.description);//填充内容
+                    $("#memo-editor-modal").attr("value", advertise.memo);//填充内容
+                }
+            });
+        })
+
+    }
+
+    function showInfoModal(id){
+        $('#info-modal').modal('show').on('shown',function(){
+            $.ajax({
+                type: "post",
+                dataType:"json",
+                url: "<?php echo $this->url->get('admin/advertise/detail?id=" + id +"') ?>",
+                data: {'id' : id},
+                success: function (advertise) {
+                    $("#title-info-modal").attr("value", advertise.title);//填充内容
+                    $("#link-info-modal").attr("value", advertise.link);//填充内容
+                    $("#description-info-modal").attr("value", advertise.description);//填充内容
+                    $("#memo-info-modal").attr("value", advertise.memo);//填充内容
+                    $("#image-info-modal").attr('src',advertise.image);
                 }
             });
         })
