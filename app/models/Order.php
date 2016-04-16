@@ -214,6 +214,93 @@ class Order extends Model
         return $orders;
     }
 
+    public function getCountsGroupByType(){
+        $ordersCounts = self::count([
+            'column' => 'order_id',
+            'group' => 'type',
+            'conditions' => 'status != :status:',
+            'bind' => ['status' => StatusCodes::ORDER_DELETED]
+        ]);
+
+        $results = [];
+        foreach ($ordersCounts as $ordersCount) {
+            $result['order_type'] = $ordersCount->type;
+            $result['order_num'] = $ordersCount->rowcount;
+
+            array_push($results, $result);
+        }
+
+        return $results;
+    }
+
+    public function getPlaceOrderCounts(){
+        $condition = " where a.status not in (5) group by b.name order by order_cnt desc";
+        $phql="select count(a.order_id) as order_cnt, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b on a.manufacture_id = b.company_id ".$condition;
+        $orderCounts = $this->modelsManager->executeQuery($phql);
+
+        $orders = [];
+        $cnt = 0;
+        $otherCompanyCnt = 0;
+        foreach($orderCounts as $orderCount){
+            $order = [
+                'company_name' => $orderCount->company_name,
+                'order_num' => $orderCount->order_cnt,
+            ];
+
+            if(++$cnt < 6){
+                array_push($orders, $order);
+            }else{
+                $otherCompanyCnt += $orderCount->order_cnt;
+            }
+
+        }
+
+        if($cnt >= 6){
+            $order = [
+                'company_name' => '其他',
+                'order_num' => $otherCompanyCnt,
+            ];
+
+            array_push($orders, $order);
+        }
+
+        return $orders;
+    }
+
+    public function getAcceptOrderCounts(){
+        $condition = " where a.status not in (5) group by b.name order by order_cnt desc";
+        $phql="select count(a.order_id) as order_cnt, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b on a.transporter_id = b.company_id ".$condition;
+        $orderCounts = $this->modelsManager->executeQuery($phql);
+
+        $orders = [];
+        $cnt = 0;
+        $otherCompanyCnt = 0;
+        foreach($orderCounts as $orderCount){
+            $order = [
+                'company_name' => $orderCount->company_name,
+                'order_num' => $orderCount->order_cnt,
+            ];
+
+            if(++$cnt < 6){
+                array_push($orders, $order);
+            }else{
+                $otherCompanyCnt += $orderCount->order_cnt;
+            }
+
+        }
+
+        if($cnt >= 6){
+            $order = [
+                'company_name' => '其他',
+                'order_num' => $otherCompanyCnt,
+            ];
+
+            array_push($orders, $order);
+        }
+
+        return $orders;
+    }
+
     public function isOrderExist($orderId){
         $orders = self::find([
             'conditions' => 'order_id = :order_id:',

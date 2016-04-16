@@ -106,6 +106,10 @@ class Elements extends Component
             'profile' => 2,
             'has_child' => true,
             'child_menu' =>[
+                '订单' => [
+                    'link' => 'admin/order/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
                 '出口订单' => [
                     'link' => 'admin/order/export',
                     'class' => 'nav nav-pills nav-stacked',
