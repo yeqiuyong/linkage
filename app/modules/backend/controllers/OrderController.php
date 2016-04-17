@@ -9,16 +9,12 @@
 
 namespace Multiple\Backend\Controllers;
 
-use Multiple\Core\Constants\LinkageUtils;
-use Multiple\Models\Order;
 use Phalcon\Di;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 use Multiple\Core\BackendControllerBase;
-use Multiple\Core\Constants\ErrorCodes;
-use Multiple\Core\Exception\UserOperationException;
-use Multiple\Models\AdminUser;
-use Multiple\Models\Notice;
+use Multiple\Core\Constants\LinkageUtils;
+use Multiple\Models\Order;
 
 
 class OrderController extends BackendControllerBase
@@ -60,24 +56,67 @@ class OrderController extends BackendControllerBase
             )
         );
 
+    }
+
+    public function exportAction(){
 
     }
 
-    public function listAction(){
+    public function importAction(){
+
+    }
+
+    public function selfAction(){
+
+    }
+
+    public function orderCountPerMonAction(){
+        $date = $this->request->getPost('date_offset', 'int'); // POST
+
+        $order = new Order();
+        $orderCountsPerMon = $order->getOrderCountPerMon($date);
+
+        $exportCountsPerMon = [];
+        $importCountsPerMon = [];
+        $selfCountsPerMon = [];
+        foreach ($orderCountsPerMon as $orderCount) {
+            $result['order_date'] = $orderCount->order_date;
+            $result['order_num'] = $orderCount->count;
+
+            switch($orderCount->type){
+                case LinkageUtils::ORDER_TYPE_EXPORT : array_push($exportCountsPerMon, $result);break;
+                case LinkageUtils::ORDER_TYPE_IMPORT : array_push($importCountsPerMon, $result);break;
+                case LinkageUtils::ORDER_TYPE_SELF : array_push($selfCountsPerMon, $result);break;
+                default: array_push($exportCountsPerMon, $result);break;
+            }
+        }
+
+        $countArray = [
+            "offset" => $date,
+            'export' => $exportCountsPerMon,
+            'import' => $importCountsPerMon,
+            'self' => $selfCountsPerMon,
+        ];
+
+        return $this->response->setJsonContent($countArray);
+    }
+
+    public function getManufactureOrderListAction(){
         // Current page to show
         // In a controller this can be:
         // $this->request->getQuery('page', 'int'); // GET
         $currentPage = $this->request->getPost('pageindex', 'int'); // POST
+        $orderType = $this->request->getPost('order_type', 'int'); // POST
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $advertise = new Notice();
-        $results = $advertise->getAdv4Admin();
+        $order = new Order();
+        $result = $order->getPlaceOrderCountsByType($orderType);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
         $paginator = new PaginatorArray(
             array(
-                "data"  => $results,
+                "data"  => $result,
                 "limit" => 10,
                 "page"  => $pageNum
             )
@@ -87,72 +126,6 @@ class OrderController extends BackendControllerBase
         $page = $paginator->getPaginate();
 
         return $this->response->setJsonContent($page);
-
-    }
-
-    public function detailAction(){
-        $id = $this->request->get('id', 'int'); // POST
-
-        $advertise = new Notice();
-        $adv = $advertise->getAdvById($id);
-
-        return $this->response->setJsonContent($adv);
-
-    }
-
-    public function addAction(){
-        $title = $this->request->getPost('title', 'string');
-        $link = $this->request->getPost('link', 'string');
-        $description = $this->request->getPost('description', 'string');
-        $memo = $this->request->getPost('memo', 'string');
-
-        $advertise = new Notice();
-        $admin = new AdminUser();
-
-        $image = $this->upload2Upyun();
-
-        if(empty($image) || empty($title) || empty($link)){
-            throw new UserOperationException(ErrorCodes::GEN_INPUT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::GEN_INPUT_ERROR]);
-        }
-
-
-        $adminInfo = $admin->getUserByName('admin');
-
-        $advertise->addAdv($title, $link, $description, $memo, $image, $adminInfo->admin_id);
-
-        $url = $this->url->get('admin/advertise/index');
-        return $this->response->redirect($url);
-
-    }
-
-    public function updateAction(){
-        $id =  $this->request->getPost('id-editor-modal', 'int');
-        $title = $this->request->getPost('title-editor-modal', 'string');
-        $link = $this->request->getPost('link-editor-modal', 'string');
-        $description = $this->request->getPost('description-editor-modal', 'string');
-        $memo = $this->request->getPost('memo-editor-modal', 'string');
-
-        $advertise = new Notice();
-        $admin = new AdminUser();
-
-        $image = $this->upload2Upyun();
-        $adminInfo = $admin->getUserByName('admin');
-
-        $advertise->updateNotice($id, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
-
-        $url = $this->url->get('admin/advertise/index');
-        return $this->response->redirect($url);
-
-    }
-
-    public function changeStatusAction(){
-        $advId = $this->request->getPost('id', 'int'); // POST
-        $status = $this->request->getPost('status', 'int'); // POST
-
-        $advertise = new Notice();
-        $advertise->updateStatus($advId, $status);
-
-        return $this->responseJsonOK();
     }
 
 }

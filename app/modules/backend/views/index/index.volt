@@ -155,6 +155,8 @@
 {{ javascript_include('bower_components/flot/jquery.flot.pie.js') }}
 {{ javascript_include('bower_components/flot/jquery.flot.stack.js') }}
 {{ javascript_include('bower_components/flot/jquery.flot.resize.js') }}
+
+{{ javascript_include('js/data-util.js') }}
 <!-- chart libraries end -->
 
 <script type="text/javascript">
@@ -276,7 +278,6 @@
     function userCountPerMon(countarr){
         if ($("#user-per-mon-chart").length) {
             var manufacutres = [], transporters = [];
-            var myDates = [];
             var offset = countarr.offset;
 
             for (var i = 0; i < countarr.manufactureCntsPerMon.length; i++) {
@@ -287,14 +288,7 @@
                 transporters.push([countarr.transporterCntsPerMon[i].x, countarr.transporterCntsPerMon[i].y]);
             }
 
-            var selectMon = getSelectedMon(offset);
-            myDates.push([12, selectMon]);
-            for(var i =11 ; i>0; i--){
-                selectMon = getDateStr4Mon(selectMon);
-                var myDate = [i, selectMon];
-
-                myDates.push(myDate);
-            }
+            var xaxis = initChartXaxis4Mon(offset);
 
             var plot = $.plot($("#user-per-mon-chart"),
                     [
@@ -307,7 +301,7 @@
                             points: { show: true }
                         },
 
-                        xaxis: { ticks: myDates, min: 1, max: 12 },
+                        xaxis: { ticks: xaxis, min: 1, max: 12 },
                         yaxis: { ticks: 5, min: 0 },
                         grid: { hoverable: true, clickable: true, backgroundColor: { colors: ["#fff", "#eee"] } },
 
@@ -353,61 +347,6 @@
         }
     }
 
-    function getDateStr4Week(offset, dateCnt) {
-        var cnt = 7 - dateCnt;
-        offset = (offset - cnt * 86400) * 1000;
-
-        var newDate = new Date();
-        newDate.setTime(offset);
-
-        return newDate.toLocaleDateString();
-    }
-
-    function getSelectedMon(offset){
-        var today = new Date(offset * 1000);
-
-        var strYear = today.getFullYear();
-        var strMonth = today.getMonth() + 1;
-
-        if(parseInt(strMonth,10) < 10){
-            strMonth="0"+strMonth;
-        }
-
-        return strYear+"-"+strMonth;
-    }
-
-    function getDateStr4Mon(thisMon){
-        var strYear = parseInt(thisMon.substr(0,4),10);
-        var strMonth = parseInt(thisMon.substr(5,7),10);
-
-        if(strMonth - 1 == 0){
-            strYear -= 1;
-            strMonth = 12;
-        } else {
-            strMonth -= 1;
-        }
-        if(strMonth<10){
-            strMonth="0"+strMonth;
-        }
-
-        var monthstr = strYear+"-"+strMonth;
-
-        return monthstr;
-
-    }
-
-    function initDatePlugin(){
-        $('.form_date').datetimepicker({
-            language:  'fr',
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 2,
-            forceParse: 0
-        });
-    }
 
     initDatePlugin();
     loadUserCountPerWeek();

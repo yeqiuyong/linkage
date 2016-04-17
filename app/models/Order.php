@@ -10,6 +10,7 @@ namespace Multiple\Models;
 
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\StatusCodes;
@@ -299,6 +300,75 @@ class Order extends Model
         }
 
         return $orders;
+    }
+
+    public function getOrderCountPerMon($time){
+        $qryDate = date('Y-m-d',$time);
+        $beginDate = date('Y-m-01', strtotime($qryDate));
+
+        $yearTime = [
+            strtotime("$beginDate -0 month"),
+            strtotime("$beginDate -1 month"),
+            strtotime("$beginDate -2 month"),
+            strtotime("$beginDate -3 month"),
+            strtotime("$beginDate -4 month"),
+            strtotime("$beginDate -5 month"),
+            strtotime("$beginDate -6 month"),
+            strtotime("$beginDate -7 month"),
+            strtotime("$beginDate -8 month"),
+            strtotime("$beginDate -9 month"),
+            strtotime("$beginDate -10 month"),
+            strtotime("$beginDate -11 month"),
+        ];
+
+        $sql = "select t.type, t.order_date, sum(t.num ) as count from" . "(select a.type, 1 as num,"
+            . " case" . " when(create_time >= ". ($yearTime[11]) ." and create_time < ". ($yearTime[10]) .") then '1'"
+            . " when(create_time >= ". ($yearTime[10]) ." and create_time < ". ($yearTime[9]) .") then '2'"
+            . " when(create_time >= ". ($yearTime[9]) ." and create_time < ". ($yearTime[8]) .") then '3'"
+            . " when(create_time >= ". ($yearTime[8]) ." and create_time < ". ($yearTime[7]) .") then '4'"
+            . " when(create_time >= ". ($yearTime[7]) ." and create_time < ". ($yearTime[6]) .") then '5'"
+            . " when(create_time >= ". ($yearTime[6]) ." and create_time < ". ($yearTime[5]) .") then '6'"
+            . " when(create_time >= ". ($yearTime[5]) ." and create_time < ". ($yearTime[4]) .") then '7'"
+            . " when(create_time >= ". ($yearTime[4]) ." and create_time < ". ($yearTime[3]) .") then '8'"
+            . " when(create_time >= ". ($yearTime[3]) ." and create_time < ". ($yearTime[2]) .") then '9'"
+            . " when(create_time >= ". ($yearTime[2]) ." and create_time < ". ($yearTime[1]) .") then '10'"
+            . " when(create_time >= ". ($yearTime[1]) ." and create_time < ". ($yearTime[0]) .") then '11'"
+            . " when(create_time >= ". ($yearTime[0]) ." and create_time <= ". $time .") then '12'"
+            . " else '13'" . " end as order_date from linkage_order a"
+            . " where status != ".StatusCodes::ORDER_DELETED." and create_time > ". ($yearTime[11]) ." and create_time <= ". $time
+            . ") t group by t.type, t.order_date";
+
+        $results = new Resultset(null, $this, $this->getReadConnection()->query($sql));
+
+        return $results;
+    }
+
+    public function getPlaceOrderCountsByType($type){
+        $condition = " where a.status not in (5) group by b.name order by order_cnt desc";
+        $phql="select a.manufacture_id, count(a.order_id) as order_cnt, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b on a.manufacture_id = b.company_id ".$condition;
+        $orderCounts = $this->modelsManager->executeQuery($phql);
+
+        $condition = " where a.status not in (5) and a.type = '.$type.' group by a.manufacture_id order by order_cnt desc";
+        $phql="select a.manufacture_id, count(a.order_id) as order_cnt from Multiple\Models\Order a".$condition;
+        $orderCounts4Type = $this->modelsManager->executeQuery($phql);
+
+        $results = [];
+        foreach($orderCounts as $orderCount){
+            foreach($orderCounts4Type as $orderCount4Type){
+                if($orderCount['manufacture_id'] == $orderCount4Type['manufacture_id']){
+                    $result = [
+                        'company_name' => $orderCount->company_name,
+                        'order_num' => $orderCount->order_cnt,
+                        'sub_order_num' => $orderCount4Type->order_cnt,
+                    ];
+
+                    array_push($results, $result);
+                    break;
+                }
+            }
+        }
+
+        return $results;
     }
 
     public function isOrderExist($orderId){

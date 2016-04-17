@@ -123,6 +123,44 @@
             </div>
         </div>
 
+
+        <div class="box col-md-12">
+            <div class="box-inner">
+                <div class="box-header well">
+                    <h2><i class="glyphicon glyphicon-list-alt"></i> 订单月报表</h2>
+
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                    class="glyphicon glyphicon-cog"></i></a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                    class="glyphicon glyphicon-chevron-up"></i></a>
+                        <a href="#" class="btn btn-close btn-round btn-default"><i
+                                    class="glyphicon glyphicon-remove"></i></a>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="control-group col-xs-4 col-md-4 col-xs-offset-8">
+                    <div class="input-group date form_date " data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                        <input id="date-order-per-mon" class="form-control" size="16" type="text" name="user-mon" value="" readonly>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        <span class="input-group-addon" onclick="loadOrderCountByMon()"><span class="glyphicon glyphicon-ok-sign blue"></span></span>
+                    </div>
+                    <input type="hidden" id="dtp_input2" value="" /><br/>
+                </div>
+
+                <br>
+                <br>
+
+                <div class="box-content">
+                    <div id="order-per-mon" class="center" style="height:300px;"></div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div><!--/fluid-row-->
 
@@ -135,6 +173,8 @@
 {{ javascript_include('bower_components/flot/jquery.flot.pie.js') }}
 {{ javascript_include('bower_components/flot/jquery.flot.stack.js') }}
 {{ javascript_include('bower_components/flot/jquery.flot.resize.js') }}
+
+{{ javascript_include('js/data-util.js') }}
 <!-- chart libraries end -->
 
 <script type="text/javascript">
@@ -219,5 +259,70 @@
                     }
                 });
     }
+
+    function initChartOrderCountByMon(countarr){
+        //stack chart
+        if ($("#order-per-mon").length) {
+            var data = [];
+            var offset = countarr.offset;
+
+            var d4Export = [];
+            for (var i = 0; i < countarr.export.length; i++) {
+                d4Export.push([countarr.export[i].order_date, 2]);
+            }
+
+            var d4Import = [];
+            for (var i = 0; i < countarr.import.length; i++) {
+                d4Import.push([countarr.import[i].order_date, 1]);
+            }
+
+            var d4Self = [];
+            for (var i = 0; i < countarr.export.length; i++) {
+                d4Self.push([countarr.self[i].order_date, 3]);
+            }
+
+            data.push(d4Export);
+            data.push(d4Import);
+            data.push(d4Self);
+
+            var xaxis = initChartXaxis4Mon(offset);
+
+            function plotWithOptions() {
+                $.plot($("#order-per-mon"),  data, {
+                    series: {
+                        stack: 0,
+                        bars: { show: true, barWidth:0.5, align:'center',multiplebars:true}
+                    },
+                    xaxis: { ticks: xaxis, min: 1, max: 12 },
+                    colors: ["#DC5625", "#007ACC", "#99FF99"]
+
+                });
+            }
+
+            plotWithOptions();
+        }
+    }
+
+    function loadOrderCountByMon(){
+        var dateStr = $("#date-order-per-mon").prop('value');
+        var dateOffset = Date.parse(new Date()) / 1000;
+
+        if(dateStr != null && dateStr != ''){
+            dateOffset = (Date.parse(new Date(dateStr))) / 1000;
+        }
+
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('admin/order/ordercountpermon') ?>",
+            data: {'date_offset':dateOffset },
+            success: function (countArr) {
+                initChartOrderCountByMon(countArr);
+            }
+        });
+    }
+
+    initDatePlugin();
+    loadOrderCountByMon();
 
 </script>
