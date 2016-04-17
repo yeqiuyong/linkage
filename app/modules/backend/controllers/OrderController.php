@@ -128,4 +128,31 @@ class OrderController extends BackendControllerBase
         return $this->response->setJsonContent($page);
     }
 
+    public function getTransporterOrderListAction(){
+        // Current page to show
+        // In a controller this can be:
+        // $this->request->getQuery('page', 'int'); // GET
+        $currentPage = $this->request->getPost('pageindex', 'int'); // POST
+        $orderType = $this->request->getPost('order_type', 'int'); // POST
+        $pageNum = ($currentPage == null) ? 1 : $currentPage;
+
+        // The data set to paginate
+        $order = new Order();
+        $result = $order->getAcceptOrderCountsByType($orderType);
+
+        // Create a Model paginator, show 10 rows by page starting from $currentPage
+        $paginator = new PaginatorArray(
+            array(
+                "data"  => $result,
+                "limit" => 10,
+                "page"  => $pageNum
+            )
+        );
+
+        // Get the paginated results
+        $page = $paginator->getPaginate();
+
+        return $this->response->setJsonContent($page);
+    }
+
 }

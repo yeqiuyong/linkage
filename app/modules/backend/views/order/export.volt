@@ -60,10 +60,10 @@
     </div>
 
     <div class=" row">
-
         <div class="box col-md-12" >
             <div class="box-inner">
                 <div class="box-header well" data-original-title="管理员信息">
+                    <h2><i class="glyphicon glyphicon-list-alt"></i> 厂商出口订单纪录表</h2>
                     <div class="box-icon">
                         <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
@@ -72,6 +72,24 @@
                     </div>
                 </div>
                 <div id="manufacture-order-table" class="box-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" row">
+        <div class="box col-md-12" >
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="管理员信息">
+                    <h2><i class="glyphicon glyphicon-list-alt"></i> 承运商出口订单纪录表</h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
+                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                    class="glyphicon glyphicon-chevron-up"></i></a>
+                        <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+                    </div>
+                </div>
+                <div id="transporter-order-table" class="box-content">
                 </div>
             </div>
         </div>
@@ -131,11 +149,11 @@
 
         var register_time = new Date();
         for (var i = 0; i < page.items.length; i++) {
-            //register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
+            register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 
             strtable += "<tr>";
             strtable += "<td>" + page.items[i].company_name + "</td>";
-            strtable += "<td>" + 'aaa' + "</td>";
+            strtable += "<td>" + register_time.toDateString() + "</td>";
             strtable += "<td>" + page.items[i].order_num + "</td>";
             strtable += "<td>" + page.items[i].sub_order_num + "</td>";
             strtable += "</tr>";
@@ -158,7 +176,7 @@
         strtable += '<li><a href="#" onclick="loadManufacureOrderTable('+page.before+','+ orderType +','+ orderSubType +','+tableTag+')">Next</a></li>';
         strtable +='</ul>';
 
-        $("#manufacture-order-table").html(strtable);
+        $("#" + tableTag).html(strtable);
     }
 
     function loadOrderCountByMon(){
@@ -192,8 +210,21 @@
         });
     }
 
+    function loadTransporterOrderTable(pageindex, orderType, orderSubType, tableTag) {
+        $.ajax({
+            type: "post",
+            dataType:"json",
+            url: "<?php echo $this->url->get('admin/order/gettransporterorderlist') ?>",
+            data: {'pageindex':pageindex, 'order_type':0},
+            success: function (page) {
+                initOrderCountTable(page, pageindex, orderType, orderSubType, tableTag)
+            }
+        });
+    }
+
     initDatePlugin();
     loadOrderCountByMon();
     loadManufacureOrderTable(pageindexinit, '厂商订单数','厂商出口订单数', 'manufacture-order-table');
+    loadTransporterOrderTable(pageindexinit, '承运商订单数','承运商出口订单数', 'transporter-order-table');
 
 </script>

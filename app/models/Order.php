@@ -345,7 +345,7 @@ class Order extends Model
 
     public function getPlaceOrderCountsByType($type){
         $condition = " where a.status not in (5) group by b.name order by order_cnt desc";
-        $phql="select a.manufacture_id, count(a.order_id) as order_cnt, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b on a.manufacture_id = b.company_id ".$condition;
+        $phql="select a.manufacture_id, count(a.order_id) as order_cnt, b.name as company_name, b.create_time from Multiple\Models\Order a join Multiple\Models\Company b on a.manufacture_id = b.company_id ".$condition;
         $orderCounts = $this->modelsManager->executeQuery($phql);
 
         $condition = " where a.status not in (5) and a.type = '.$type.' group by a.manufacture_id order by order_cnt desc";
@@ -359,6 +359,36 @@ class Order extends Model
                     $result = [
                         'company_name' => $orderCount->company_name,
                         'order_num' => $orderCount->order_cnt,
+                        'create_time' => $orderCount->create_time,
+                        'sub_order_num' => $orderCount4Type->order_cnt,
+                    ];
+
+                    array_push($results, $result);
+                    break;
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    public function getAcceptOrderCountsByType($type){
+        $condition = " where a.status not in (5) group by b.name order by order_cnt desc";
+        $phql="select a.transporter_id, count(a.order_id) as order_cnt, b.name as company_name, b.create_time from Multiple\Models\Order a join Multiple\Models\Company b on a.transporter_id = b.company_id ".$condition;
+        $orderCounts = $this->modelsManager->executeQuery($phql);
+
+        $condition = " where a.status not in (5) and a.type = '.$type.' group by a.manufacture_id order by order_cnt desc";
+        $phql="select a.transporter_id, count(a.order_id) as order_cnt from Multiple\Models\Order a".$condition;
+        $orderCounts4Type = $this->modelsManager->executeQuery($phql);
+
+        $results = [];
+        foreach($orderCounts as $orderCount){
+            foreach($orderCounts4Type as $orderCount4Type){
+                if($orderCount['transporter_id'] == $orderCount4Type['transporter_id']){
+                    $result = [
+                        'company_name' => $orderCount->company_name,
+                        'order_num' => $orderCount->order_cnt,
+                        'create_time' => $orderCount->create_time,
                         'sub_order_num' => $orderCount4Type->order_cnt,
                     ];
 
