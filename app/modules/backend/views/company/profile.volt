@@ -1,73 +1,69 @@
+<!-- content starts -->
 
-<div id="profile-table" class="col-lg-10 col-sm-10">
-    <!-- content starts -->
+<div class=" row">
+
+    <div class="box col-md-4">
+        <div class="box-inner">
+            <div class="box-header well" data-original-title="">
+                <h2><i class="glyphicon glyphicon-list-alt"></i> 订单占比图</h2>
+
+                <div class="box-icon">
+                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                class="glyphicon glyphicon-cog"></i></a>
+                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                class="glyphicon glyphicon-chevron-up"></i></a>
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+                <div id="order-chart" style="height:300px"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="box col-md-8">
+        <div class="box-inner">
+            <div class="box-header well">
+                <h2><i class="glyphicon glyphicon-list-alt"></i> 订单月报表</h2>
+
+                <div class="box-icon">
+                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                class="glyphicon glyphicon-cog"></i></a>
+                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                class="glyphicon glyphicon-chevron-up"></i></a>
+                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </div>
+
+            <div class="box-content">
+                <div id="order-per-mon" class="center" style="height:300px;"></div>
+            </div>
+        </div>
+    </div>
 
 
     <div class=" row">
-
-        <div class="box col-md-4">
+        <div class="box col-md-12" >
             <div class="box-inner">
-                <div class="box-header well" data-original-title="">
-                    <h2><i class="glyphicon glyphicon-list-alt"></i> 订单占比图</h2>
-
+                <div class="box-header well" data-original-title="管理员信息">
+                    <h2><i class="glyphicon glyphicon-list-alt"></i> 员工信息表</h2>
                     <div class="box-icon">
-                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                    class="glyphicon glyphicon-cog"></i></a>
+                        <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                     class="glyphicon glyphicon-chevron-up"></i></a>
-                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                    class="glyphicon glyphicon-remove"></i></a>
+                        <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
                     </div>
                 </div>
-                <div class="box-content">
-                    <div id="order-chart" style="height:300px"></div>
+                <div id="staff-table" class="box-content">
                 </div>
             </div>
         </div>
-
-
-        <div class="box col-md-8">
-            <div class="box-inner">
-                <div class="box-header well">
-                    <h2><i class="glyphicon glyphicon-list-alt"></i> 订单月报表</h2>
-
-                    <div class="box-icon">
-                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                    class="glyphicon glyphicon-cog"></i></a>
-                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
-                                    class="glyphicon glyphicon-chevron-up"></i></a>
-                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                    class="glyphicon glyphicon-remove"></i></a>
-                    </div>
-                </div>
-
-                <div class="box-content">
-                    <div id="order-per-mon" class="center" style="height:300px;"></div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class=" row">
-            <div class="box col-md-12" >
-                <div class="box-inner">
-                    <div class="box-header well" data-original-title="管理员信息">
-                        <h2><i class="glyphicon glyphicon-list-alt"></i> 员工信息表</h2>
-                        <div class="box-icon">
-                            <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
-                            <a href="#" class="btn btn-minimize btn-round btn-default"><i
-                                        class="glyphicon glyphicon-chevron-up"></i></a>
-                            <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
-                        </div>
-                    </div>
-                    <div id="staff-table" class="box-content">
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
-</div><!--/fluid-row-->
+
+</div>
 
 
 <!-- Ad ends -->
@@ -158,14 +154,13 @@
         var register_time = new Date();
         for (var i = 0; i < page.items.length; i++) {
             var num = i + 1 ;
-
             register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
 
             strtable += "<tr>";
             strtable += "<td>" + num + "</td>";
-            strtable += "<td>" + page.items[i].rolename + "</td>";
+            strtable += "<td>" + page.items[i].user_id + "</td>";
             strtable += "<td>" + page.items[i].username + "</td>";
-            strtable += "<td>" + page.items[i].realname + "</td>";
+            strtable += "<td>" + page.items[i].name + "</td>";
             strtable += "<td>" + page.items[i].mobile + "</td>";
             strtable += "<td>" + register_time.toLocaleDateString() + "</td>";
 
@@ -233,7 +228,7 @@
             url: "<?php echo $this->url->get('admin/clientuser/staffs') ?>",
             data: {'pageindex':pageindex, 'company_id':companyId},
             success: function (page) {
-                render(companyId, pageindex, page);
+                initStaffTable(companyId, pageindex, page);
             }
         });
     }

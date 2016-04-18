@@ -159,8 +159,11 @@ class OrderController extends BackendControllerBase
     public function orderCnt4CompanyByTypeAction(){
         $companyId = $this->request->getPost('company_id', 'int'); // POST
 
+        $company = new Company();
         $order = new Order();
-        $countsGroupByType = $order->getCountsGroupByType4Company($companyId);
+
+        $companyInfo = $company->getCompanyInformation($companyId);
+        $countsGroupByType = $order->getCountsGroupByType4Company($companyId, $companyInfo['type']);
 
         $exportCnt = 0;
         $importCnt = 0;

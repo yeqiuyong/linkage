@@ -1,10 +1,4 @@
 
-<div class="box-content">
-    <ul class="dashboard-list" id="company-info">
-    </ul>
-</div>
-</div>
-</div>
 
 
 <script type="text/javascript">
@@ -15,6 +9,9 @@
             url: "<?php echo $this->url->get('admin/company/information') ?>",
             data: {'id' : id},
             success: function (information) {
+                var strtable = '<div class="box-content"> <ul class="dashboard-list" id="company-info"> </ul> </div>';
+                $("#information-table").html(strtable);
+
                 $("#company-info").append("<li><strong>公司名称:</strong> <small>"+ information.name +"</small><br> </li>");
                 $("#company-info").append("<li><strong>类型:</strong> <small>"+ information.type +"</small><br> </li>");
                 $("#company-info").append("<li><strong>联系人:</strong> <small>"+ information.contactor +"</small><br> </li>");
@@ -27,6 +24,8 @@
                 $("#company-info").append("<li><strong>公司简介:</strong> <small>"+ information.description +"</small><br> </li>");
                 $("#company-info").append("<li><strong>注册时间:</strong> <small>"+ information.create_time +"</small><br> </li>");
                 $("#company-info").append('<li><strong>状态:</h3><span class="label-success label label-default">Approved</span>');
+
+
             }
         });
 

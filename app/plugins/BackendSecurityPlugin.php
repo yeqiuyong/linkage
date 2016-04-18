@@ -23,21 +23,21 @@ class BackendSecurityPlugin extends Plugin
 	public function beforeDispatch(Event $event, Dispatcher $dispatcher)
 	{
 		$controller = $dispatcher->getControllerName();
-		//$action = $dispatcher->getActionName();
+		$action = $dispatcher->getActionName();
 
-//		if($controller == 'session' || $controller == 'errors'){
-//			return true;
-//		}else {
-//			$auth = $this->session->get('auth');
-//			if (!$auth) {
-//				$dispatcher->forward(array(
-//					'controller' => 'errors',
-//					'action' => 'show401'
-//				));
-//
-//				return false;
-//			}
-//		}
+		if($controller == 'session' || $controller == 'errors'){
+			return true;
+		}else {
+			$auth = $this->session->get('auth');
+			if (!$auth) {
+				$dispatcher->forward(array(
+					'controller' => 'errors',
+					'action' => 'show401'
+				));
+
+				return false;
+			}
+		}
 
 	}
 }

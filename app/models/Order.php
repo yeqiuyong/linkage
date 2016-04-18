@@ -235,15 +235,26 @@ class Order extends Model
         return $results;
     }
 
-    public function getCountsGroupByType4Company($companyId){
-        $ordersCounts = self::count([
-            'column' => 'order_id',
-            'group' => 'type',
-            'conditions' => 'status != :status: AND company_id = :company_id:',
-            'bind' => ['status' => StatusCodes::ORDER_DELETED,
-                'company_id' => $companyId
-            ]
-        ]);
+    public function getCountsGroupByType4Company($companyId, $companyType){
+        if(LinkageUtils::COMPANY_MANUFACTURE == $companyType){
+            $ordersCounts = self::count([
+                'column' => 'order_id',
+                'group' => 'type',
+                'conditions' => 'status != :status: AND manufacture_id = :company_id:',
+                'bind' => ['status' => StatusCodes::ORDER_DELETED,
+                    'company_id' => $companyId
+                ]
+            ]);
+        }else{
+            $ordersCounts = self::count([
+                'column' => 'order_id',
+                'group' => 'type',
+                'conditions' => 'status != :status: AND transporter_id = :company_id:',
+                'bind' => ['status' => StatusCodes::ORDER_DELETED,
+                    'company_id' => $companyId
+                ]
+            ]);
+        }
 
         return $ordersCounts;
     }
@@ -400,7 +411,7 @@ class Order extends Model
             . " else '13'" . " end as order_date from linkage_order a"
             . " where status != ".StatusCodes::ORDER_DELETED." and create_time > ". ($yearTime[11]) ." and create_time <= ". $now
             . $condition
-            . ") t group by t.type, t.order_date";
+            . ") t group by t.order_date";
 
         $results = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 

@@ -29,7 +29,13 @@ class CompanyController extends BackendControllerBase
     }
 
     public function detailAction(){
+        $companyId = $this->request->get('id', 'int'); // POST
 
+        $this->view->setVars(
+            array(
+                'company_id'   => $companyId,
+            )
+        );
     }
 
     public function manufacturesAction(){
@@ -78,7 +84,7 @@ class CompanyController extends BackendControllerBase
 
 
     public function informationAction(){
-        $companyID = $this->request->getQuery('id', 'int'); // POST
+        $companyID = $this->request->getPost('id', 'int'); // POST
 
         $company = new Company();
         $information = $company->getCompanyInformation($companyID);
