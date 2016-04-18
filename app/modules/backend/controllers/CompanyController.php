@@ -11,6 +11,8 @@ namespace Multiple\Backend\Controllers;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 use Multiple\Core\BackendControllerBase;
+use Multiple\Core\Constants\LinkageUtils;
+use Multiple\Core\Exception\Exception;
 use Multiple\Models\ClientUser;
 use Multiple\Models\Company;
 
@@ -23,6 +25,10 @@ class CompanyController extends BackendControllerBase
     }
 
     public function indexAction(){
+
+    }
+
+    public function detailAction(){
 
     }
 
@@ -77,26 +83,16 @@ class CompanyController extends BackendControllerBase
         $company = new Company();
         $information = $company->getCompanyInformation($companyID);
 
-        $type= $information['type'] == 0 ? "厂商" : "承运商";
+        $type= $information['type'] == LinkageUtils::COMPANY_MANUFACTURE ? "厂商" : "承运商";
+        $createTime = date('Y-m-d',$information['create_time']);
 
-        $this->view->setVars(
-            array(
-                'name' => $information['name'],
-                'type' => $type,
-                'contactor' => $information['contactor'],
-                'address' => $information['address'],
-                'email' => $information['email'],
-                'service_phone1' => $information['service_phone_1'],
-                'service_phone2' => $information['service_phone_2'],
-                'service_phone3' => $information['service_phone_3'],
-                'service_phone4' => $information['service_phone_4'],
-                'description' => $information['description'],
-                'update_time' =>date('Y-m-d',$information['update_time']),
-                'status' => $information['status'],
-                'level' => $information['level'],
-                'credit' => $information['credit'],
-            )
-        );
+        unset ($information['type']);
+        unset ($information['create_time']);
+
+        $information['type'] = $type;
+        $information['create_time'] = $createTime;
+
+        return $this->response->setJsonContent($information);
     }
 
     public function changeStatusAction(){

@@ -8,6 +8,7 @@
 
 namespace Multiple\Models;
 
+use Multiple\Core\Constants\LinkageUtils;
 use Phalcon\Di;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
@@ -234,6 +235,19 @@ class Order extends Model
         return $results;
     }
 
+    public function getCountsGroupByType4Company($companyId){
+        $ordersCounts = self::count([
+            'column' => 'order_id',
+            'group' => 'type',
+            'conditions' => 'status != :status: AND company_id = :company_id:',
+            'bind' => ['status' => StatusCodes::ORDER_DELETED,
+                'company_id' => $companyId
+            ]
+        ]);
+
+        return $ordersCounts;
+    }
+
     public function getPlaceOrderCounts(){
         $condition = " where a.status not in (5) group by b.name order by order_cnt desc";
         $phql="select count(a.order_id) as order_cnt, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b on a.manufacture_id = b.company_id ".$condition;
@@ -336,6 +350,56 @@ class Order extends Model
             . " when(create_time >= ". ($yearTime[0]) ." and create_time <= ". $time .") then '12'"
             . " else '13'" . " end as order_date from linkage_order a"
             . " where status != ".StatusCodes::ORDER_DELETED." and create_time > ". ($yearTime[11]) ." and create_time <= ". $time
+            . ") t group by t.type, t.order_date";
+
+        $results = new Resultset(null, $this, $this->getReadConnection()->query($sql));
+
+        return $results;
+    }
+
+    public function getOrderCountPerMon4Company($companyId, $companyType){
+        $now = time();
+        $qryDate = date('Y-m-d', $now);
+        $beginDate = date('Y-m-01', strtotime($qryDate));
+
+        $yearTime = [
+            strtotime("$beginDate -0 month"),
+            strtotime("$beginDate -1 month"),
+            strtotime("$beginDate -2 month"),
+            strtotime("$beginDate -3 month"),
+            strtotime("$beginDate -4 month"),
+            strtotime("$beginDate -5 month"),
+            strtotime("$beginDate -6 month"),
+            strtotime("$beginDate -7 month"),
+            strtotime("$beginDate -8 month"),
+            strtotime("$beginDate -9 month"),
+            strtotime("$beginDate -10 month"),
+            strtotime("$beginDate -11 month"),
+        ];
+
+        if(LinkageUtils::COMPANY_MANUFACTURE == $companyType){
+            $condition = " and manufacture_id = " . $companyId;
+        }else{
+            $condition = " and transporter_id = " . $companyId;
+        }
+
+
+        $sql = "select t.order_date, sum(t.num ) as count from" . "(select 1 as num,"
+            . " case" . " when(create_time >= ". ($yearTime[11]) ." and create_time < ". ($yearTime[10]) .") then '1'"
+            . " when(create_time >= ". ($yearTime[10]) ." and create_time < ". ($yearTime[9]) .") then '2'"
+            . " when(create_time >= ". ($yearTime[9]) ." and create_time < ". ($yearTime[8]) .") then '3'"
+            . " when(create_time >= ". ($yearTime[8]) ." and create_time < ". ($yearTime[7]) .") then '4'"
+            . " when(create_time >= ". ($yearTime[7]) ." and create_time < ". ($yearTime[6]) .") then '5'"
+            . " when(create_time >= ". ($yearTime[6]) ." and create_time < ". ($yearTime[5]) .") then '6'"
+            . " when(create_time >= ". ($yearTime[5]) ." and create_time < ". ($yearTime[4]) .") then '7'"
+            . " when(create_time >= ". ($yearTime[4]) ." and create_time < ". ($yearTime[3]) .") then '8'"
+            . " when(create_time >= ". ($yearTime[3]) ." and create_time < ". ($yearTime[2]) .") then '9'"
+            . " when(create_time >= ". ($yearTime[2]) ." and create_time < ". ($yearTime[1]) .") then '10'"
+            . " when(create_time >= ". ($yearTime[1]) ." and create_time < ". ($yearTime[0]) .") then '11'"
+            . " when(create_time >= ". ($yearTime[0]) ." and create_time <= ". $now .") then '12'"
+            . " else '13'" . " end as order_date from linkage_order a"
+            . " where status != ".StatusCodes::ORDER_DELETED." and create_time > ". ($yearTime[11]) ." and create_time <= ". $now
+            . $condition
             . ") t group by t.type, t.order_date";
 
         $results = new Resultset(null, $this, $this->getReadConnection()->query($sql));

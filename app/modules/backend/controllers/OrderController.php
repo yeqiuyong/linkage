@@ -9,6 +9,7 @@
 
 namespace Multiple\Backend\Controllers;
 
+use Multiple\Models\Company;
 use Phalcon\Di;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
@@ -155,4 +156,60 @@ class OrderController extends BackendControllerBase
         return $this->response->setJsonContent($page);
     }
 
+    public function orderCnt4CompanyByTypeAction(){
+        $companyId = $this->request->getPost('company_id', 'int'); // POST
+
+        $order = new Order();
+        $countsGroupByType = $order->getCountsGroupByType4Company($companyId);
+
+        $exportCnt = 0;
+        $importCnt = 0;
+        $selfCnt = 0;
+        foreach ($countsGroupByType as $orderCount) {
+            $result['order_date'] = $orderCount->order_date;
+            $result['order_num'] = $orderCount->count;
+
+            switch($orderCount->type){
+                case LinkageUtils::ORDER_TYPE_EXPORT : $exportCnt = $orderCount->rowcount;break;
+                case LinkageUtils::ORDER_TYPE_IMPORT : $importCnt = $orderCount->rowcount;break;
+                case LinkageUtils::ORDER_TYPE_SELF : $selfCnt = $orderCount->rowcount;break;
+                default: $exportCnt = $orderCount->rowcount;break;
+            }
+        }
+
+        $result = [
+            'exportCnt' => $exportCnt,
+            'importCnt' => $importCnt,
+            'selfCnt' => $selfCnt,
+        ];
+
+        return $this->response->setJsonContent($result);
+    }
+
+    public function orderCnt4CompanyByMonAction(){
+        $companyId = $this->request->getPost('company_id', 'int'); // POST
+
+        $company = new Company();
+        $order = new Order();
+
+        $companyInfo = $company->getCompanyInformation($companyId);
+        $countsGroupByMon = $order->getOrderCountPerMon4Company($companyId, $companyInfo['type']);
+
+        $results = [];
+        foreach ($countsGroupByMon as $orderCount) {
+            $result['order_date'] = $orderCount->order_date;
+            $result['order_num'] = $orderCount->count;
+
+            array_push($results, $result);
+        }
+
+        $countArray = [
+            "offset" => time(),
+            'count_group' => $results,
+
+        ];
+
+        return $this->response->setJsonContent($countArray);
+
+    }
 }

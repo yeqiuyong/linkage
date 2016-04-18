@@ -183,7 +183,7 @@
     }
 
     function loadCompanyInfo(id){
-        window.location.href = "<?php echo $this->url->get('admin/company/information').'?id="+ id +"' ?>";
+        window.location.href = "<?php echo $this->url->get('admin/company/detail').'?id="+ id +"' ?>";
     }
 
     function changeStatus(id, status, func, pageindex){

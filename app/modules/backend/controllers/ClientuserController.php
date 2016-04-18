@@ -27,6 +27,10 @@ class ClientuserController extends BackendControllerBase
 
     }
 
+    public function editorAction(){
+
+    }
+
     public function manufacturesAction(){
         $currentPage = $this->request->getPost('pageindex', 'int'); // POST
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
@@ -115,7 +119,28 @@ class ClientuserController extends BackendControllerBase
         );
     }
 
-    public function editorAction(){
+    public function staffsAction(){
+        $companyId = $this->request->getPost('company_id', 'int'); // POST
+        $currentPage = $this->request->getPost('pageindex', 'int'); // POST
+        $pageNum = ($currentPage == null) ? 1 : $currentPage;
+
+        // The data set to paginate
+        $phql="select a.user_id, a.username, a.name, a.mobile, a.create_time, a.status from Multiple\Models\ClientUser a where a.company_id = ".$companyId;
+        $users=$this->modelsManager->executeQuery($phql);
+
+        // Create a Model paginator, show 10 rows by page starting from $currentPage
+        $paginator = new PaginatorModel(
+            array(
+                "data"  => $users,
+                "limit" => 10,
+                "page"  => $pageNum
+            )
+        );
+
+        // Get the paginated results
+        $page = $paginator->getPaginate();
+
+        return $this->response->setJsonContent($page);
 
     }
 
