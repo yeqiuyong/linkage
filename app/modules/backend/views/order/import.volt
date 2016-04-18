@@ -25,7 +25,7 @@
         <div class="box col-md-12">
             <div class="box-inner">
                 <div class="box-header well">
-                    <h2><i class="glyphicon glyphicon-list-alt"></i> 进口订单月报表</h2>
+                    <h2><i class="glyphicon glyphicon-list-alt"></i> 入口订单月报表</h2>
 
                     <div class="box-icon">
                         <a href="#" class="btn btn-setting btn-round btn-default"><i
@@ -63,7 +63,7 @@
         <div class="box col-md-12" >
             <div class="box-inner">
                 <div class="box-header well" data-original-title="管理员信息">
-                    <h2><i class="glyphicon glyphicon-list-alt"></i> 厂商出口订单纪录表</h2>
+                    <h2><i class="glyphicon glyphicon-list-alt"></i> 厂商入口订单纪录表</h2>
                     <div class="box-icon">
                         <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
@@ -81,7 +81,7 @@
         <div class="box col-md-12" >
             <div class="box-inner">
                 <div class="box-header well" data-original-title="管理员信息">
-                    <h2><i class="glyphicon glyphicon-list-alt"></i> 承运商出口订单纪录表</h2>
+                    <h2><i class="glyphicon glyphicon-list-alt"></i> 承运商入口订单纪录表</h2>
                     <div class="box-icon">
                         <a href="#" class="btn btn-setting btn-round btn-default"><i class="glyphicon glyphicon-cog"></i></a>
                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
@@ -108,6 +108,7 @@
 {{ javascript_include('bower_components/flot/jquery.flot.resize.js') }}
 
 {{ javascript_include('js/data-util.js') }}
+{{ javascript_include('js/init-table.js') }}
 <!-- chart libraries end -->
 
 <script type="text/javascript">
@@ -139,44 +140,7 @@
             }
 
             plotWithOptions();
-
         }
-    }
-
-    function initOrderCountTable(page, pageindex, orderType, orderSubType, tableTag){
-        var strtable = '<table class="table table-striped table-bordered bootstrap-datatable datatable responsive">';
-        strtable += '<thead><tr> <th>公司名</th> <th>注册时间</th> <th>'+ orderType +'</th> <th>'+ orderSubType +'</th> </tr> </thead>';
-
-        var register_time = new Date();
-        for (var i = 0; i < page.items.length; i++) {
-            register_time.setTime((parseInt(page.items[i].create_time) ) * 1000);
-
-            strtable += "<tr>";
-            strtable += "<td>" + page.items[i].company_name + "</td>";
-            strtable += "<td>" + register_time.toDateString() + "</td>";
-            strtable += "<td>" + page.items[i].order_num + "</td>";
-            strtable += "<td>" + page.items[i].sub_order_num + "</td>";
-            strtable += "</tr>";
-        }
-
-        strtable += '</table>';
-
-        strtable += '<ul class="pagination pagination-centered">';
-        strtable += '<li><a href="#" onclick="loadManufacureOrderTable('+page.before+','+ orderType +','+ orderSubType +','+tableTag+')">Prev</a></li>';
-
-        for (var i = 0; i < page.total_pages; i++) {
-            var index  = i + 1;
-            if(index == pageindex){
-                strtable += '<li class="active"><a href="#" onclick="loadManufacureOrderTable('+index+','+ orderType +','+ orderSubType +','+tableTag+')">'+index+'</a></li>';
-            }else{
-                strtable += '<li><a href="#" onclick="loadManufacureOrderTable('+index+','+ orderType +','+ orderSubType +','+tableTag+')">'+index+'</a></li>';
-            }
-        }
-
-        strtable += '<li><a href="#" onclick="loadManufacureOrderTable('+page.before+','+ orderType +','+ orderSubType +','+tableTag+')">Next</a></li>';
-        strtable +='</ul>';
-
-        $("#" + tableTag).html(strtable);
     }
 
     function loadOrderCountByMon(){
@@ -198,33 +162,33 @@
         });
     }
 
-    function loadManufacureOrderTable(pageindex, orderType, orderSubType, tableTag) {
+    function loadManufacureOrderTable(func, pageindex, orderType, orderSubType, tableTag) {
         $.ajax({
             type: "post",
             dataType:"json",
             url: "<?php echo $this->url->get('admin/order/getmanufactureorderlist') ?>",
-            data: {'pageindex':pageindex, 'order_type':0},
+            data: {'pageindex':pageindex, 'order_type':1},
             success: function (page) {
-                initOrderCountTable(page, pageindex, orderType, orderSubType, tableTag)
+                initOrderCountByTypeTable(func, page, pageindex, orderType, orderSubType, tableTag)
             }
         });
     }
 
-    function loadTransporterOrderTable(pageindex, orderType, orderSubType, tableTag) {
+    function loadTransporterOrderTable(func, pageindex, orderType, orderSubType, tableTag) {
         $.ajax({
             type: "post",
             dataType:"json",
             url: "<?php echo $this->url->get('admin/order/gettransporterorderlist') ?>",
-            data: {'pageindex':pageindex, 'order_type':0},
+            data: {'pageindex':pageindex, 'order_type':1},
             success: function (page) {
-                initOrderCountTable(page, pageindex, orderType, orderSubType, tableTag)
+                initOrderCountByTypeTable(func, page, pageindex, orderType, orderSubType, tableTag)
             }
         });
     }
 
     initDatePlugin();
     loadOrderCountByMon();
-    loadManufacureOrderTable(pageindexinit, '厂商订单数','厂商进口订单数', 'manufacture-order-table');
-    loadTransporterOrderTable(pageindexinit, '承运商订单数','承运商进口订单数', 'transporter-order-table');
+    loadManufacureOrderTable('loadManufacureOrderTable', pageindexinit, '厂商订单数','厂商入口订单数', 'manufacture-order-table');
+    loadTransporterOrderTable('loadTransporterOrderTable', pageindexinit, '承运商订单数','承运商入口订单数', 'transporter-order-table');
 
 </script>

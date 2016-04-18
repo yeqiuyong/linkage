@@ -412,7 +412,7 @@ class Order extends Model
         $phql="select a.manufacture_id, count(a.order_id) as order_cnt, b.name as company_name, b.create_time from Multiple\Models\Order a join Multiple\Models\Company b on a.manufacture_id = b.company_id ".$condition;
         $orderCounts = $this->modelsManager->executeQuery($phql);
 
-        $condition = " where a.status not in (5) and a.type = '.$type.' group by a.manufacture_id order by order_cnt desc";
+        $condition = " where a.status not in (5) and a.type=$type group by a.manufacture_id order by order_cnt desc";
         $phql="select a.manufacture_id, count(a.order_id) as order_cnt from Multiple\Models\Order a".$condition;
         $orderCounts4Type = $this->modelsManager->executeQuery($phql);
 
@@ -441,7 +441,7 @@ class Order extends Model
         $phql="select a.transporter_id, count(a.order_id) as order_cnt, b.name as company_name, b.create_time from Multiple\Models\Order a join Multiple\Models\Company b on a.transporter_id = b.company_id ".$condition;
         $orderCounts = $this->modelsManager->executeQuery($phql);
 
-        $condition = " where a.status not in (5) and a.type = '.$type.' group by a.manufacture_id order by order_cnt desc";
+        $condition = " where a.status not in (5) and a.type = $type group by a.manufacture_id order by order_cnt desc";
         $phql="select a.transporter_id, count(a.order_id) as order_cnt from Multiple\Models\Order a".$condition;
         $orderCounts4Type = $this->modelsManager->executeQuery($phql);
 
