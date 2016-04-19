@@ -150,6 +150,9 @@ class ClientuserController extends BackendControllerBase
 
         try{
             $user = new ClientUser();
+
+            $this->db->begin();
+
             $user->updateStatus($userid, $status);
 
             if($user->isAdmin($userid)){
@@ -159,7 +162,11 @@ class ClientuserController extends BackendControllerBase
                 $company->updateStatus($companyId, $status);
             }
 
+            $this->db->commit();
+
         }catch (Exception $e){
+            $this->db->rollback();
+            
             return$this->responseJsonError($e->getCode(), $e->getMessage());
         }
 
