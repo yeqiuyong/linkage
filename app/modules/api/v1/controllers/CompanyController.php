@@ -36,13 +36,13 @@ class CompanyController extends APIControllerBase
             $information = $company->getCompanyInformation($companyId);
 
             $result = [
-                'logo' => isset($information['logo']) ? $information['logo'] : '',
+                'logo' => $information['logo'] ,
                 'company_id' => $companyId,
                 'company_name' => $information['name'],
-                'contact_name' => isset($information['contactor']) ? $information['contactor'] : '',
-                'contact_address' => isset($information['address']) ? $information['address'] : '',
-                'contact_phone' => isset($information['service_phone_1']) ? $information['service_phone_1'] : '',
-                'contact_description' => isset($information['description']) ? $information['description'] : '',
+                'contact_name' => $information['contactor'],
+                'contact_address' => $information['address'],
+                'contact_phone' => $information['service_phone_1'],
+                'contact_description' => $information['description'],
                 'order_num' => 0,
             ];
 

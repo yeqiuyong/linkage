@@ -43,8 +43,8 @@ class ProfileController extends APIControllerBase
             $companyInfo = $company->getCompanyInformation($userInfo['company_id']);
 
             $result = [
-              'company_name' => $companyInfo['name'],
-                'company_icon' => isset($companyInfo['logo']) ? $companyInfo['logo'] : '',
+                'company_name' => $companyInfo['name'],
+                'company_icon' => $companyInfo['logo'],
                 'username' => isset($userInfo['username']) ? $userInfo['username'] : '',
                 'realname' => isset($userInfo['realname']) ? $userInfo['realname'] : '',
                 'mobile' => $userInfo['mobile'],
