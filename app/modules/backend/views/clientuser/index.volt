@@ -233,6 +233,7 @@
                     $("#email-info-modal").attr("value", clientuser.email);//填充内容
                     $("#role-info-modal").attr("value", clientuser.role);//填充内容
                     $("#update-info-modal").attr('value', update_time.toDateString());
+                    $("#image-info-modal").attr('src', clientuser.icon);
                 }
             });
         })

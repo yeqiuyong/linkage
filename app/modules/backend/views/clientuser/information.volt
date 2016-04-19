@@ -32,6 +32,10 @@
                     <label>上次登录时间</label>
                     <input class="form-control" type="text" name="update-info-modal" id="update-info-modal" readonly="readonly"/>
                 </div>
+                <div class="form-group">
+                    <label>头像</label>
+                    <img name="image-info-modal" id="image-info-modal"/>
+                </div>
 
             </div>
 

@@ -180,7 +180,7 @@
             $.ajax({
                 type: "post",
                 dataType:"json",
-                url: "<?php echo $this->url->get('admin/adminuser/detail?id=" + id +"') ?>",
+                url: "<?php echo $this->url->get('admin/adminuser/detail') ?>",
                 data: {'id' : id},
                 success: function (adminuser) {
                     var update_time = new Date();

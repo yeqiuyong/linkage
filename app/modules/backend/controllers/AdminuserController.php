@@ -69,7 +69,7 @@ class AdminuserController extends BackendControllerBase
     }
 
     public function detailAction(){
-        $id = $this->request->get('id', 'int'); // POST
+        $id = $this->request->getPost('id', 'int'); // POST
 
         $adminUser = new AdminUser();
         $admin = $adminUser->getUserById($id);
