@@ -236,19 +236,13 @@ class Company extends Model
     }
 
     public function getCompaniesByType($type){
+        $companies = self::find([
+            'conditions' => "type = :type: AND status != :status:",
+            'bind' => [  "type" => $type,
+                "status" => StatusCodes::COMPANY_DELETED,]
+        ]);
+
         $results = [];
-
-        $conditions = "type = :type:";
-        $parameters = array(
-            "type" => $type
-        );
-        $companies = self::find(
-            array(
-                $conditions,
-                "bind" => $parameters
-            )
-        );
-
         foreach ($companies as $company) {
             $result = [];
             $result['id'] = $company->company_id;

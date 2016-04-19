@@ -43,7 +43,7 @@ class CompanyController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         $company = new Company();
-        $companies = $company->getCompaniesByType(0);
+        $companies = $company->getCompaniesByType(LinkageUtils::COMPANY_MANUFACTURE);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
         $paginator = new PaginatorArray(
@@ -65,7 +65,7 @@ class CompanyController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         $company = new Company();
-        $companies = $company->getCompaniesByType(1);
+        $companies = $company->getCompaniesByType(LinkageUtils::COMPANY_TRANSPORTER);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
         $paginator = new PaginatorArray(
@@ -107,18 +107,22 @@ class CompanyController extends BackendControllerBase
 
         try{
             $company = new Company();
+            $user = new ClientUser();
+
+            $staffs = $user->getUsersByCompanyId($companyId);
+            // Start a transaction
+            $this->db->begin();
             $company->updateStatus($companyId, $status);
 
-            $user = new ClientUser();
-            $user->updateStatus($userid, $status);
-
-            if($user->isAdmin($userid)){
-
-
-
+            foreach($staffs as $staff){
+                $user->updateStatus($staff['user_id'], $status);
             }
 
+            // Commit the transaction
+            $this->db->commit();
+
         }catch (Exception $e){
+            $this->db->rollback();
             return$this->responseJsonError($e->getCode(), $e->getMessage());
         }
 

@@ -222,6 +222,12 @@
     }
 
     function changeStatus(id, status, func, pageindex){
+        if(status == 4){
+            if(!confirm("确定要删除该用户？")){
+                return;
+            }
+        }
+
         $.ajax({
             type: "post",
             dataType:"json",

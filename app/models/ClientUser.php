@@ -406,7 +406,7 @@ class ClientUser extends Model
         return $user->username;
     }
 
-    public function getStaffs($userid, $pagination, $offset, $size){
+    public function getStaffs($userid, $pagination=0, $offset=0, $size=10){
         $condition = " and status = ". StatusCodes::CLIENT_USER_ACTIVE;
         if($pagination != 0){
             $condition = " limit ".$offset.",".$size;
@@ -439,8 +439,7 @@ class ClientUser extends Model
 
         $results = [];
         foreach ($users as $user) {
-            $result = [];
-            $result['id'] = $user->user_id;
+            $result['user_id'] = $user->user_id;
             $result['user'] = $user->username;
             $result['realname'] = $user->name;
             $result['mobile'] = $user->mobile;

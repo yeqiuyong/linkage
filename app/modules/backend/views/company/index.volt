@@ -153,6 +153,7 @@
             strtable += '<li class="divider"></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 0' + ', ' + func + ' ,' +  pageindex  + ')">Active</a></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 1' + ', ' + func + ' ,' +  pageindex  + ')">Inactive</a></li>';
+            strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 2' + ', ' + func + ' ,' +  pageindex  + ')">Pending</a></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 3' + ', ' + func + ' ,' +  pageindex  + ')">Banned</a></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 4' + ', ' + func + ' ,' +  pageindex  + ')">Delete</a></li>';
             strtable += '</ul>';
@@ -187,11 +188,17 @@
     }
 
     function changeStatus(id, status, func, pageindex){
+        if(status == 4){
+            if(!confirm("确定要删除该公司和其下所有用户？")){
+                return;
+            }
+        }
+
         $.ajax({
             type: "post",
             dataType:"json",
             url: "<?php echo $this->url->get('admin/company/changestatus') ?>",
-            data: "id="+id+"&status="+status+"&pageindex="+pageindex,
+            data: "id="+id+"&status="+status,
             success: function () {
                 func(pageindex);
             }

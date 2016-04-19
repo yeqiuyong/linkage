@@ -36,7 +36,7 @@ class ClientuserController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $phql="select a.user_id, a.username, a.mobile, a.create_time, a.status, c.rolename from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b join Multiple\Models\Role c where a.user_id = b.user_id and b.role_id = c.role_id and b.role_id in (1,2)";
+        $phql="select a.user_id, a.username, a.mobile, a.create_time, a.status, c.rolename from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b join Multiple\Models\Role c where a.user_id = b.user_id and b.role_id = c.role_id and b.role_id in (1,2) and a.status != 4";
         $users=$this->modelsManager->executeQuery($phql);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
@@ -60,7 +60,7 @@ class ClientuserController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $phql="select a.user_id, a.username, a.mobile, a.create_time, a.status, c.rolename from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b join Multiple\Models\Role c where a.user_id = b.user_id and b.role_id = c.role_id and b.role_id in (3,4)";
+        $phql="select a.user_id, a.username, a.mobile, a.create_time, a.status, c.rolename from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b join Multiple\Models\Role c where a.user_id = b.user_id and b.role_id = c.role_id and b.role_id in (3,4) and a.status != 4";
         $users=$this->modelsManager->executeQuery($phql);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
@@ -83,7 +83,7 @@ class ClientuserController extends BackendControllerBase
         $pageNum = ($currentPage == null) ? 1 : $currentPage;
 
         // The data set to paginate
-        $phql="select a.user_id, a.username, a.mobile, a.create_time, a.status, c.rolename from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b join Multiple\Models\Role c where a.user_id = b.user_id and b.role_id = c.role_id and b.role_id = 5";
+        $phql="select a.user_id, a.username, a.mobile, a.create_time, a.status, c.rolename from Multiple\Models\ClientUser a join Multiple\Models\ClientUserRole b join Multiple\Models\Role c where a.user_id = b.user_id and b.role_id = c.role_id and b.role_id = 5 and a.status != 4";
         $users=$this->modelsManager->executeQuery($phql);
 
         // Create a Model paginator, show 10 rows by page starting from $currentPage
