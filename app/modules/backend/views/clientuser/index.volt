@@ -1,3 +1,5 @@
+{% include "clientuser/information.volt" %}
+
 <div id="content" class="col-lg-10 col-sm-10">
     <!-- content starts -->
     <div>
@@ -78,28 +80,6 @@
 
 <!-- Ad ends -->
 
-<hr>
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h3>Settings</h3>
-            </div>
-            <div class="modal-body">
-                <p>Here settings can be configured...</p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-                <a href="#" class="btn btn-primary" data-dismiss="modal">Save changes</a>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
     var pagesize = 10;
     var pageindexinit = 1;
@@ -172,7 +152,7 @@
             strtable += '</td>';
 
             strtable += '<td class="center">';
-            strtable += '<a class="btn btn-success" href="#" onclick="loadUser('+ id +')">';
+            strtable += '<a class="btn btn-success" href="#" onclick="showInfoModal('+ id +')">';
             strtable += '<i class="glyphicon glyphicon-zoom-in icon-white"></i>';
             strtable += '查看';
             strtable += '</a>';
@@ -217,10 +197,6 @@
         window.location.href = "<?php echo $this->url->get('admin/clientuser/information').'?id="+ id +"' ?>";
     }
 
-    function editUser(id){
-        window.location.href = "<?php echo $this->url->get('admin/clientuser/editor').'?id="+ id +"' ?>";
-    }
-
     function changeStatus(id, status, func, pageindex){
         if(status == 4){
             if(!confirm("确定要删除该用户？")){
@@ -237,6 +213,29 @@
                 func(pageindex);
             }
         });
+
+    }
+
+    function showInfoModal(id){
+        $('#info-modal').modal('show').on('shown',function(){
+            $.ajax({
+                type: "post",
+                dataType:"json",
+                url: "<?php echo $this->url->get('admin/clientuser/detail') ?>",
+                data: {'id' : id},
+                success: function (clientuser) {
+                    var update_time = new Date();
+                    update_time.setTime((parseInt(clientuser.update_time) ) * 1000);
+
+                    $("#username-info-modal").attr("value", clientuser.username);//填充内容
+                    $("#realname-info-modal").attr("value", clientuser.realname);//填充内容
+                    $("#mobile-info-modal").attr("value", clientuser.mobile);//填充内容
+                    $("#email-info-modal").attr("value", clientuser.email);//填充内容
+                    $("#role-info-modal").attr("value", clientuser.role);//填充内容
+                    $("#update-info-modal").attr('value', update_time.toDateString());
+                }
+            });
+        })
 
     }
 

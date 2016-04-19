@@ -153,7 +153,6 @@
             strtable += '<li class="divider"></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 0' + ', ' + func + ' ,' +  pageindex  + ')">Active</a></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 1' + ', ' + func + ' ,' +  pageindex  + ')">Inactive</a></li>';
-            strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 2' + ', ' + func + ' ,' +  pageindex  + ')">Pending</a></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 3' + ', ' + func + ' ,' +  pageindex  + ')">Banned</a></li>';
             strtable += '<li><a href="#" onclick="changeStatus('+ id + ', 4' + ', ' + func + ' ,' +  pageindex  + ')">Delete</a></li>';
             strtable += '</ul>';
