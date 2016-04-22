@@ -34,9 +34,9 @@ class UserController extends APIControllerBase
     }
 
     public function staffAction(){
-        $pagination = $this->request->getPost('pagination');
-        $offset = $this->request->getPost('offset');
-        $size = $this->request->getPost('size');
+        $pagination = $this->request->getPost('pagination', 'int');
+        $offset = $this->request->getPost('offset', 'int');
+        $size = $this->request->getPost('size', 'int');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);

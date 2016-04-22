@@ -420,9 +420,9 @@ class ClientUser extends Model
         foreach($staffs as $staff){
             $result['staff_id'] = $staff->user_id;
             $result['username'] = $staff->username;
-            $result['name'] = $staff->name;
+            $result['name'] = isset($staff->name) ? $staff->name : '';
             $result['mobile'] = $staff->mobile;
-            $result['staff_icon'] = $staff->icon;
+            $result['staff_icon'] = isset($staff->icon) ? $staff->icon : '';
 
             array_push($results, $result);
         }
