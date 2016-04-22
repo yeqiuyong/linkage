@@ -18,6 +18,7 @@ use Multiple\Models\ClientUser;
 
 class UploadController extends APIControllerBase
 {
+    const PROTOCOL = "http://";
     private $upyun;
 
     /**
@@ -60,7 +61,7 @@ class UploadController extends APIControllerBase
         if ($this->request->hasFiles()) {
             try{
                 $file = $this->request->getUploadedFiles()[0];
-                $fileName = $this->upyun->uploadImage($file);
+                $fileName = self::PROTOCOL . $this->upyun->uploadImage($file);
 
                 $user = new ClientUser();
                 $user->updateIconById($this->cid, $fileName);
@@ -88,7 +89,7 @@ class UploadController extends APIControllerBase
         if ($this->request->hasFiles()) {
             try{
                 $file = $this->request->getUploadedFiles()[0];
-                $fileName = $this->upyun->uploadImage($file);
+                $fileName = self::PROTOCOL . $this->upyun->uploadImage($file);
 
                 $user = new ClientUser();
                 $companyId = $user->getCompanyidByUserid($this->cid);
@@ -121,7 +122,7 @@ class UploadController extends APIControllerBase
         if ($this->request->hasFiles()) {
             try{
                 foreach ($this->request->getUploadedFiles() as $file) {
-                    $FileNames .= $this->upyun->uploadImage($file).';';
+                    $FileNames .=  self::PROTOCOL . $this->upyun->uploadImage($file).';';
                 }
             }catch (UploadException $e){
                 $this->respondError($e->getCode(), $e->getMessage());
