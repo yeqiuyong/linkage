@@ -219,6 +219,7 @@ CREATE TABLE `linkage_company` (
   `service_phone_2` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话2',
   `service_phone_3` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话3',
   `service_phone_4` VARCHAR(30)  DEFAULT NULL COMMENT '客户电话4',
+  `fax` VARCHAR(30) DEFAULT NULL COMMENT 'FAX',
   `description` TEXT DEFAULT null COMMENT '企业简介',
   `remark` TEXT DEFAULT NULL COMMENT '备注',
   `logo` VARCHAR(200) DEFAULT '' COMMENT '企业logo',

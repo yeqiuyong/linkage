@@ -283,6 +283,7 @@ class Company extends Model
             'service_phone_2' => isset($company->service_phone_2) ? $company->service_phone_2 : '',
             'service_phone_3' => isset($company->service_phone_3) ? $company->service_phone_3 : '',
             'service_phone_4' => isset($company->service_phone_4) ? $company->service_phone_4 : '',
+            'fax' => isset($company->fax) ? $company->fax : '',
             'description' => isset($company->description) ? $company->description : '',
             'remark' => isset($company->remark) ? $company->remark : '',
             'logo' => isset($company->logo) ? $company->logo : '',

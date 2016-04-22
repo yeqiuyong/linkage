@@ -43,6 +43,11 @@ class CompanyController extends APIControllerBase
                 'contact_address' => $information['address'],
                 'contact_phone' => $information['service_phone_1'],
                 'contact_description' => $information['description'],
+                'service_phone2' => $information['service_phone_2'],
+                'service_phone3' => $information['service_phone_3'],
+                'service_phone4' => $information['service_phone_4'],
+                'home_page' => $information['home_page'],
+                'fax' => $information['fax'],
                 'order_num' => 0,
             ];
 
