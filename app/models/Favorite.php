@@ -94,9 +94,9 @@ class Favorite extends Model
             $company['company_name'] = $favorite->name;
             $company['contact_name'] = $favorite->contactor;
             $company['service_phone'] = $favorite->service_phone_1;
-            $company['logo'] = isset($favorite->logo) ? $favorite->logo : 0;
+            $company['logo'] = isset($favorite->logo) ? $favorite->logo : '';
             $company['score'] = 5;
-            $company['order_num'] = isset($favorite->order_num) ? $favorite->order_num : 0;
+            $company['order_num'] = isset($favorite->order_num) ? (int)$favorite->order_num : 0;
 
             array_push($companies, $company);
         }
