@@ -209,9 +209,9 @@ class SessionController extends APIControllerBase
 
             $userInfo = $user->getUserInfomation($userid);
             if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_MANUFACTURE || $userInfo['role'] == LinkageUtils::ROLE_MANUFACTURE){
-                $companies = $company->getManufactures($pagination, $offset, $size);
-            }else if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] == LinkageUtils::ROLE_TRANSPORTER){
                 $companies = $company->getTransporters($pagination, $offset, $size);
+            }else if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] == LinkageUtils::ROLE_TRANSPORTER){
+                $companies = $company->getManufactures($pagination, $offset, $size);
             }else{
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
