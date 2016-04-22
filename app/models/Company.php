@@ -346,7 +346,7 @@ class Company extends Model
             $result['contact_phone'] = isset($transporter->service_phone_1) ? $transporter->service_phone_1 : '';
             $result['description'] = isset($transporter->description) ? $transporter->description : '';
             $result['score'] = 5;
-            $result['order_num'] = isset($transporter->order_num) ? $transporter->order_num : 0;
+            $result['order_num'] = isset($transporter->order_num) ? (int)$transporter->order_num : 0;
 
             array_push($results,$result);
         }
