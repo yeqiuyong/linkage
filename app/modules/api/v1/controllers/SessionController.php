@@ -7,9 +7,6 @@
  */
 
 namespace Multiple\API\Controllers;
-
-use Multiple\Models\Notice;
-use Multiple\Models\Order;
 use Phalcon\Di;
 
 use Multiple\Core\Auth\MobileAdaptor;
@@ -23,6 +20,9 @@ use Multiple\Core\Exception\Exception;
 use Multiple\Models\Company;
 use Multiple\Models\ClientUser;
 use Multiple\Models\ClientUserRole;
+use Multiple\Models\SystemSet;
+use Multiple\Models\Notice;
+use Multiple\Models\Order;
 
 class SessionController extends APIControllerBase
 {
@@ -99,6 +99,9 @@ class SessionController extends APIControllerBase
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);
 
+            $systemSet = new SystemSet();
+            $systemSet->init($userID);
+
             // Commit the transaction
             $this->db->commit();
 
@@ -171,6 +174,9 @@ class SessionController extends APIControllerBase
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);
 
+            $systemSet = new SystemSet();
+            $systemSet->init($userID);
+
             // Commit the transaction
             $this->db->commit();
 
@@ -221,6 +227,9 @@ class SessionController extends APIControllerBase
             $notice = new Notice();
             $advs = $notice->getAdv();
 
+            $systemSet = new SystemSet();
+            $setting = $systemSet->getSettingById($userid);
+
             $response = $this->getTokenResponse($userid, $mobile, $password);
 
             $response['ctype'] = $roleId - 1;
@@ -237,6 +246,8 @@ class SessionController extends APIControllerBase
             $response['companies'] = $companies;
 
             $response['advertes'] = $advs;
+
+            $response['setting'] = $setting;
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());

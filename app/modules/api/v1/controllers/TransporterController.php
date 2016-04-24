@@ -9,7 +9,6 @@
 
 namespace Multiple\API\Controllers;
 
-use Multiple\Models\Order;
 use Phalcon\Di;
 
 use Multiple\Core\APIControllerBase;
@@ -23,7 +22,9 @@ use Multiple\Models\ClientUser;
 use Multiple\Models\ClientUserRole;
 use Multiple\Models\Driver;
 use Multiple\Models\DriverTask;
+use Multiple\Models\Order;
 use Multiple\Models\Car;
+use Multiple\Models\SystemSet;
 
 class TransporterController extends APIControllerBase
 {
@@ -172,6 +173,9 @@ class TransporterController extends APIControllerBase
 
             $mDriver = new Driver();
             $mDriver->add($driverId, $license);
+
+            $systemSet = new SystemSet();
+            $systemSet->init($driverId);
 
             // Commit the transaction
             $this->db->commit();

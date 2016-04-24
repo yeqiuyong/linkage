@@ -64,5 +64,10 @@ class StatusCodes
     const COMPLAIN_HANDLED= 1;
     const COMPLAIN_DELETED = 2;
 
+    const RECEIVE_SMS = 1;
+    const NOT_RECEIVE_SMS = 0;
+
+    const RECEIVE_EMAIL = 1;
+    const NOT_RECEIVE_EMAIL = 0;
 
 }

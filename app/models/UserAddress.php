@@ -15,6 +15,7 @@ use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\COre\Constants\Services;
 use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 
 class UserAddress extends Model
 {

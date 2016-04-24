@@ -16,6 +16,7 @@ use Multiple\Models\ClientUser;
 use Multiple\Models\Company;
 use Multiple\Models\Favorite;
 use Multiple\Models\UserAddress;
+use Multiple\Models\SystemSet;
 
 class ProfileController extends APIControllerBase
 {
@@ -349,6 +350,32 @@ class ProfileController extends APIControllerBase
         try {
             $mAddress = new UserAddress();
             $mAddress->delFavorite($this->cid, $addressId);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+
+    }
+
+    /**
+     * @title("updatesysset")
+     * @description("Update User system setting")
+     * @requestExample("POST /profile/updatesysset")
+     * @response("Data object or Error object")
+     */
+    public function updateSysSetAction(){
+        $isReceiveSMS = $this->request->getPost('receive_sms', 'int');
+        $isReceiveEmail = $this->request->getPost('receive_email', 'int');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try {
+            $systemSet = new SystemSet();
+            $systemSet->set($this->cid, $isReceiveSMS, $isReceiveEmail);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
