@@ -194,14 +194,14 @@ class Order extends Model
             $limit = "";
         }
 
-        $phql="select a.order_id, a.transporter_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id ".$condition.$limit;
+        $phql="select a.order_id, a.type, a.transporter_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id ".$condition.$limit;
         $lists = $this->modelsManager->executeQuery($phql);
 
         $orders = [];
         foreach($lists as $list){
             $order = [
                 'order_id' => $list->order_id,
-                'type' => 0,
+                'type' => $list->type,
                 'status' => $list->status,
                 'company_id' => $list->transporter_id,
                 'company_name' => $list->company_name,
