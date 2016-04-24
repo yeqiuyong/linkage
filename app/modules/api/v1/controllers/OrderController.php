@@ -143,8 +143,8 @@ class OrderController extends APIControllerBase
         $billNo = $this->request->getPost('bill_no', 'string');
         $cargoNo = $this->request->getPost('cargo_no', 'string');
         $cargoCompany = $this->request->getPost('cargo_company', 'string');
-        $customBroker = $this->request->getPost('custom_broker', 'string');
-        $customContact = $this->request->getPost('custom_contact', 'string');
+        $customBroker = $this->request->getPost('customs_broker', 'string');
+        $customContact = $this->request->getPost('customs_contact', 'string');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
@@ -388,8 +388,8 @@ class OrderController extends APIControllerBase
         $billNo = $this->request->getPost('bill_no', 'string');
         $cargoNo = $this->request->getPost('cargo_no', 'string');
         $cargoCompany = $this->request->getPost('cargo_company', 'string');
-        $customBroker = $this->request->getPost('custom_broker', 'string');
-        $customContact = $this->request->getPost('custom_contact', 'string');
+        $customBroker = $this->request->getPost('customs_broker', 'string');
+        $customContact = $this->request->getPost('customs_contact', 'string');
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
