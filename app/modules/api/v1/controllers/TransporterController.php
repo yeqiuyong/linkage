@@ -139,8 +139,8 @@ class TransporterController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function addDriverAction(){
-        $name = $this->request->getPost('name', 'string');
-        $mobile = $this->request->getPost('mobile', 'string');
+        $name = $this->request->getPost('driver_name', 'string');
+        $mobile = $this->request->getPost('driver_mobile', 'string');
         $gender = $this->request->getPost('gender', 'string');
         $license = $this->request->getPost('license', 'string');
         $icon = $this->request->getPost('icon', 'string');
@@ -186,7 +186,7 @@ class TransporterController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray(['driver_id' => $driverId]);
     }
 
     /**
