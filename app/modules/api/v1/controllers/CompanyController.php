@@ -46,8 +46,10 @@ class CompanyController extends APIControllerBase
                 'service_phone2' => $information['service_phone_2'],
                 'service_phone3' => $information['service_phone_3'],
                 'service_phone4' => $information['service_phone_4'],
+                'email' => $information['email'],
                 'home_page' => $information['home_page'],
                 'fax' => $information['fax'],
+                'images' => $information['images'],
                 'order_num' => 0,
             ];
 
@@ -70,6 +72,9 @@ class CompanyController extends APIControllerBase
         $phone_2 = $this->request->getPost('phone_2', 'string');
         $phone_3 = $this->request->getPost('phone_3', 'string');
         $phone_4 = $this->request->getPost('phone_4', 'string');
+        $fax = $this->request->getPost('fax', 'string');
+        $logo = $this->request->getPost('logo', 'string');
+        $images = $this->request->getPost('images', 'string');
 
         $info = [
             'contact_name' => $contact_name,
@@ -81,6 +86,9 @@ class CompanyController extends APIControllerBase
             'phone_2' => $phone_2,
             'phone_3' => $phone_3,
             'phone_4' => $phone_4,
+            'fax' => $fax,
+            'logo' => $logo,
+            'images' => $images,
         ];
 
         if(!isset($name)){
@@ -115,6 +123,9 @@ class CompanyController extends APIControllerBase
         $phone_2 = $this->request->getPost('phone_2', 'string');
         $phone_3 = $this->request->getPost('phone_3', 'string');
         $phone_4 = $this->request->getPost('phone_4', 'string');
+        $fax = $this->request->getPost('fax', 'string');
+        $logo = $this->request->getPost('logo', 'string');
+        $images = $this->request->getPost('images', 'string');
 
         $info = [
             'contact_name' => $contact_name,
@@ -126,6 +137,9 @@ class CompanyController extends APIControllerBase
             'phone_2' => $phone_2,
             'phone_3' => $phone_3,
             'phone_4' => $phone_4,
+            'fax' => $fax,
+            'logo' => $logo,
+            'images' => $images,
         ];
 
         try{

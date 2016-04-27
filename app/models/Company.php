@@ -110,6 +110,18 @@ class Company extends Model
             $company->service_phone_4 = $info['phone_4'];
         }
 
+        if(!empty($info['fax'])){
+            $company->fax = $info['fax'];
+        }
+
+        if(!empty($info['logo'])){
+            $company->logo = $info['logo'];
+        }
+
+        if(!empty($info['images'])){
+            $company->images = $info['images'];
+        }
+
         if($company->update() == false){
             $message = '';
             foreach ($company->getMessages() as $msg) {
@@ -166,6 +178,18 @@ class Company extends Model
 
         if(!empty($info['phone_4'])){
             $company->service_phone_4 = $info['phone_4'];
+        }
+
+        if(!empty($info['fax'])){
+            $company->fax = $info['fax'];
+        }
+
+        if(!empty($info['logo'])){
+            $company->logo = $info['logo'];
+        }
+
+        if(!empty($info['images'])){
+            $company->images = $info['images'];
         }
 
         if($company->update() == false){
@@ -287,6 +311,7 @@ class Company extends Model
             'description' => isset($company->description) ? $company->description : '',
             'remark' => isset($company->remark) ? $company->remark : '',
             'logo' => isset($company->logo) ? $company->logo : '',
+            'images' => isset($company->images) ? $company->images : '',
         ];
 
     }

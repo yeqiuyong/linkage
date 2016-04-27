@@ -223,6 +223,7 @@ CREATE TABLE `linkage_company` (
   `description` TEXT DEFAULT null COMMENT '企业简介',
   `remark` TEXT DEFAULT NULL COMMENT '备注',
   `logo` VARCHAR(200) DEFAULT '' COMMENT '企业logo',
+  `images` VARCHAR(600) DEFAULT NULL COMMENT '企业信息照片',
   `create_time` INT(11) NOT NULL DEFAULT 0,
   `update_time` INT(11) NOT NULL DEFAULT 0,
   `create_by` INT(11) NOT NULL DEFAULT 0 COMMENT '创建人用户id',
@@ -292,7 +293,7 @@ DROP TABLE IF EXISTS `linkage_order_export`;
 CREATE TABLE `linkage_order_export` (
   `order_id` CHAR(64)  NOT NULL DEFAULT '',
   `so` VARCHAR(64) NOT NULL DEFAULT '' COMMENT '',
-  `so_images` VARCHAR(400) NOT NULL DEFAULT '' COMMENT '',
+  `so_images` VARCHAR(600) NOT NULL DEFAULT '' COMMENT '',
   `customs_in` INT(11) COMMENT '截关时间',
   `port` VARCHAR(400) COMMENT '提货港口',
   `ship_company` VARCHAR(120) COMMENT '头程公司',
