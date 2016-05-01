@@ -46,6 +46,8 @@ class UserAddress extends Model
 
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
+
+        return $this->address_id;
     }
 
     public function delAddress($userId, $addressId)

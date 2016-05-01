@@ -320,13 +320,13 @@ class ProfileController extends APIControllerBase
 
         try {
             $mAddress = new UserAddress();
-            $mAddress->add($this->cid, $title, $address);
+            $address_id = $mAddress->add($this->cid, $title, $address);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray(['address_id' => $address_id]);
 
     }
 
