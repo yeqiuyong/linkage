@@ -141,7 +141,7 @@ class OrderController extends APIControllerBase
         $memo = $this->request->getPost('memo', 'string');
         $rentExpire = $this->request->getPost('cargos_rent_expire', 'int');
         $billNo = $this->request->getPost('bill_no', 'string');
-        $cargoNo = $this->request->getPost('cargo_no', 'string');
+        //$cargoNo = $this->request->getPost('cargo_no', 'string');
         $cargoCompany = $this->request->getPost('cargo_company', 'string');
         $customBroker = $this->request->getPost('customs_broker', 'string');
         $customContact = $this->request->getPost('customs_contact', 'string');
@@ -170,14 +170,12 @@ class OrderController extends APIControllerBase
             $order->add($orderId, LinkageUtils::ORDER_TYPE_IMPORT, $mUserInfo['company_id'], $tCompanyId, $this->cid, $mUserInfo['realname'], $mUserInfo['mobile'], $takeAddress, $takeTime, $deliveryAddress, $deliveryTime, $isTransferPort, $memo);
 
             $orderImport = new OrderImport();
-            $orderImport->add($orderId, $rentExpire, $billNo, $cargoNo, $cargoCompany, $customBroker, $customContact);
+            $orderImport->add($orderId, $rentExpire, $billNo, '', $cargoCompany, $customBroker, $customContact);
 
-            $cargoObjs = $this->genCargosObj($cargoStr);
+            $cargoObjs = $this->genCargosObj2($cargoStr);
             foreach($cargoObjs as $cargoObj){
-                for($i = 0; $i < $cargoObj['num']; $i++){
-                    $orderCargo = new OrderCargo();
-                    $orderCargo->add($orderId, $cargoObj['type']);
-                }
+                $orderCargo = new OrderCargo();
+                $orderCargo->addWithNo($orderId, $cargoObj['cargono'], $cargoObj['type']);
             }
 
             // Commit the transaction
@@ -428,12 +426,10 @@ class OrderController extends APIControllerBase
             $orderImport = new OrderImport();
             $orderImport->add($orderId, $rentExpire, $billNo, $cargoNo, $cargoCompany, $customBroker, $customContact);
 
-            $cargoObjs = $this->genCargosObj($cargoStr);
+            $cargoObjs = $this->genCargosObj2($cargoStr);
             foreach($cargoObjs as $cargoObj){
-                for($i = 0; $i < $cargoObj['num']; $i++){
-                    $orderCargo = new OrderCargo();
-                    $orderCargo->add($orderId, $cargoObj['type']);
-                }
+                $orderCargo = new OrderCargo();
+                $orderCargo->addWithNo($orderId, $cargoObj['cargono'], $cargoObj['type']);
             }
 
             // Commit the transaction
@@ -782,7 +778,7 @@ class OrderController extends APIControllerBase
 
             //Get Cargos Information
             $orderCargo = new OrderCargo();
-            $cargos = $orderCargo->getCargosByOrderId($orderId);
+            $cargos = $orderCargo->getCargosByOrderIdWithNo($orderId);
             $orderDetail['cargos'] = $cargos;
 
             //Get Driver Tasks
@@ -908,6 +904,22 @@ class OrderController extends APIControllerBase
 
         return $cargoObjs;
 
+    }
+
+    private function genCargosObj2($cargoStr){
+        $cargoObjs = [];
+        $cargoArrs = explode(';', $cargoStr);
+
+        foreach($cargoArrs as $cargoAttr){
+            $cargo = explode(':', $cargoAttr);
+
+            $cargoObj['cargono'] = $cargo[0];
+            $cargoObj['type'] = $cargo[1];
+
+            array_push($cargoObjs, $cargoObj);
+        }
+
+        return $cargoObjs;
     }
 
 }

@@ -38,6 +38,23 @@ class OrderCargo extends Model
         }
     }
 
+    public function addWithNo($orderId, $cargoNo, $cargoType){
+        $this->order_id = $orderId;
+        $this->cargo_no = $cargoNo;
+        $this->cargo_type = $cargoType;
+
+        if($this->save() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function getCargosByOrderId($orderId){
         $phql = "select a.cargo_type, COUNT(1) as number FROM Multiple\Models\OrderCargo a where a.order_id='$orderId' GROUP BY a.cargo_type";
         $cargos = $this->modelsManager->executeQuery($phql);
@@ -46,6 +63,21 @@ class OrderCargo extends Model
         foreach ($cargos as $cargo) {
             $result['type'] = $cargo->cargo_type;
             $result['number'] = $cargo->number;
+
+            array_push($results, $result);
+        }
+
+        return $results;
+    }
+
+    public function getCargosByOrderIdWithNo($orderId){
+        $phql = "select a.cargo_type, a.cargo_no FROM Multiple\Models\OrderCargo a where a.order_id='$orderId'";
+        $cargos = $this->modelsManager->executeQuery($phql);
+
+        $results = [];
+        foreach ($cargos as $cargo) {
+            $result['type'] = $cargo->cargo_type;
+            $result['cargo_no'] = $cargo->cargo_no;
 
             array_push($results, $result);
         }
