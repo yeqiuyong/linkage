@@ -15,6 +15,7 @@ use Phalcon\Mvc\Model;
 use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 
 class OrderImport extends Model
 {
