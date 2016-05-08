@@ -559,7 +559,7 @@ class OrderController extends APIControllerBase
 
         try {
             $user = new ClientUser();
-            $userInfo = $user->getUserInfomation($this-cid);
+            $userInfo = $user->getUserInfomation($this->cid);
 
             if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
