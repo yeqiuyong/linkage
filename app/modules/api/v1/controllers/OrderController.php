@@ -41,6 +41,7 @@ class OrderController extends APIControllerBase
     {
         parent::initialize();
 
+        $this->redis = Di::getDefault()->get(Services::REDIS);
         $this->logger = Di::getDefault()->get(Services::LOGGER);
 
     }
@@ -561,12 +562,29 @@ class OrderController extends APIControllerBase
             $user = new ClientUser();
             $userInfo = $user->getUserInfomation($this->cid);
 
-            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
             $order = new Order();
-            $order->accept($orderId, $this->cid, $userInfo['name'], $userInfo['mobile']);
+            if($order->getStatus($orderId) != StatusCodes::ORDER_PLACE){
+                return $this->respondError(ErrorCodes::ORDER_ACCEPT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ACCEPT_ERROR]);
+            }
+
+            $mutex = "LINKAGE_ORDER_APT_".$orderId;
+            if($this->redis->setnx($mutex, 'processing')) {
+                if($order->getStatus($orderId) != StatusCodes::ORDER_PLACE){
+                    $this->redis->delete($mutex);
+                    return $this->respondError(ErrorCodes::ORDER_ACCEPT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ACCEPT_ERROR]);
+                }
+
+                $this->redis->setTimeout($mutex, 30);
+
+                $order->accept($orderId, $this->cid, $userInfo['name'], $userInfo['mobile']);
+                $this->redis->delete($mutex);
+            }else{
+                return $this->respondError(ErrorCodes::ORDER_ACCEPT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ACCEPT_ERROR]);
+            }
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());

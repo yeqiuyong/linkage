@@ -82,6 +82,7 @@ class ErrorCodes
     const ORDER_NOT_FOUND = 6002;
     const ORDER_TRANSPORTER_NULL = 6003;
     const ORDER_DISPATCH_INFO_NULL = 6004;
+    const ORDER_ACCEPT_ERROR = 6005;
 
     public static $MESSAGE = [
         // General
@@ -155,6 +156,7 @@ class ErrorCodes
         self:: ORDER_NOT_FOUND => "订单不存在",
         self:: ORDER_TRANSPORTER_NULL => "订单运营商为空",
         self:: ORDER_DISPATCH_INFO_NULL => "订单分配信息为空",
+        self:: ORDER_ACCEPT_ERROR => "接单失败",
 
     ];
 

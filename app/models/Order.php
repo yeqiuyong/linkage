@@ -114,6 +114,19 @@ class Order extends Model
         }
     }
 
+    public function getStatus($orderId){
+        $order = self::findFirst([
+            'conditions' => 'order_id = :order_id:',
+            'bind' => ['order_id' => $orderId]
+        ]);
+
+        if(!isset($order->order_id)){
+            throw new UserOperationException(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
+        }
+
+        return $order->status;
+    }
+
     public function getOrderInfo($orderId){
         $order = self::findFirst([
             'conditions' => 'order_id = :order_id:',
