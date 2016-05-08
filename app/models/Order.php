@@ -174,14 +174,12 @@ class Order extends Model
     }
 
     public function getOrders4Transporter($userid, $type = -1, $status, $pagination = 0,  $offset = 0, $size = 10){
-        if($type == -1){
-            $condition = " and a.transporter_contact_id = $userid ";
-        }else{
-            $condition = " and a.transporter_contact_id = $userid and type = $type";
+        if($type != -1){
+            $condition = " and type = $type";
         }
 
         if($status == 1){
-            $condition .= " and a.status in (0, 1, 2)";
+            $condition .= " and ((a.transporter_contact_id = $userid and a.status in (1, 2)) or a.status in (0))";
         }else if($status == 2){
             $condition .= " and a.status in (3, 4)";
         }else{
