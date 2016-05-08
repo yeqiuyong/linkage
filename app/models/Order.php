@@ -175,9 +175,9 @@ class Order extends Model
 
     public function getOrders4Transporter($userid, $type = -1, $status, $pagination = 0,  $offset = 0, $size = 10){
         if($type == -1){
-            $condition = " and a.manufacture_contact_id = $userid ";
+            $condition = " and a.transporter_contact_id = $userid ";
         }else{
-            $condition = " and a.manufacture_contact_id = $userid and type = $type";
+            $condition = " and a.transporter_contact_id = $userid and type = $type";
         }
 
         if($status == 1){
