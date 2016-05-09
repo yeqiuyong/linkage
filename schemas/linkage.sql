@@ -391,7 +391,7 @@ CREATE TABLE `linkage_driver` (
 DROP TABLE IF EXISTS `linkage_driver_task`;
 CREATE TABLE `linkage_driver_task` (
   `task_id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `order_id` INT(11) UNSIGNED NOT NULL,
+  `order_id` CHAR(64)  NOT NULL DEFAULT '' COMMENT '订单号',
   `order_type` TINYINT(4) UNSIGNED NOT NULL COMMENT '码头出口0,码头进口1,内陆柜2,自备柜3',
   `company_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '承运商公司id',
   `driver_id` INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '承运商司机id',
