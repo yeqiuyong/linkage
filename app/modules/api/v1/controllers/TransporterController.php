@@ -67,6 +67,12 @@ class TransporterController extends APIControllerBase
             $orderInfo = $order->getOrderInfo($orderId);
 
             $cargos = $dispatchInfo['cargos'];
+            if(sizeof($cargos) == 0){
+                return $this->respondError(ErrorCodes::ORDER_DISPATCH_INFO_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_DISPATCH_INFO_NULL]);
+            }
+
+            $this->db->begin();
+
             foreach($cargos as $cargo){
                 $driverTask = new DriverTask();
                 $driverTask->add($orderId,
@@ -79,7 +85,11 @@ class TransporterController extends APIControllerBase
                 );
             }
 
+            // Commit the transaction
+            $this->db->commit();
+
         }catch (Exception $e){
+            $this->db->rollback();
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
