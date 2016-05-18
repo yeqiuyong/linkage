@@ -53,12 +53,14 @@ class DriverTask extends Model
     }
 
     public function getTaskByOrderId($orderId){
-        $phql="select a.cargo_no, a.status, b.name, c.license from Multiple\Models\DriverTask a join Multiple\Models\ClientUser b join Multiple\Models\Driver c on a.driver_id = b.user_id and a.driver_id = c.driver_id where a.order_id = '".$orderId."'";
+        $phql="select a.cargo_no, a.cargo_type, a.driver_id, a.status, b.name, c.license from Multiple\Models\DriverTask a join Multiple\Models\ClientUser b join Multiple\Models\Driver c on a.driver_id = b.user_id and a.driver_id = c.driver_id where a.order_id = '".$orderId."'";
         $tasks = $this->modelsManager->executeQuery($phql);
 
         $results = [];
         foreach ($tasks as $task) {
             $result['cargo_no'] = $task->cargo_no;
+            $result['cargo_type'] = $task->cargo_type;
+            $result['driver_id'] = $task->driver_id;
             $result['driver_name'] = $task->name;
             $result['license'] = $task->license;
             $result['status'] = $task->status;
