@@ -345,6 +345,7 @@ class Company extends Model
             $result['contact_address'] = isset($manufacture->address) ? $manufacture->address : '';
             $result['contact_phone'] = isset($manufacture->service_phone_1) ? $manufacture->service_phone_1 : '';
             $result['description'] = isset($manufacture->description) ? $manufacture->description : '';
+            $result['logo'] = isset($manufacture->logo) ? $manufacture->logo : '';
 
             array_push($results,$result);
         }
@@ -371,6 +372,7 @@ class Company extends Model
             $result['contact_address'] = isset($transporter->address) ? $transporter->address : '';
             $result['contact_phone'] = isset($transporter->service_phone_1) ? $transporter->service_phone_1 : '';
             $result['description'] = isset($transporter->description) ? $transporter->description : '';
+            $result['logo'] = isset($transporter->logo) ? $transporter->logo : '';
             $result['score'] = 5;
             $result['order_num'] = isset($transporter->order_num) ? (int)$transporter->order_num : 0;
 
