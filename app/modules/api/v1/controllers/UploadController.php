@@ -38,6 +38,9 @@ class UploadController extends APIControllerBase
                 foreach ($this->request->getUploadedFiles() as $file) {
                     $FileNames .= self::PROTOCOL . $this->upyun->uploadImage($file).';';
                 }
+                
+                $FileNames = substr($FileNames, 0, strlen($FileNames) - 1);
+
             }catch (UploadException $e){
                 $this->respondError($e->getCode(), $e->getMessage());
             }
