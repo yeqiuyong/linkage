@@ -590,7 +590,7 @@ class OrderController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray(['order_status' => StatusCodes::ORDER_HANDLING]);
     }
 
     /**
@@ -618,7 +618,7 @@ class OrderController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray(['order_status' => StatusCodes::ORDER_HANDLED]);
     }
 
     /**
@@ -646,7 +646,7 @@ class OrderController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray(['order_status' => StatusCodes::ORDER_CANCEL]);
 
     }
 
@@ -675,7 +675,7 @@ class OrderController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray(['order_status' => StatusCodes::ORDER_REJECT]);
 
     }
 
