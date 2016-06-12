@@ -18,7 +18,7 @@ class UPyun
 
     private static $IMAGE_SIZE = 3000000;
 
-    private static $SERVER_UPLOAD_PATH = '/private/var/tmp/upload/';
+    private static $SERVER_UPLOAD_PATH = '/www/tmp/image/';
 
     public function __construct(){
     }

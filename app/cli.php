@@ -76,6 +76,7 @@ $di->setShared(AppServices::DB, function () use ($config) {
 $di->setShared(AppServices::REDIS, function() use ($config) {
     $redisConnect = new Redis();
     $redisConnect->connect($config->redis->host, $config->redis->port);
+    $redisConnect->auth('Qiushui456@Redis');
     return $redisConnect;
 });
 

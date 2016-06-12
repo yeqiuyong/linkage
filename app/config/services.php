@@ -38,7 +38,8 @@ $di->set(AppServices::URL, function () use ($config) {
 $di->set(AppServices::DB, function () use ($config) {
 	$connection = new DBAdapter(array(
 		"host" => $config->database->host,
-		"username" => $config->database->username,
+		"port" => 33062,
+                "username" => $config->database->username,
 		"password" => $config->database->password,
 		"dbname" => $config->database->dbname,
 		//"prefix" => $config->database->prefix,
@@ -55,6 +56,7 @@ $di->set(AppServices::REDIS, function() use ($config) {
 	$redisConnect = new Redis();
 	$redisConnect->connect($config->redis->host, $config->redis->port);
 	//$redisConnect->select($config->redis->database);
+        $redisConnect->auth('Qiushui456@Redis');
 	return $redisConnect;
 });
 
