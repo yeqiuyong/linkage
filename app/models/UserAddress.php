@@ -53,7 +53,7 @@ class UserAddress extends Model
     public function delAddress($userId, $addressId)
     {
         $address = self::findFirst([
-            'conditions' => 'user_id = :user_id: AND address_id = :address_id:',
+            'conditions' => 'user_id = :user_id: AND address_id = :address_id: AND status = :status:',
             'bind' => [
                 'user_id' => $userId,
                 'address_id' => $addressId,
@@ -82,10 +82,10 @@ class UserAddress extends Model
         }
     }
 
-    public function updateAddress($userId, $addressId, $title, $address)
+    public function updateAddress($userId, $addressId, $title, $modeAddress)
     {
         $address = self::findFirst([
-            'conditions' => 'user_id = :user_id: AND address_id = :address_id:',
+            'conditions' => 'user_id = :user_id: AND address_id = :address_id: AND status = :status:',
             'bind' => [
                 'user_id' => $userId,
                 'address_id' => $addressId,
@@ -101,8 +101,8 @@ class UserAddress extends Model
             $this->title = $title;
         }
 
-        if(!empty($address)){
-            $this->address = $address;
+        if(!empty($modeAddress)){
+            $this->address = $modeAddress;
         }
 
         $now = time();
@@ -126,7 +126,7 @@ class UserAddress extends Model
     {
         if($pagination){
             $condition = [
-                'conditions' => 'user_id = :user_id:',
+                'conditions' => 'user_id = :user_id: AND status = :status:',
                 'bind' => ['user_id' => $userId,
                     'status'=> StatusCodes::ADDRESS_ACTIVE],
                 'offset' => $offset,
@@ -134,7 +134,7 @@ class UserAddress extends Model
             ];
         }else{
             $condition = [
-                'conditions' => 'user_id = :user_id:',
+                'conditions' => 'user_id = :user_id: AND status = :status:',
                 'bind' => ['user_id' => $userId,
                     'status'=> StatusCodes::ADDRESS_ACTIVE]
             ];
