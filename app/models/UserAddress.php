@@ -88,6 +88,7 @@ class UserAddress extends Model
             'bind' => [
                 'user_id' => $userId,
                 'address_id' => $addressId,
+                'status'=> StatusCodes::ADDRESS_ACTIVE
             ]
         ]);
 
