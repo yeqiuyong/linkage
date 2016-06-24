@@ -98,11 +98,11 @@ class UserAddress extends Model
         }
 
         if(!empty($title)){
-            $this->title = $title;
+            $address->title = $title;
         }
 
         if(!empty($modeAddress)){
-            $this->address = $modeAddress;
+            $address->address = $modeAddress;
         }
 
         $now = time();
