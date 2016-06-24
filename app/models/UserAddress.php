@@ -127,15 +127,17 @@ class UserAddress extends Model
         if($pagination){
             $condition = [
                 'conditions' => 'user_id = :user_id:',
-                'bind' => ['user_id' => $userId],
+                'bind' => ['user_id' => $userId,
+                    'status'=> StatusCodes::ADDRESS_ACTIVE],
                 'offset' => $offset,
                 'limit' => $size,
             ];
         }else{
             $condition = [
                 'conditions' => 'user_id = :user_id:',
-                'bind' => ['user_id' => $userId],
-                'status'=> StatusCodes::ADDRESS_ACTIVE
+                'bind' => ['user_id' => $userId,
+                    'status'=> StatusCodes::ADDRESS_ACTIVE],
+
             ];
         }
 
