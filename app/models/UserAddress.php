@@ -57,6 +57,7 @@ class UserAddress extends Model
             'bind' => [
                 'user_id' => $userId,
                 'address_id' => $addressId,
+                'status'=> StatusCodes::ADDRESS_ACTIVE
             ]
         ]);
 
@@ -133,7 +134,8 @@ class UserAddress extends Model
         }else{
             $condition = [
                 'conditions' => 'user_id = :user_id:',
-                'bind' => ['user_id' => $userId]
+                'bind' => ['user_id' => $userId],
+                'status'=> StatusCodes::ADDRESS_ACTIVE
             ];
         }
 
