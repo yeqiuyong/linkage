@@ -349,7 +349,39 @@ class ProfileController extends APIControllerBase
 
         try {
             $mAddress = new UserAddress();
-            $mAddress->delFavorite($this->cid, $addressId);
+            $mAddress->delAddress($this->cid, $addressId);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+
+    }
+
+
+    /**
+     * @title("addfavorite")
+     * @description("User favirate")
+     * @requestExample("POST /profile/favlist")
+     * @response("Data object or Error object")
+     */
+    public function modAddrAction(){
+        $addressId = $this->request->getPost('address_id', 'int');
+        $title = $this->request->getPost('title', 'string');
+        $address = $this->request->getPost('address', 'string');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($addressId)){
+            return $this->respondError(ErrorCodes::USER_ADDRESS_INPUT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_ADDRESS_INPUT_ERROR]);
+        }
+
+        try {
+            $mAddress = new UserAddress();
+            $mAddress->updateAddress($this->cid, $addressId, $title, $address);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());

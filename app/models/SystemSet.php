@@ -55,7 +55,7 @@ class SystemSet extends Model
         $this->receive_sms = $isReceiveSms;
         $this->receive_email = $isReceiveEmail;
 
-        $this->create_time = $now;
+        //$this->create_time = $now;
         $this->update_time = $now;
 
         if ($this->save() == false) {

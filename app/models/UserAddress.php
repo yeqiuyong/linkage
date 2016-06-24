@@ -81,6 +81,45 @@ class UserAddress extends Model
         }
     }
 
+    public function updateAddress($userId, $addressId, $title, $address)
+    {
+        $address = self::findFirst([
+            'conditions' => 'user_id = :user_id: AND address_id = :address_id:',
+            'bind' => [
+                'user_id' => $userId,
+                'address_id' => $addressId,
+            ]
+        ]);
+
+        if(!isset($address->address_id)){
+            throw new UserOperationException(ErrorCodes::USER_ADDRESS_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_ADDRESS_NOT_FOUND]);
+        }
+
+        if(!empty($title)){
+            $this->title = $title;
+        }
+
+        if(!empty($address)){
+            $this->address = $address;
+        }
+
+        $now = time();
+
+        $address->update_time = $now;
+        $address->status = StatusCodes::ADDRESS_DELETE;
+
+        if ($address->update() == false) {
+            $message = '';
+            foreach ($address->getMessages() as $msg) {
+                $message .= (String)$msg . ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function getList($userId, $pagination, $offset, $size)
     {
         if($pagination){

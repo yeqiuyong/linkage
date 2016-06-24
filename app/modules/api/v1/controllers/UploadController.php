@@ -38,7 +38,7 @@ class UploadController extends APIControllerBase
                 foreach ($this->request->getUploadedFiles() as $file) {
                     $FileNames .= self::PROTOCOL . $this->upyun->uploadImage($file).';';
                 }
-                
+
                 $FileNames = substr($FileNames, 0, strlen($FileNames) - 1);
 
             }catch (UploadException $e){
@@ -97,8 +97,8 @@ class UploadController extends APIControllerBase
                 $user = new ClientUser();
                 $companyId = $user->getCompanyidByUserid($this->cid);
 
-                $company = new Company();
-                $company->updateIconById($companyId, $fileName);
+                //$company = new Company();
+                //$company->updateIconById($companyId, $fileName);
 
             }catch (UploadException $e){
                 $this->respondError($e->getCode(), $e->getMessage());
