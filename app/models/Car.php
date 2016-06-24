@@ -97,7 +97,7 @@ class Car extends Model
 
         if($car->save() == false){
             $message = '';
-            foreach ($this->getMessages() as $msg) {
+            foreach ($car->getMessages() as $msg) {
                 $message .= (String)$msg . ",";
             }
             $logger = Di::getDefault()->get(Services::LOGGER);

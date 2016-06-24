@@ -270,6 +270,10 @@ class ClientUser extends Model
             $user->identity_id = $info['identity'];
         }
 
+        if(!empty($info['icon'])){
+            $user->icon = $info['icon'];
+        }
+
         if($user->update() == false){
             $message = '';
             foreach ($user->getMessages() as $msg) {

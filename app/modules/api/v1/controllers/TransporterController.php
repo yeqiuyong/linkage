@@ -270,6 +270,53 @@ class TransporterController extends APIControllerBase
     }
 
     /**
+     * @title("moddriver")
+     * @description("Add driver")
+     * @requestExample("POST /transporter/adddriver")
+     * @response("Data object or Error object")
+     */
+    public function modDriverAction(){
+//        $mobile = $this->request->getPost('driver_mobile', 'string');
+        $driverId = $this->request->getPost('driver_id', 'int');
+        $name = $this->request->getPost('driver_name', 'string');
+        $gender = $this->request->getPost('gender', 'string');
+        $license = $this->request->getPost('license', 'string');
+        $icon = $this->request->getPost('icon', 'string');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try{
+            // Start a transaction
+            $this->db->begin();
+
+            $transporterAdmin = new ClientUser();
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $user = new ClientUser();
+            $user->updateProfile($driverId, ['name'=>$name, 'gender'=> $gender, 'icon'=>$icon ]);
+
+            $driver = new Driver();
+            $driver->modify($driverId, $license);
+
+            // Commit the transaction
+            $this->db->commit();
+
+        }catch (Exception $e){
+            $this->db->rollback();
+
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray(['driver_id' => $driverId]);
+    }
+
+    /**
      * @title("cars")
      * @description("Get Cars")
      * @requestExample("POST /transporter/cars")
@@ -433,8 +480,6 @@ class TransporterController extends APIControllerBase
         }
 
         try {
-
-
             $car = new Car();
             $car->modify($carId, $applyDate, $examineDate, $maintainDate, $trafficInsureDate, $businessInsureDate, $insureCompany, $memo);
 

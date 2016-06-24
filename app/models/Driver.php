@@ -44,6 +44,30 @@ class Driver extends Model
         }
     }
 
+    public function modify($driver_id, $license){
+        $driver = self::findFirst([
+            'conditions' => 'driver_id = :driver_id:',
+            'bind' => ['driver_id' => $driver_id]
+        ]);
+
+        if(!isset($driver->driver_id)){
+            throw new UserOperationException(ErrorCodes::USER_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_NOTFOUND]);
+        }
+
+        $driver->license = $license;
+
+        if($driver->save() == false){
+            $message = '';
+            foreach ($driver->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function getDriversByCompanyId($companyId){
         $phql="select a.user_id, a.name, a.mobile, a.icon, b.license from Multiple\Models\ClientUser a join Multiple\Models\Driver b where a.user_id = b.driver_id and a.company_id = $companyId and a.status =".StatusCodes::CLIENT_USER_ACTIVE;
         $drivers = $this->modelsManager->executeQuery($phql);
