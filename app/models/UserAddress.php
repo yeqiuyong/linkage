@@ -108,7 +108,6 @@ class UserAddress extends Model
         $now = time();
 
         $address->update_time = $now;
-        $address->status = StatusCodes::ADDRESS_DELETE;
 
         if ($address->update() == false) {
             $message = '';
