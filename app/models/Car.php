@@ -54,6 +54,59 @@ class Car extends Model
         }
     }
 
+    public function modify($carId,  $applyDate, $examineDate, $maintainDate, $trafficInsureDate, $businessInsureDate, $insureCompany, $memo){
+        $car = self::findFirst([
+            'conditions' => 'car_id = :car_id: and status = :status:',
+            'bind' => ['car_id' => $carId,
+                'status' => StatusCodes::CAR_ACTIVE]
+        ]);
+
+        if(!isset($car->car_id)){
+            throw new UserOperationException(ErrorCodes::USER_CAR_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_CAR_NOT_FOUND]);
+        }
+
+        if(!empty($applyDate)){
+            $car->apply_date = $applyDate;
+        }
+
+        if(!empty($examineDate)){
+            $car->examine_date = $examineDate;
+        }
+
+        if(!empty($maintainDate)){
+            $car->maintain_date = $maintainDate;
+        }
+
+        if(!empty($trafficInsureDate)){
+            $car->traffic_insure_date = $trafficInsureDate;
+        }
+
+        if(!empty($businessInsureDate)){
+            $car->business_insure_date = $businessInsureDate;
+        }
+
+        if(!empty($insureCompany)){
+            $car->insure_company = $insureCompany;
+        }
+
+        if(!empty($memo)){
+            $car->memo = $memo;
+        }
+
+        $car->update_time = time();
+
+        if($car->save() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
+    }
+
     public function getCarsByCompanyId($companyId){
         $cars = self::find([
             'conditions' => 'company_id = :company_id: and status = :status:',

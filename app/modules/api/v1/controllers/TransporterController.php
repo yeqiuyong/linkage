@@ -408,4 +408,41 @@ class TransporterController extends APIControllerBase
         return $this->respondArray($carDetail);
     }
 
+    /**
+     * @title("modcar")
+     * @description("Add car")
+     * @requestExample("POST /transporter/addcar")
+     * @response("Data object or Error object")
+     */
+    public function modCarAction(){
+        $carId = $this->request->getPost('car_id', 'int');
+        $applyDate = $this->request->getPost('apply_date', 'int');
+        $examineDate = $this->request->getPost('examine_date', 'int');
+        $maintainDate = $this->request->getPost('maintain_date', 'int');
+        $trafficInsureDate = $this->request->getPost('traffic_insure_date', 'int');
+        $businessInsureDate = $this->request->getPost('business_insure_date', 'int');
+        $insureCompany = $this->request->getPost('insure_company', 'string');
+        $memo = $this->request->getPost('memo', 'string');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(!isset($carId)){
+            return $this->respondError(ErrorCodes::USER_CAR_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_CAR_ID_NULL]);
+        }
+
+        try {
+
+
+            $car = new Car();
+            $car->modify($carId, $applyDate, $examineDate, $maintainDate, $trafficInsureDate, $businessInsureDate, $insureCompany, $memo);
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+    }
+
 }
