@@ -77,7 +77,7 @@ class Favorite extends Model
     }
 
     public function getList($userid, $pagination, $offset, $size){
-        $condition = "";
+        $condition = " where user_id = ".$userid;
         if($pagination != 0){
             $condition = "limit ".$offset.",".$size;
         }
