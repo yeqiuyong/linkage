@@ -889,7 +889,7 @@ class OrderController extends APIControllerBase
 
             $orderComment = new OrderComment();
             if($orderComment->isCommentExist($orderId)){
-                $this->respondError(ErrorCodes::ORDER_COMMENT_DUPLICATED, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_COMMENT_DUPLICATED]);
+                return $this->respondError(ErrorCodes::ORDER_COMMENT_DUPLICATED, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_COMMENT_DUPLICATED]);
             }
 
             $orderComment->add($orderId, $score, $comment);
