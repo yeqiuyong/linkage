@@ -705,7 +705,8 @@ class OrderController extends APIControllerBase
             if($isManufacture){
                 $orders = $order->getOrders4Manufacture($this->cid, $type, $status, $pagination, $offset, $size);
             }else{
-                $orders = $order->getOrders4Transporter($this->cid, $type, $status, $pagination, $offset, $size);
+                $info = $user->getUserInfomation($this->cid);
+                $orders = $order->getOrders4Transporter($this->cid, $info['company_id'], $type, $status, $pagination, $offset, $size);
             }
 
         }catch (Exception $e){

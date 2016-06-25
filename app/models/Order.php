@@ -186,11 +186,11 @@ class Order extends Model
         return $orders;
     }
 
-    public function getOrders4Transporter($userid, $type = -1, $status, $pagination = 0,  $offset = 0, $size = 10){
+    public function getOrders4Transporter($userid, $companyId, $type = -1, $status, $pagination = 0,  $offset = 0, $size = 10){
         if($type == -1){
-            $condition = " and a.transporter_contact_id = $userid";
+            $condition = " and a.transporter_id = $companyId";
         }else{
-            $condition = " and a.transporter_contact_id = $userid and type = $type";
+            $condition = " and a.transporter_id = $companyId and type = $type";
         }
 
         if($status == 1){
