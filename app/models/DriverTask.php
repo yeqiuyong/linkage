@@ -16,6 +16,7 @@ use Multiple\Core\Constants\Services;
 use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 
 
 class DriverTask extends Model
@@ -88,6 +89,31 @@ class DriverTask extends Model
         }
 
         return $results;
+    }
+
+    public function updateTaskStatus($taskId, $status){
+        $task = self::findFirst([
+            'conditions' => 'task_id = :task_id:',
+            'bind' => ['task_id' => $taskId]
+        ]);
+
+        if(!isset($task->task_id)){
+            throw new UserOperationException(ErrorCodes::ORDER_TASK_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_TASK_NOT_FOUND]);
+        }
+
+        $task->status = $status;
+        $task->update_time = time();
+
+        if($task->update() == false){
+            $message = '';
+            foreach ($task->getMessages() as $msg) {
+                $message .= (String)$msg . ',';
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
     }
 
 }

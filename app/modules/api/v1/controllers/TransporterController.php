@@ -25,6 +25,7 @@ use Multiple\Models\DriverTask;
 use Multiple\Models\Order;
 use Multiple\Models\Car;
 use Multiple\Models\SystemSet;
+use Multiple\Models\DriverTaskHistory;
 
 class TransporterController extends APIControllerBase
 {
@@ -484,6 +485,55 @@ class TransporterController extends APIControllerBase
             $car->modify($carId, $applyDate, $examineDate, $maintainDate, $trafficInsureDate, $businessInsureDate, $insureCompany, $memo);
 
         }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondOK();
+    }
+
+    /**
+     * @title("dispatch")
+     * @description("Dispatch task for drivers")
+     * @requestExample("POST /transporter/dispatch")
+     * @response("Data object or Error object")
+     */
+    public function updateTaskStatusAction(){
+        $taskId = $this->request->getPost('task_id', 'int');
+        $status = $this->request->getPost('status', 'int');
+        $memo = $this->request->getPost('memo', 'string');
+        $image = $this->request->getPost('image', 'string');
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        if(empty($taskId) || empty($status)){
+            return $this->respondError(ErrorCodes::GEN_INPUT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::GEN_INPUT_ERROR]);
+        }
+
+        try{
+            // Start a transaction
+            $this->db->begin();
+
+            $transporterAdmin = new ClientUser();
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
+            $task = new DriverTask();
+            $task->updateTaskStatus($taskId, $status);
+
+            $taskHistory = new DriverTaskHistory();
+            $taskHistory->add($taskId, $status, $memo, $image);
+
+            // Commit the transaction
+            $this->db->commit();
+
+        }catch (Exception $e){
+            $this->db->rollback();
+
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 

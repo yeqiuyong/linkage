@@ -71,7 +71,6 @@ class ErrorCodes
     const USER_ADDRESS_NOT_FOUND = 4026;
     const USER_ADVERTISE_NOT_FOUND = 4026;
 
-
     //Company mangement
     const COMPANY_ID_NULL = 5001;
     const COMPANY_DEUPLICATE = 5002;
@@ -84,6 +83,8 @@ class ErrorCodes
     const ORDER_DISPATCH_INFO_NULL = 6004;
     const ORDER_ACCEPT_ERROR = 6005;
     const ORDER_COMMENT_DUPLICATED = 6006;
+    const ORDER_TASK_NOT_FOUND = 6007;
+
 
     public static $MESSAGE = [
         // General
@@ -159,6 +160,7 @@ class ErrorCodes
         self:: ORDER_DISPATCH_INFO_NULL => "订单分配信息为空",
         self:: ORDER_ACCEPT_ERROR => "接单失败",
         self:: ORDER_COMMENT_DUPLICATED => "评论重复",
+        self:: ORDER_TASK_NOT_FOUND => "任务不存在",
 
     ];
 
