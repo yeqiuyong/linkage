@@ -20,6 +20,7 @@ use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Models\Company;
 use Multiple\Models\ClientUser;
 use Multiple\Models\ClientUserRole;
+use Multiple\Models\SystemSet;
 
 
 /**
@@ -116,6 +117,9 @@ class RegisterController extends FrontendControllerBase
 
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);
+
+            $systemSet = new SystemSet();
+            $systemSet->init($userID);
 
             // Commit the transaction
             $this->db->commit();
