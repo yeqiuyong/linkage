@@ -89,12 +89,15 @@ class TransporterController extends APIControllerBase
             // Commit the transaction
             $this->db->commit();
 
+            $driverTask = new DriverTask();
+            $task = $driverTask->getTaskByOrderId($orderId);
+
         }catch (Exception $e){
             $this->db->rollback();
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray(['task' => $task]);
     }
 
     /**
