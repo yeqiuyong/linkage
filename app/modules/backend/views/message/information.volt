@@ -13,6 +13,10 @@
                     <input class="form-control" type="text" name="type-info-modal" id="type-info-modal" readonly="readonly"/>
                 </div>
                 <div class="form-group">
+                    <label>用户类型</label>
+                    <input class="form-control" type="text" name="client-type-info-modal" id="client-type-info-modal" readonly="readonly"/>
+                </div>
+                <div class="form-group">
                     <label>发布时间</label>
                     <input class="form-control" type="text" name="pub-time-info-modal" id="pub-time-info-modal" readonly="readonly"/>
                 </div>
@@ -33,7 +37,7 @@
                     <input class="form-control" type="text" name="memo-info-modal" id="memo-info-modal" readonly="readonly"/>
                 </div>
                 <div class="form-group">
-                    <img name="image-info-modal" id="image-info-modal" src="" alt="图片"/>
+                    <img style="width:100%;height:auto;" name="image-info-modal" id="image-info-modal" src="" alt="图片"/>
                 </div>
 
             </div>
