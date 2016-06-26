@@ -53,7 +53,7 @@ class ContactController extends APIControllerBase
             $name = empty($userInfo['name']) ? $userInfo['username'] : $userInfo['name'];
 
             $contact = new Contact();
-            $contact->add($name, $mobile, $email, $contact);
+            $contact->add($name, $mobile, $email, $content);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
