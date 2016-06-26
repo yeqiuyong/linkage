@@ -71,6 +71,7 @@ class MessageController extends BackendControllerBase
 
     public function addAction(){
         $type = $this->request->getPost('msg_type', 'int');
+        $client_type = $this->request->getPost('client_type', 'int');
         $title = $this->request->getPost('title', 'string');
         $link = $this->request->getPost('link', 'string');
         $description = $this->request->getPost('description', 'string');
@@ -86,7 +87,7 @@ class MessageController extends BackendControllerBase
         $image = $this->upload2Upyun();
         $adminInfo = $admin->getUserByName('admin');
 
-        $message->addMsg($type, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
+        $message->addMsg($type, $client_type, $title, $link, $description, $memo, $image, $adminInfo->admin_id);
 
         $url = $this->url->get('admin/message/index');
         return $this->response->redirect($url);
