@@ -194,7 +194,7 @@ class Order extends Model
         }
 
         if($status == 1){
-            $condition .= " and ((a.status in (1, 2) or a.status in (0))";
+            $condition .= " and (a.status in (1, 2) or a.status in (0))";
         }else if($status == 2){
             $condition .= " and a.status in (3, 4)";
         }else{
