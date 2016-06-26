@@ -144,6 +144,18 @@ class Elements extends Component
                 ],
             ]
         ],
+        '投诉管理' => [
+            'link' => 'admin/index/index',
+            'class' => 'glyphicon glyphicon-plus',
+            'profile' => 2,
+            'has_child' => true,
+            'child_menu' =>[
+                '投诉建议' => [
+                    'link' => 'admin/contact/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
+            ]
+        ],
 
     ];
 
