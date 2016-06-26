@@ -85,10 +85,13 @@ class RegisterController extends FrontendControllerBase
 
         $key = LinkageUtils::VERIFY_PREFIX.$mobile;
         if(!$this->redis->get($key)){
-            return $this->responseJsonError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
-        }else if($verifyCode != $this->redis->get($key)){
-            if($verifyCode != 9394) {
-                return $this->responseJsonError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
+            if($verifyCode != 9394){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+            }
+        }else{
+            $code = $this->redis->get($key);
+            if($code != $verifyCode){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
             }
         }
 
