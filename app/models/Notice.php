@@ -134,8 +134,8 @@ class Notice extends Model
     public function getMsg($roleId, $pagination, $offset, $size){
         if($pagination){
             $notices = self::find([
-                'conditions' => 'client_type = :client_type: AND type = :type: AND status = 0',
-                'bind' => ['client_type' => $roleId, 'type' => LinkageUtils::MESSAGE_TYPE_NOTICE],
+                'conditions' => '(client_type = :client_type: OR client_type= 0) AND status = 0',
+                'bind' => ['client_type' => $roleId],
                 'order' => 'create_time DESC',
                 'offset' => $offset,
                 'limit' => $size,
@@ -143,8 +143,8 @@ class Notice extends Model
             ]);
         }else{
             $notices = self::find([
-                'conditions' => 'client_type = :client_type: AND type = :type: AND status = 0',
-                'bind' => ['client_type' => $roleId, 'type' => LinkageUtils::MESSAGE_TYPE_NOTICE],
+                'conditions' => '(client_type = :client_type: OR client_type = 0) AND status = 0',
+                'bind' => ['client_type' => $roleId],
                 'order' => 'create_time DESC',
             ]);
         }
@@ -203,8 +203,16 @@ class Notice extends Model
                 default: $type = "通知";break;
             }
 
+            switch($notice->client_type){
+                case 1 : $client_type = "厂商";break;
+                case 2 : $client_type = "承运商";break;
+                case 3 : $client_type = "司机";break;
+                default: $client_type = "所有人";break;
+            }
+
             return [
                 'type' => $type,
+                'client_type' => $client_type,
                 'id' => $notice->id,
                 'icon' => $notice->image,
                 'title' => $notice->title,
@@ -239,17 +247,17 @@ class Notice extends Model
         }
     }
 
-    public function addMsg($type, $title, $link, $description, $memo, $image, $creator){
+    public function addMsg($type, $client_type, $title, $link, $description, $memo, $image, $creator){
         $now = time();
 
         $this->type = $type;
+        $this->client_type = $client_type;
         $this->title = $title;
         $this->link = $link;
         $this->description = $description;
         $this->memo = $memo;
         $this->image = $image;
         $this->status = StatusCodes::NOTICE_ACTIVE;
-        $this->client_type = 0;
         $this->create_by = $creator;
 
         $this->create_time = $now;
