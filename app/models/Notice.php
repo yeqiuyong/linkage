@@ -139,6 +139,7 @@ class Notice extends Model
                 'order' => 'create_time DESC',
                 'offset' => $offset,
                 'limit' => $size,
+
             ]);
         }else{
             $notices = self::find([
@@ -147,6 +148,7 @@ class Notice extends Model
                 'order' => 'create_time DESC',
             ]);
         }
+
         $results = [];
         foreach($notices as $notice){
             $result['type'] = $notice->type;
@@ -154,8 +156,10 @@ class Notice extends Model
             $result['title'] = $notice->title;
             $result['description'] = $notice->description;
             $result['create_time'] = $notice->create_time;
+
             array_push($results, $result);
         }
+
         return $results;
     }
 
@@ -191,18 +195,21 @@ class Notice extends Model
             'conditions' => 'id = :notice_id:',
             'bind' => ['notice_id' => $noticeId]
         ]);
+
         if(isset($notice->id)){
             switch($notice->type){
                 case LinkageUtils::MESSAGE_TYPE_EMPLOYMENT : $type = "招聘信息";break;
                 case LinkageUtils::MESSAGE_TYPE_NOTICE : $type = "通知";break;
                 default: $type = "通知";break;
             }
+
             switch($notice->client_type){
                 case 1 : $client_type = "厂商";break;
                 case 2 : $client_type = "承运商";break;
                 case 3 : $client_type = "司机";break;
                 default: $client_type = "所有人";break;
             }
+
             return [
                 'type' => $type,
                 'client_type' => $client_type,
