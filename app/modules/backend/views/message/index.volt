@@ -54,6 +54,15 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label>用户类型</label>
+                                <select name="client_type" id="client_type">
+                                    <option value ="0">所有人</option>
+                                    <option value ="1">厂商</option>
+                                    <option value ="2">承运商</option>
+                                    <option value ="3">司机</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label>消息标题</label>
                                 {{ text_field('title', 'class': "form-control", 'required' :"required") }}
                             </div>
@@ -222,6 +231,7 @@
                     publish_time.setTime((parseInt(message.create_time) ) * 1000);
 
                     $("#type-info-modal").attr("value", message.type);//填充内容
+                    $("#client-type-info-modal").attr("value", message.client_type);//填充内容
                     $("#pub-time-info-modal").attr("value", publish_time.toDateString());//填充内容
                     $("#title-info-modal").attr("value", message.title);//填充内容
                     $("#link-info-modal").attr("value", message.link);//填充内容
