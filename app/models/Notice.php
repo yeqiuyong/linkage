@@ -134,8 +134,8 @@ class Notice extends Model
     public function getMsg($roleId, $pagination, $offset, $size){
         if($pagination){
             $notices = self::find([
-                'conditions' => '(client_type = :client_type: OR client_type= 0) AND status = 0',
-                'bind' => ['client_type' => $roleId],
+                'conditions' => '(client_type = :client_type: OR client_type= 0) AND type != :type: AND status = 0',
+                'bind' => ['client_type' => $roleId,'type' => LinkageUtils::MESSAGE_TYPE_ADV],
                 'order' => 'create_time DESC',
                 'offset' => $offset,
                 'limit' => $size,
@@ -143,14 +143,15 @@ class Notice extends Model
             ]);
         }else{
             $notices = self::find([
-                'conditions' => '(client_type = :client_type: OR client_type = 0) AND status = 0',
-                'bind' => ['client_type' => $roleId],
+                'conditions' => '(client_type = :client_type: OR client_type = 0) AND type != :type: AND status = 0',
+                'bind' => ['client_type' => $roleId,'type' => LinkageUtils::MESSAGE_TYPE_ADV],
                 'order' => 'create_time DESC',
             ]);
         }
 
         $results = [];
         foreach($notices as $notice){
+            $result['id'] = $notice->id;
             $result['type'] = $notice->type;
             $result['icon'] = $notice->image;
             $result['title'] = $notice->title;
