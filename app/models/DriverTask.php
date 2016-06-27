@@ -54,11 +54,12 @@ class DriverTask extends Model
     }
 
     public function getTaskByOrderId($orderId){
-        $phql="select a.cargo_no, a.cargo_type, a.driver_id, a.status, b.name, c.license from Multiple\Models\DriverTask a join Multiple\Models\ClientUser b join Multiple\Models\Driver c on a.driver_id = b.user_id and a.driver_id = c.driver_id where a.order_id = '".$orderId."'";
+        $phql="select a.task_id, a.cargo_no, a.cargo_type, a.driver_id, a.status, b.name, c.license from Multiple\Models\DriverTask a join Multiple\Models\ClientUser b join Multiple\Models\Driver c on a.driver_id = b.user_id and a.driver_id = c.driver_id where a.order_id = '".$orderId."'";
         $tasks = $this->modelsManager->executeQuery($phql);
 
         $results = [];
         foreach ($tasks as $task) {
+            $result['task_id'] = $task->task_id;
             $result['cargo_no'] = $task->cargo_no;
             $result['cargo_type'] = $task->cargo_type;
             $result['driver_id'] = $task->driver_id;
@@ -67,6 +68,26 @@ class DriverTask extends Model
             $result['status'] = $task->status;
 
             array_push($results, $result);
+        }
+
+        return $results;
+    }
+
+    public function getTaskByTaskId($taskId){
+        $phql="select a.task_id, a.cargo_no, a.cargo_type, a.driver_id, a.status, b.name, c.license from Multiple\Models\DriverTask a join Multiple\Models\ClientUser b join Multiple\Models\Driver c on a.driver_id = b.user_id and a.driver_id = c.driver_id where a.task_id = '".$taskId."'";
+        $tasks = $this->modelsManager->executeQuery($phql);
+
+        $results = [];
+        foreach ($tasks as $task) {
+            $result['task_id'] = $task->task_id;
+            $result['cargo_no'] = $task->cargo_no;
+            $result['cargo_type'] = $task->cargo_type;
+            $result['driver_id'] = $task->driver_id;
+            $result['driver_name'] = $task->name;
+            $result['license'] = $task->license;
+            $result['status'] = $task->status;
+
+            return $result;
         }
 
         return $results;

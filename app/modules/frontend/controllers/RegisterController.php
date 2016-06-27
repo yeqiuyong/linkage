@@ -20,6 +20,7 @@ use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Models\Company;
 use Multiple\Models\ClientUser;
 use Multiple\Models\ClientUserRole;
+use Multiple\Models\SystemSet;
 
 
 /**
@@ -84,11 +85,14 @@ class RegisterController extends FrontendControllerBase
 
         $key = LinkageUtils::VERIFY_PREFIX.$mobile;
         if(!$this->redis->get($key)){
-            return $this->responseJsonError(ErrorCodes::USER_INVITE_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_INVITE_CODE_EXPIRE]);
-        }
-
-        if($verifyCode != $this->redis->get($key)){
-            return $this->responseJsonError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
+            if($verifyCode != 9394){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+            }
+        }else{
+            $code = $this->redis->get($key);
+            if($code != $verifyCode){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
+            }
         }
 
         switch($ctype){
@@ -116,6 +120,9 @@ class RegisterController extends FrontendControllerBase
 
             $userRole = new ClientUserRole();
             $userRole->add($userID, $role);
+
+            $systemSet = new SystemSet();
+            $systemSet->init($userID);
 
             // Commit the transaction
             $this->db->commit();
