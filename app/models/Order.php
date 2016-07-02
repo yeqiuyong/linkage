@@ -164,7 +164,7 @@ class Order extends Model
             $limit = "";
         }
 
-        $phql="select a.order_id, a.type, a.manufacture_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id ".$condition.$limit;
+        $phql="select a.order_id, a.type, a.manufacture_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id ".$condition." order by a.create_time desc ".$limit;
         $lists = $this->modelsManager->executeQuery($phql);
 
         $orders = [];
@@ -207,7 +207,7 @@ class Order extends Model
             $limit = "";
         }
 
-        $phql="select a.order_id, a.type, a.transporter_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id ".$condition.$limit;
+        $phql="select a.order_id, a.type, a.transporter_id, a.create_time, a.update_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id ".$condition." order by a.create_time desc ".$limit;
         $lists = $this->modelsManager->executeQuery($phql);
 
         $orders = [];
