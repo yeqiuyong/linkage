@@ -229,6 +229,126 @@ class Order extends Model
         return $orders;
     }
 
+    public function getSearchOrders4Manufacture($companyId,$searchType, $value, $pagination = 0,  $offset = 0, $size = 10){
+
+        if(!$pagination){
+            $limit = " limit $offset, $size";
+        }else{
+            $limit = "";
+        }
+
+        if($searchType == 2){
+            $condition = " license like '".$value."'";
+            $sql="select driver_id,license from Multiple\Models\Driver where ".$condition;
+            $plist = $this->modelsManager->executeQuery($sql);
+            $driver_id=$plist[0]->driver_id;
+            $sqlcondition = " a.manufacture_id = $companyId and c.driver_id = $driver_id";
+
+            $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.manufacture_id as company_id, b.name as company_name from Multiple\Models\Order a inner join Multiple\Models\Company b on a.manufacture_id = b.company_id inner join Multiple\Models\DriverTask c on a.order_id = c.order_id where ". $sqlcondition." order by a.create_time desc ".$limit;
+
+
+        }else{
+            $condition = "a.manufacture_id = $companyId";
+
+            if($searchType == 0){
+                $condition .= " and a.order_id like $value";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.manufacture_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }elseif($searchType == 1){
+                $condition .= " and c.cargo_no like '".$value."'";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.manufacture_id as company_id, b.name as company_name from Multiple\Models\Order a inner join Multiple\Models\Company b on a.manufacture_id = b.company_id inner join Multiple\Models\OrderCargo c on a.order_id = c.order_id where ". $condition." order by a.create_time desc ".$limit;
+            }elseif($searchType == 3){
+                $timeArrs = explode(';', $value);
+                $condition .= " and a.create_time >= $timeArrs[0] and a.create_time <= $timeArrs[1]";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.manufacture_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }elseif($searchType == 4){
+                $condition .= " and b.name like '".$value."'";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.manufacture_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }else{
+                $condition .= " and b.name like '".$value."'";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.manufacture_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }
+
+        }
+        $lists = $this->modelsManager->executeQuery($phql);
+
+        $orders = [];
+        foreach($lists as $list){
+            $order = [
+                'order_id' => $list->order_id,
+                'type' => $list->type,
+                'status' => $list->status,
+                'company_id' => $list->company_id,
+                'company_name' => $list->company_name,
+                'create_time' => $list->create_time,
+                'update_time' => $list->update_time,
+
+            ];
+
+            array_push($orders, $order);
+        }
+        return $orders;
+    }
+
+    public function getSearchOrders4Transporter($companyId,$searchType, $value, $pagination = 0,  $offset = 0, $size = 10){
+
+        if(!$pagination){
+            $limit = " limit $offset, $size";
+        }else{
+            $limit = "";
+        }
+
+        if($searchType == 2){
+            $condition = " license like '".$value."'";
+            $sql="select driver_id,license from Multiple\Models\Driver where ".$condition;
+            $plist = $this->modelsManager->executeQuery($sql);
+            $driver_id=$plist[0]->driver_id;
+            $sqlcondition = " a.transporter_id = $companyId and c.driver_id = $driver_id";
+
+            $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.transporter_id as company_id, b.name as company_name from Multiple\Models\Order a inner join Multiple\Models\Company b on a.transporter_id = b.company_id inner join Multiple\Models\DriverTask c on a.order_id = c.order_id where ". $sqlcondition." order by a.create_time desc ".$limit;
+
+
+        }else{
+            $condition = "a.transporter_id = $companyId";
+
+            if($searchType == 0){
+                $condition .= " and a.order_id like $value";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.transporter_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }elseif($searchType == 1){
+                $condition .= " and c.cargo_no like '".$value."'";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.transporter_id as company_id, b.name as company_name from Multiple\Models\Order a inner join Multiple\Models\Company b on a.transporter_id = b.company_id inner join Multiple\Models\OrderCargo c on a.order_id = c.order_id where ". $condition." order by a.create_time desc ".$limit;
+            }elseif($searchType == 3){
+                $timeArrs = explode(';', $value);
+                $condition .= " and a.create_time >= $timeArrs[0] and a.create_time <= $timeArrs[1]";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.transporter_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }elseif($searchType == 4){
+                $condition .= " and b.name like '".$value."'";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.transporter_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }else{
+                $condition .= " and b.name like '".$value."'";
+                $phql="select a.order_id, a.type, a.create_time, a.update_time, a.status, a.transporter_id as company_id, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id and ".$condition." order by a.create_time desc ".$limit;
+            }
+
+        }
+        $lists = $this->modelsManager->executeQuery($phql);
+
+        $orders = [];
+        foreach($lists as $list){
+            $order = [
+                'order_id' => $list->order_id,
+                'type' => $list->type,
+                'status' => $list->status,
+                'company_id' => $list->company_id,
+                'company_name' => $list->company_name,
+                'create_time' => $list->create_time,
+                'update_time' => $list->update_time,
+
+            ];
+
+            array_push($orders, $order);
+        }
+        return $orders;
+    }
+
     public function getCountsGroupByType(){
         $ordersCounts = self::count([
             'column' => 'order_id',
