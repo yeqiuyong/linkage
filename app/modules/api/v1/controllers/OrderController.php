@@ -28,7 +28,6 @@ use Multiple\Models\Company;
 use Multiple\Models\DriverTask;
 use Multiple\Models\OrderComment;
 
-
 /**
  * @resource("User")
  */
@@ -84,6 +83,10 @@ class OrderController extends APIControllerBase
 
             $user = new ClientUser();
             $mUserInfo = $user->getUserInfomation($this->cid);
+
+            if($mUserInfo['role'] != LinkageUtils::ROLE_ADMIN_MANUFACTURE && $mUserInfo['role'] != LinkageUtils::ROLE_MANUFACTURE){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -162,6 +165,10 @@ class OrderController extends APIControllerBase
             $user = new ClientUser();
             $mUserInfo = $user->getUserInfomation($this->cid);
 
+            if($mUserInfo['role'] != LinkageUtils::ROLE_ADMIN_MANUFACTURE && $mUserInfo['role'] != LinkageUtils::ROLE_MANUFACTURE){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
 
@@ -233,6 +240,10 @@ class OrderController extends APIControllerBase
 
             $user = new ClientUser();
             $mUserInfo = $user->getUserInfomation($this->cid);
+
+            if($mUserInfo['role'] != LinkageUtils::ROLE_ADMIN_MANUFACTURE && $mUserInfo['role'] != LinkageUtils::ROLE_MANUFACTURE){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -326,6 +337,10 @@ class OrderController extends APIControllerBase
             $user = new ClientUser();
             $mUserInfo = $user->getUserInfomation($this->cid);
 
+            if($mUserInfo['role'] != LinkageUtils::ROLE_ADMIN_MANUFACTURE && $mUserInfo['role'] != LinkageUtils::ROLE_MANUFACTURE){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
 
@@ -416,6 +431,10 @@ class OrderController extends APIControllerBase
             $user = new ClientUser();
             $mUserInfo = $user->getUserInfomation($this->cid);
 
+            if($mUserInfo['role'] != LinkageUtils::ROLE_ADMIN_MANUFACTURE && $mUserInfo['role'] != LinkageUtils::ROLE_MANUFACTURE){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
 
@@ -500,6 +519,10 @@ class OrderController extends APIControllerBase
 
             $user = new ClientUser();
             $mUserInfo = $user->getUserInfomation($this->cid);
+
+            if($mUserInfo['role'] != LinkageUtils::ROLE_ADMIN_MANUFACTURE && $mUserInfo['role'] != LinkageUtils::ROLE_MANUFACTURE){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
 
             $company = new Company();
             $tCompanyInfo = $company->getCompanyInformation($tCompanyId);
@@ -611,6 +634,13 @@ class OrderController extends APIControllerBase
         }
 
         try {
+            $user = new ClientUser();
+            $userInfo = $user->getUserInfomation($this->cid);
+
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $order = new Order();
             $order->updateStatus($orderId, StatusCodes::ORDER_HANDLED);
 
@@ -639,6 +669,13 @@ class OrderController extends APIControllerBase
         }
 
         try {
+            $user = new ClientUser();
+            $mUserInfo = $user->getUserInfomation($this->cid);
+
+            if($mUserInfo['role'] != LinkageUtils::ROLE_ADMIN_MANUFACTURE && $mUserInfo['role'] != LinkageUtils::ROLE_MANUFACTURE){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $order = new Order();
             $order->updateStatus($orderId, StatusCodes::ORDER_CANCEL);
 
@@ -668,6 +705,13 @@ class OrderController extends APIControllerBase
         }
 
         try {
+            $user = new ClientUser();
+            $userInfo = $user->getUserInfomation($this->cid);
+
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $order = new Order();
             $order->updateStatus($orderId, StatusCodes::ORDER_REJECT);
 
@@ -707,6 +751,45 @@ class OrderController extends APIControllerBase
             }else{
                 $info = $user->getUserInfomation($this->cid);
                 $orders = $order->getOrders4Transporter($this->cid, $info['company_id'], $type, $status, $pagination, $offset, $size);
+            }
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray(['orders' => $orders]);
+
+    }
+
+    /**
+     * @title("search")
+     * @description("List orders by type")
+     * @requestExample("POST /order/search")
+     * @response("Data object or Error object")
+     */
+    public function searchAction(){
+        $searchType = $this->request->getPost('searchType', 'int');
+        $value = $this->request->getPost('value', 'string');
+        $pagination = $this->request->getPost('pagination', 'int')?$this->request->getPost('pagination', 'int'):0;
+        $offset = $this->request->getPost('offset', 'int')?$this->request->getPost('offset', 'int'):0;
+        $size = $this->request->getPost('size', 'int')?$this->request->getPost('size', 'int'):1000;
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try {
+            $user = new  ClientUser();
+            $role = $user->getRoleId($this->cid);
+            $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
+
+            $order = new Order();
+            $info = $user->getUserInfomation($this->cid);
+            if($isManufacture){
+                $orders = $order->getSearchOrders4Manufacture($info['company_id'], $searchType, $value, $pagination, $offset, $size);
+            }else{
+
+                $orders = $order->getSearchOrders4Transporter($info['company_id'], $searchType, $value, $pagination, $offset, $size);
             }
 
         }catch (Exception $e){
