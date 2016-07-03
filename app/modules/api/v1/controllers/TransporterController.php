@@ -64,6 +64,13 @@ class TransporterController extends APIControllerBase
         $dispatchInfo = json_decode($dispatchJson, true);
 
         try {
+            $user = new ClientUser();
+            $userInfo = $user->getUserInfomation($this->cid);
+
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $order = new Order();
             $orderInfo = $order->getOrderInfo($orderId);
 
@@ -115,7 +122,7 @@ class TransporterController extends APIControllerBase
             $user = new ClientUser();
             $userInfo = $user->getUserInfomation($this->cid);
 
-            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -174,7 +181,7 @@ class TransporterController extends APIControllerBase
             $transporterAdmin = new ClientUser();
             $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
 
-            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -224,7 +231,7 @@ class TransporterController extends APIControllerBase
             $transporterAdmin = new ClientUser();
             $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
 
-            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -259,7 +266,7 @@ class TransporterController extends APIControllerBase
             $transporterAdmin = new ClientUser();
             $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
 
-            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -298,7 +305,7 @@ class TransporterController extends APIControllerBase
             $transporterAdmin = new ClientUser();
             $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
 
-            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER  && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -335,7 +342,7 @@ class TransporterController extends APIControllerBase
             $user = new ClientUser();
             $userInfo = $user->getUserInfomation($this->cid);
 
-            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -375,7 +382,7 @@ class TransporterController extends APIControllerBase
             $user = new ClientUser();
             $userInfo = $user->getUserInfomation($this->cid);
 
-            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($userInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $userInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -410,7 +417,7 @@ class TransporterController extends APIControllerBase
             $transporterAdmin = new ClientUser();
             $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
 
-            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -445,7 +452,7 @@ class TransporterController extends APIControllerBase
             $transporterAdmin = new ClientUser();
             $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
 
-            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
@@ -484,6 +491,13 @@ class TransporterController extends APIControllerBase
         }
 
         try {
+            $transporterAdmin = new ClientUser();
+            $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
+
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
+                return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
+            }
+
             $car = new Car();
             $car->modify($carId, $applyDate, $examineDate, $maintainDate, $trafficInsureDate, $businessInsureDate, $insureCompany, $memo);
 
@@ -521,7 +535,7 @@ class TransporterController extends APIControllerBase
             $transporterAdmin = new ClientUser();
             $transporterInfo = $transporterAdmin->getUserInfomation($this->cid);
 
-            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER){
+            if($transporterInfo['role'] != LinkageUtils::ROLE_ADMIN_TRANSPORTER && $transporterInfo['role'] != LinkageUtils::ROLE_TRANSPORTER){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
