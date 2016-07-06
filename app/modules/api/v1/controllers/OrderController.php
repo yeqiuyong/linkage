@@ -745,12 +745,14 @@ class OrderController extends APIControllerBase
             $role = $user->getRoleId($this->cid);
             $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
 
+            $info = $user->getUserInfomation($this->cid);
+
             $order = new Order();
             if($isManufacture){
-                $orders = $order->getOrders4Manufacture($this->cid, $type, $status, $pagination, $offset, $size);
+                $orders = $order->getOrders4Manufacture($info['company_id'], $type, $status, $pagination, $offset, $size);
             }else{
-                $info = $user->getUserInfomation($this->cid);
-                $orders = $order->getOrders4Transporter($this->cid, $info['company_id'], $type, $status, $pagination, $offset, $size);
+
+                $orders = $order->getOrders4Transporter($info['company_id'], $type, $status, $pagination, $offset, $size);
             }
 
         }catch (Exception $e){
