@@ -121,10 +121,9 @@ class DriverTask extends Model
         if(!isset($task->task_id)){
             throw new UserOperationException(ErrorCodes::ORDER_TASK_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_TASK_NOT_FOUND]);
         }
-
         $task->status = $status;
+        $task->cargo_no = $task->cargo_no?$task->cargo_no:'0';
         $task->update_time = time();
-
         if($task->update() == false){
             $message = '';
             foreach ($task->getMessages() as $msg) {
