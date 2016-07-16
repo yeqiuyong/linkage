@@ -159,7 +159,7 @@ class ErrorCodes
         self:: ORDER_TRANSPORTER_NULL => "订单运营商为空",
         self:: ORDER_DISPATCH_INFO_NULL => "订单分配信息为空",
         self:: ORDER_ACCEPT_ERROR => "接单失败",
-        self:: ORDER_COMMENT_COMMENT_ALREADY => " 订单已经背评论",
+        self:: ORDER_COMMENT_COMMENT_ALREADY => " 订单已经被评论",
         self:: ORDER_TASK_NOT_FOUND => "任务不存在",
 
     ];
