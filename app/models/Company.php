@@ -259,12 +259,23 @@ class Company extends Model
         $this->modelsManager->executeQuery($phql);
     }
 
-    public function getCompaniesByType($type){
-        $companies = self::find([
-            'conditions' => "type = :type: AND status != :status:",
-            'bind' => [  "type" => $type,
-                "status" => StatusCodes::COMPANY_DELETED,]
-        ]);
+    public function getCompaniesByType($type,$start_time='',$end_time=''){
+        if($start_time == '' || $end_time==''){
+            $companies = self::find([
+                'conditions' => "type = :type: AND status != :status:",
+                'bind' => [  "type" => $type,
+                    "status" => StatusCodes::COMPANY_DELETED,]
+            ]);
+        }else{
+            $companies = self::find([
+                'conditions' => "type = :type: AND status != :status: AND create_time >= :start_time: AND create_time <= :end_time:",
+                'bind' => [  "type" => $type,
+                    "status" => StatusCodes::COMPANY_DELETED,
+                    "start_time" => $start_time,
+                    "end_time" => $end_time,
+                ]
+            ]);
+        }
 
         $results = [];
         foreach ($companies as $company) {
@@ -355,7 +366,7 @@ class Company extends Model
     }
 
     public function getTransporters($pagination, $offset = 0, $size = 10){
-        $condition = '';
+        $condition = ' and a.type=1 ';
         if($pagination){
             $condition = "limit $offset, $size";
         }
@@ -380,6 +391,28 @@ class Company extends Model
         }
 
         return $results;
+    }
+
+    public function getCompanyByid($id){
+        $condition = [
+            'conditions' => 'company_id = :company_id:',
+            'bind' => ['company_id' => $id]
+        ];
+
+        $companies = self::find($condition);
+        foreach ($companies as $company) {
+            $result = [];
+            $result['company_id'] = $company->company_id;
+            $result['company_name'] = $company->name? $company->name : '';
+            $result['contact_name'] = isset($company->contactor) ? $company->contactor : '';
+            $result['contact_address'] = isset($company->address) ? $company->address : '';
+            $result['contact_phone'] = isset($company->service_phone_1) ? $company->service_phone_1 : '';
+            $result['description'] = isset($company->description) ? $company->description : '';
+            $result['logo'] = isset($company->logo) ? $company->logo : '';
+        }
+
+        return $result;
+
     }
 
     public function isCompanyExist($companyID){
