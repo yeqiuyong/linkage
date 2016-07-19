@@ -618,4 +618,80 @@ class Order extends Model
         return (sizeof($orders) == 0) ? false : true;
     }
 
+    public function getManureOrder4admin($companyId,$start_time='',$end_time=''){
+        $condition = " and manufacture_id='".$companyId."' ";
+        if($start_time != '' || $end_time != ''){
+            $condition .= " and a.create_time>=$start_time and a.create_time<=$end_time ";
+        }
+        $phql="select a.order_id, a.type, a.create_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.transporter_id = b.company_id ".$condition." order by a.create_time desc ";
+        $orders = $this->modelsManager->executeQuery($phql);
+
+        $results = [];
+        foreach ($orders as $order) {
+            switch($order->type){
+                case '1': $type = '进口';break;
+                case '2': $type = '内陆柜';break;
+                case '3': $type = '自备柜';break;
+                default:$type = '出口';
+
+            }
+            switch($order->status){
+                case '1': $status = '处理中';break;
+                case '2': $status = '被拒绝';break;
+                case '3': $status = '已完成';break;
+                case '4': $status = '被取消';break;
+                default:$status = '未处理';
+
+            }
+            $result = [];
+            $result['order_id'] = $order->order_id;
+            $result['type'] = $type;
+            $result['company_name'] = $order->company_name;
+            $result['status'] = $status;
+            $result['create_time'] = $order->create_time;
+
+            array_push($results,$result);
+        }
+
+        return $results;
+    }
+
+    public function getTransporterOrder4admin($companyId,$start_time='',$end_time=''){
+        $condition = "and transporter_id='".$companyId."' ";
+        if($start_time != '' || $end_time != ''){
+            $condition .= " and a.create_time>=$start_time and a.create_time<=$end_time ";
+        }
+        $phql="select a.order_id, a.type, a.create_time, a.status, b.name as company_name from Multiple\Models\Order a join Multiple\Models\Company b where a.manufacture_id = b.company_id ".$condition."order by a.create_time desc ";
+        $orders = $this->modelsManager->executeQuery($phql);
+
+        $results = [];
+        foreach ($orders as $order) {
+            switch($order->type){
+                case '1': $type = '进口';break;
+                case '2': $type = '内陆柜';break;
+                case '3': $type = '自备柜';break;
+                default:$type = '出口';
+
+            }
+            switch($order->status){
+                case '1': $status = '处理中';break;
+                case '2': $status = '被拒绝';break;
+                case '3': $status = '已完成';break;
+                case '4': $status = '被取消';break;
+                default:$status = '未处理';
+
+            }
+            $result = [];
+            $result['order_id'] = $order->order_id;
+            $result['type'] = $type;
+            $result['company_name'] = $order->company_name;
+            $result['status'] = $status;
+            $result['create_time'] = $order->create_time;
+
+            array_push($results,$result);
+        }
+
+        return $results;
+    }
+
 }
