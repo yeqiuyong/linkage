@@ -122,6 +122,10 @@ class Elements extends Component
                     'link' => 'admin/order/self',
                     'class' => 'nav nav-pills nav-stacked',
                 ],
+                '报表导出' => [
+                    'link' => 'admin/export/index',
+                    'class' => 'nav nav-pills nav-stacked',
+                ],
             ]
         ],
         '设置' => [
