@@ -60,7 +60,7 @@ class RegisterController extends FrontendControllerBase
         $cn = $this->request->getPost('cn');
         $mobile = $this->request->getPost('mobile');
         $password = $this->request->getPost('password');
-        $ctype = $this->request->getPost('ctype');
+        //$ctype = $this->request->getPost('ctype');
         $verifyCode = $this->request->getPost('verify_code');
 
         if(!isset($cn)){
@@ -74,11 +74,11 @@ class RegisterController extends FrontendControllerBase
         if(!isset($password)){
             return $this->responseJsonError(ErrorCodes::USER_PASSWORD_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_PASSWORD_NULL]);
         }
-
+/*
         if(!isset($ctype)){
             return $this->responseJsonError(ErrorCodes::USER_ROLE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ROLE_NULL]);
         }
-
+*/
         if(!isset($verifyCode)){
             return $this->responseJsonError(ErrorCodes::USER_VERIFY_CODE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_NULL]);
         }
@@ -94,7 +94,7 @@ class RegisterController extends FrontendControllerBase
                 return $this->respondError(ErrorCodes::USER_VERIFY_CODE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_ERROR]);
             }
         }
-
+/*
         switch($ctype){
             case '0': $role = LinkageUtils::USER_MANUFACTURE;break;
             case '1': $role = LinkageUtils::USER_TRANSPORTER;break;
@@ -102,7 +102,7 @@ class RegisterController extends FrontendControllerBase
             default:
                 return $this->responseJsonError(ErrorCodes::USER_TYPE_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::USER_TYPE_ERROR]);
         }
-
+*/
         try{
             // Start a transaction
             $this->db->begin();
@@ -114,12 +114,19 @@ class RegisterController extends FrontendControllerBase
                 return $this->responseJsonError(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
             }
 
+            $role = $company->getCompanyInformation($companyID);
+            if($role['type'] == 0){
+                $role_type = LinkageUtils::USER_MANUFACTURE;
+            }else{
+                $role_type = LinkageUtils::USER_TRANSPORTER;
+            }
+
             $user = new ClientUser();
             $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
             $userID = $user->user_id;
 
             $userRole = new ClientUserRole();
-            $userRole->add($userID, $role);
+            $userRole->add($userID, $role_type);
 
             $systemSet = new SystemSet();
             $systemSet->init($userID);
@@ -153,7 +160,7 @@ class RegisterController extends FrontendControllerBase
 
             //如果客户端多次调用接口生成校验码，以最后一次校验码为准
             $this->redis->setex($key, $expire, $verify_code);
-
+            //return $this->responseJsonError('a', $msg);
             //send message
             $this->sms->send($mobile, $msg);
 
