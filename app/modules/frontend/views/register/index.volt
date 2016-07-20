@@ -9,7 +9,7 @@
 
     <fieldset>
         <input type="text" name="cn" id="cn" value="{{ cn }}" hidden="true">
-
+<!--
         <div class="control-group">
             <label class="control-label" for="selectError">注册类型</label>
 
@@ -21,6 +21,7 @@
                 </select>
             </div>
         </div>
+-->
 
 
         <div class="control-group">
@@ -143,13 +144,13 @@
         }
 
         var pwd = $.md5(password);
-        var userType = $("#usertype").val();
+        //var userType = $("#usertype").val();
 
         $.ajax({
             type: "post",
             dataType:"json",
             url: "<?php echo $this->url->get('register/register') ?>",
-            data: "cn="+cn+"&mobile="+mobile+"&password="+pwd+"&ctype="+userType+"&verify_code="+verifyCode,
+            data: "cn="+cn+"&mobile="+mobile+"&password="+pwd+"&verify_code="+verifyCode,
             success:function(data){
                 if(data.code == 0){
                     window.location.href=data.url;
