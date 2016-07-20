@@ -203,7 +203,7 @@ class SessionController extends APIControllerBase
         $password = $this->request->getPost('password', 'string');
         $pagination = $this->request->getPost('pagination', 'int');
         $offset = $this->request->getPost('offset', 'int');
-        $size = $this->request->getPost('size', 'size');
+        $size = $this->request->getPost('size', 'int');
 
         try {
             $authManager = $this->di->get(Services::AUTH_MANAGER);
