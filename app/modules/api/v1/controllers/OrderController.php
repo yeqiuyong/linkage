@@ -480,8 +480,8 @@ class OrderController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function mod4selfAction(){
-        $rejectOrderId = $this->request->getPost('reject_order_id', 'string');
-        $rejectOrderStatus = $this->request->getPost('reject_order_status', 'int');
+        $rejectOrderId = $this->request->getPost('rejected_order_id', 'string');
+        $rejectOrderStatus = $this->request->getPost('rejected_order_status', 'int');
         $tCompanyId = $this->request->getPost('company_id', 'int');
         $cargoStr = $this->request->getPost('cargo', 'string');
         $takeAddress = $this->request->getPost('take_address', 'string');
