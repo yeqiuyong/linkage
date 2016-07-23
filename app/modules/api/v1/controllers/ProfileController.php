@@ -231,9 +231,15 @@ class ProfileController extends APIControllerBase
             return $this->respondError(ErrorCodes::COMPANY_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_ID_NULL]);
         }
 
+
         try {
             $favorite = new Favorite();
-            $favorite->add($this->cid, $companyId);
+            $isfavorite = $favorite->isFavorite($this->cid,$companyId);
+            if($isfavorite){
+                $favorite->add($this->cid, $companyId);
+            }else{
+                return $this->respondError(ErrorCodes::USER_FAVORITE_EXIST, ErrorCodes::$MESSAGE[ErrorCodes::USER_FAVORITE_EXIST]);
+            }
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
