@@ -44,11 +44,17 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function register4adminAction(){
+        $name = $this->request->getPost('name', 'string');
+        $gender = $this->request->getPost('gender', 'string');
         $mobile = $this->request->getPost('mobile', 'string');
         $password = $this->request->getPost('password', 'string');
         $ctype = $this->request->getPost('ctype', 'string');
         $verifyCode = $this->request->getPost('verify_code', 'int');
         $companyName = $this->request->getPost('company_name', 'string');
+
+        if(!isset($name)){
+            return $this->respondError(ErrorCodes::USER_NAME_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_NAME_NULL]);
+        }
 
         if(!isset($mobile)){
             return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
@@ -93,7 +99,7 @@ class SessionController extends APIControllerBase
             $companyID = $company->company_id;
 
             $user = new ClientUser();
-            $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_PENDING, $companyID);
+            $user->registerByMobile($name, $gender, $mobile, $password, StatusCodes::CLIENT_USER_PENDING, $companyID);
             $userID = $user->user_id;
 
             $userRole = new ClientUserRole();
@@ -124,10 +130,16 @@ class SessionController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function register4invitecodeAction(){
+        $name = $this->request->getPost('name', 'string');
+        $gender = $this->request->getPost('gender', 'string');
         $mobile = $this->request->getPost('mobile', 'string');
         $password = $this->request->getPost('password', 'string');
         $ctype = $this->request->getPost('ctype', 'string');
         $inviteCode = $this->request->getPost('invite_code');
+
+        if(!isset($name)){
+            return $this->respondError(ErrorCodes::USER_NAME_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_NAME_NULL]);
+        }
 
         if(!isset($mobile)){
             return $this->respondError(ErrorCodes::USER_MOBILE_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_MOBILE_NULL]);
@@ -168,7 +180,7 @@ class SessionController extends APIControllerBase
             }
 
             $user = new ClientUser();
-            $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
+            $user->registerByMobile($name, $gender, $mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
             $userID = $user->user_id;
 
             $userRole = new ClientUserRole();
