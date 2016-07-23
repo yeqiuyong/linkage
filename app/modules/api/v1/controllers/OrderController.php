@@ -988,13 +988,9 @@ class OrderController extends APIControllerBase
     }
 
     private function genOrderId($userid){
-        list($tmp1, $tmp2) = explode(' ', microtime());
+        $date = time();
 
-        $msec =  (String)((int)sprintf('%.0f', (floatval($tmp1) + floatval($tmp2)) * 10000));
-
-        $date = date("Ymd");
-        $prefix = "37";
-        return $prefix.$userid.$date.substr($msec, 4, 10);
+        return $userid.substr($date, 0, 8);
     }
 
     private function genCargosObj($cargoStr){
