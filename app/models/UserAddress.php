@@ -23,11 +23,12 @@ class UserAddress extends Model
         $this->setSource("linkage_user_address");
     }
 
-    public function add($userid, $title, $address, $memo='')
+    public function add($userid, $companyId, $title, $address, $memo='')
     {
         $now = time();
 
         $this->user_id = $userid;
+        $this->company_id = $companyId;
         $this->title = $title;
         $this->address = $address;
         $this->memo  = $memo;
@@ -121,20 +122,20 @@ class UserAddress extends Model
         }
     }
 
-    public function getList($userId, $pagination, $offset, $size)
+    public function getList($companyId, $pagination, $offset, $size)
     {
         if($pagination){
             $condition = [
-                'conditions' => 'user_id = :user_id: AND status = :status:',
-                'bind' => ['user_id' => $userId,
+                'conditions' => 'company_id = :company_id: AND status = :status:',
+                'bind' => ['company_id' => $companyId,
                     'status'=> StatusCodes::ADDRESS_ACTIVE],
                 'offset' => $offset,
                 'limit' => $size,
             ];
         }else{
             $condition = [
-                'conditions' => 'user_id = :user_id: AND status = :status:',
-                'bind' => ['user_id' => $userId,
+                'conditions' => 'company_id = :company_id: AND status = :status:',
+                'bind' => ['company_id' => $companyId,
                     'status'=> StatusCodes::ADDRESS_ACTIVE]
             ];
         }
