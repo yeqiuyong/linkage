@@ -416,12 +416,12 @@ class ClientUser extends Model
     }
 
     public function getStaffs($userid, $pagination=0, $offset=0, $size=10){
-        $condition = " and status = ". StatusCodes::CLIENT_USER_ACTIVE;
+        $condition = " and a.status = ". StatusCodes::CLIENT_USER_ACTIVE;
         if($pagination != 0){
             $condition = " limit ".$offset.",".$size;
         }
 
-        $sql="select a.user_id, a.username, a.name, a.mobile, a.icon from linkage_clientuser a join linkage_user_role b where a.user_id = b.user_id and b.role_id not in(5) and a.company_id in (select company_id from linkage_clientuser where user_id = $userid)" . $condition;
+        $sql="select a.user_id, a.username, a.name, a.mobile, a.icon, b.role_id from linkage_clientuser a join linkage_user_role b where a.user_id = b.user_id and b.role_id not in(5) and a.company_id in (select company_id from linkage_clientuser where user_id = $userid)" . $condition;
         // Execute the query
         $staffs = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 
