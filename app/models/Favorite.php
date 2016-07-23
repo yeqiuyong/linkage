@@ -46,6 +46,18 @@ class Favorite extends Model
         }
     }
 
+    public function isFavorite($userid, $companyId){
+        $favorite = self::findFirst([
+            'conditions' => 'user_id = :user_id: AND company_id = :company_id:',
+            'bind' => [
+                'user_id' => $userid,
+                'company_id' => $companyId,
+            ]
+        ]);
+
+        return empty($favorite)?true : false;
+    }
+
     public function delFavorite($userid, $companyId)
     {
         $favorite = self::findFirst([
