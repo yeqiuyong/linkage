@@ -67,7 +67,7 @@ class ClientUser extends Model
 
     }
 
-    public function registerByMobile($mobile, $password, $status, $companyID){
+    public function registerByMobile($name,$gender, $mobile, $password, $status, $companyID){
         $security = Di::getDefault()->get(Services::SECURITY);
 
         if($this->isMobileRegistered($mobile)){
@@ -77,10 +77,15 @@ class ClientUser extends Model
         $now = time();
 
         $this->username = $mobile;
+        $this->name = $name;
         $this->mobile = $mobile;
         $this->password = $security->hash($password);
         $this->company_id = $companyID;
-
+        if($gender == '0'){
+            $this->gender = 'M';
+        }else{
+            $this->gender ='F';
+        }
         $this->create_time = $now;
         $this->update_time = $now;
         $this->status = $status;
