@@ -77,6 +77,7 @@ class CompanyController extends APIControllerBase
         $images = $this->request->getPost('images', 'string');
 
         $info = [
+            'name' => $name,
             'contact_name' => $contact_name,
             'address' => $address,
             'email' => $email,
