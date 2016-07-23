@@ -177,6 +177,7 @@ class Order extends Model
                 'company_name' => $list->company_name,
                 'create_time' => $list->create_time,
                 'update_time' => $list->update_time,
+                'comments' =>''
 
             ];
 
@@ -220,6 +221,7 @@ class Order extends Model
                 'company_name' => $list->company_name,
                 'create_time' => $list->create_time,
                 'update_time' => $list->update_time,
+                'comments' => ''
 
             ];
 
@@ -616,6 +618,31 @@ class Order extends Model
         ]);
 
         return (sizeof($orders) == 0) ? false : true;
+    }
+
+    public function updateComment($orderId){
+        $order = self::findFirst([
+            'conditions' => 'order_id = :order_id:',
+            'bind' => ['order_id' => $orderId]
+        ]);
+
+        if(!isset($order->order_id)){
+            throw new UserOperationException(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
+        }
+
+        $order->update_time = time();
+        $order->is_comment = 1;
+
+        if($order->update() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
     }
 
     public function getManureOrder4admin($companyId,$start_time='',$end_time=''){
