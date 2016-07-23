@@ -153,7 +153,7 @@ class Order extends Model
         if($status == 1){
             $condition .= " and a.status in (0, 1)";
         }else if($status == 2){
-            $condition .= " and a.status in (2, 3)";
+            $condition .= " and a.status in (2, 3,4)";
         }else{
             $condition .= " and a.status not in (5)";
         }
@@ -197,7 +197,7 @@ class Order extends Model
         if($status == 1){
             $condition .= " and (a.status in (1) or a.status in (0))";
         }else if($status == 2){
-            $condition .= " and a.status in (2, 3)";
+            $condition .= " and a.status in (2, 3, 4)";
         }else{
             $condition .= " and a.status not in (5)";
         }
