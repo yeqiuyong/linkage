@@ -54,4 +54,13 @@ class OrderComment extends Model
         return (sizeof($orders) == 0) ? false : true;
     }
 
+    public function getCommentInfo($orderId){
+        $comments = self::findFirst([
+            'conditions' => 'order_id = :order_id:',
+            'bind' => ['order_id' => $orderId]
+        ]);
+
+        return $comments;
+    }
+
 }
