@@ -755,11 +755,25 @@ class OrderController extends APIControllerBase
                 $orders = $order->getOrders4Transporter($info['company_id'], $type, $status, $pagination, $offset, $size);
             }
 
+            $orderComment = new OrderComment();
+            $ordersInfo = [];
+            foreach($orders as $orderinfo){
+
+                $comments = $orderComment->getCommentInfo($orderinfo['order_id']);
+                $comment = [
+                    'comment_id' => $comments->id,
+                    'score' =>  $comments->score,
+                    'comment' => $comments->comment
+                ];
+                $orderinfo['comments'] = $comment;
+                array_push($ordersInfo, $orderinfo);
+
+            }
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray(['orders' => $orders]);
+        return $this->respondArray(['orders' => $ordersInfo]);
 
     }
 
@@ -978,6 +992,8 @@ class OrderController extends APIControllerBase
             }
 
             $orderComment->add($orderId, $score, $comment);
+
+            $order->updateComment($orderId);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
