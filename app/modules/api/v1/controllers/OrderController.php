@@ -761,9 +761,9 @@ class OrderController extends APIControllerBase
 
                 $comments = $orderComment->getCommentInfo($orderinfo['order_id']);
                 $comment = [
-                    'comment_id' => $comments->id?$comments->id:'',
-                    'score' =>  $comments->score?$comments->score:'',
-                    'comment' => $comments->comment?$comments->comment:''
+                    'comment_id' => isset($comments->id)?$comments->id:'',
+                    'score' =>  isset($comments->score)?$comments->score:'',
+                    'comment' => isset($comments->comment)?$comments->comment:''
                 ];
                 $orderinfo['comments'] = $comment;
                 array_push($ordersInfo, $orderinfo);
