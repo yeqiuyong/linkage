@@ -116,6 +116,7 @@ class CodeController extends APIControllerBase
      * @response("Data object or Error object")
      */
     public function inviteurlAction(){
+        
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::USER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::USER_ID_NULL]);
         }
