@@ -97,7 +97,7 @@ class CompanyController extends APIControllerBase
 
         try{
             $user = new ClientUser();
-            if(!$user->isAdmin($this->cid) || $user->getStatus($this->cid) != StatusCodes::CLIENT_USER_PENDING){
+            if(!$user->isAdmin($this->cid) || $user->getStatus($this->cid) != StatusCodes::CLIENT_USER_INACTIVE){
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
