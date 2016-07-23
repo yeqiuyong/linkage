@@ -371,7 +371,7 @@ class Company extends Model
             $condition = "limit $offset, $size";
         }
 
-        $sql = "select a.company_id, a.name, a.contactor, a.address, a.service_phone_1, a.description, a.status, a.logo, b.order_num from linkage_company a left join (select count(1) as order_num, transporter_id as company_id from linkage_order b group by b.transporter_id) b on a.company_id = b.company_id where a.status=0 ".$condition;
+        $sql = "select a.company_id, a.name, a.contactor, a.address, a.service_phone_1, a.description, a.status, a.logo, b.order_num from linkage_company a left join (select count(1) as order_num, transporter_id as company_id from linkage_order b where b.status in(1,3) group by b.transporter_id) b on a.company_id = b.company_id where a.status=0 ".$condition;
         $transporters = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 
         $results = [];;
