@@ -295,8 +295,11 @@ class ProfileController extends APIControllerBase
         }
 
         try {
+            $clientuser = new ClientUser();
+            $userinfo = $clientuser->getUserInfomation($this->cid);
+
             $userAddress = new UserAddress();
-            $myAddresses = $userAddress->getList($this->cid, $pagination, $offset, $size);
+            $myAddresses = $userAddress->getList($userinfo['company_id'], $pagination, $offset, $size);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -325,8 +328,11 @@ class ProfileController extends APIControllerBase
         }
 
         try {
+            $clientuser = new ClientUser();
+            $userinfo = $clientuser->getUserInfomation($this->cid);
+
             $mAddress = new UserAddress();
-            $address_id = $mAddress->add($this->cid, $title, $address);
+            $address_id = $mAddress->add($this->cid, $userinfo['company_id'], $title, $address);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
