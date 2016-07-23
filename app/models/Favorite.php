@@ -17,6 +17,7 @@ use Multiple\Core\Constants\StatusCodes;
 use Multiple\Core\Constants\ErrorCodes;
 use Multiple\COre\Constants\Services;
 use Multiple\Core\Exception\DataBaseException;
+use Multiple\Core\Exception\UserOperationException;
 
 class Favorite extends Model
 {
@@ -68,7 +69,7 @@ class Favorite extends Model
             ]
         ]);
 
-        if(!isset($favorite->favorite_id)){
+        if(!isset($favorite->id)){
             throw new UserOperationException(ErrorCodes::USER_FAVORITE_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::USER_FAVORITE_NOT_FOUND]);
         }
 
