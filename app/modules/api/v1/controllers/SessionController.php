@@ -247,7 +247,7 @@ class SessionController extends APIControllerBase
             $response['ctype'] = $roleId - 1;
             $response['icon'] = $userInfo['icon'];
             $response['username'] = $userInfo['username'];
-            $response['name'] = $userInfo['realname'];
+            $response['realname'] = $userInfo['realname'];
             $response['gender'] = $userInfo['gender'];
             $response['mobile'] = $userInfo['mobile'];
             $response['email'] = $userInfo['email'];
