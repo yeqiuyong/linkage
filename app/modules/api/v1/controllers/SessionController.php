@@ -274,7 +274,7 @@ class SessionController extends APIControllerBase
      * @requestExample("POST /session/forgotpassword")
      * @response("Data object or Error object")
      */
-    public function forgotPasswordAction(){
+    public function forgotpasswordAction(){
         $mobile = $this->request->getPost('mobile');
         $password = $this->request->getPost('password');
         $verifyCode = $this->request->getPost('verify_code');
