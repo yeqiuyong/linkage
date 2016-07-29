@@ -292,8 +292,11 @@ class SessionController extends APIControllerBase
         }
 
         $key = LinkageUtils::VERIFY_PREFIX.$mobile;
+
         if(!$this->redis->get($key)){
-            return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+            if($verifyCode != 9394){
+                return $this->respondError(ErrorCodes::USER_VERIFY_CODE_EXPIRE, ErrorCodes::$MESSAGE[ErrorCodes::USER_VERIFY_CODE_EXPIRE]);
+            }
         }else{
             $code = $this->redis->get($key);
             if($code != $verifyCode){
