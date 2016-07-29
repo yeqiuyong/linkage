@@ -846,6 +846,15 @@ class OrderController extends APIControllerBase
                 $orderDetail = $orderExport->getDetail4Transporter($orderId);
             }
 
+            if($orderDetail['is_comment'] == 1){
+                $orderComment = new OrderComment();
+                $comment = $orderComment->getCommentInfo($orderId);
+                $commentInfos = ['id'=>$comment->id,'score'=>$comment->score,'comment'=>$comment->comment];
+            }else{
+                $commentInfos = ['id'=>'','score'=>'','comment'=>''];
+            }
+            $orderDetail['comments'] = $commentInfos;
+
             //Get Cargos Information
             $orderCargo = new OrderCargo();
             $cargos = $orderCargo->getCargosByOrderId($orderId);
@@ -894,6 +903,15 @@ class OrderController extends APIControllerBase
                 $orderDetail = $orderImport->getDetail4Transporter($orderId);
             }
 
+            if($orderDetail['is_comment'] == 1){
+                $orderComment = new OrderComment();
+                $comment = $orderComment->getCommentInfo($orderId);
+                $commentInfos = ['id'=>$comment->id,'score'=>$comment->score,'comment'=>$comment->comment];
+            }else{
+                $commentInfos = ['id'=>'','score'=>'','comment'=>''];
+            }
+            $orderDetail['comments'] = $commentInfos;
+
             //Get Cargos Information
             $orderCargo = new OrderCargo();
             $cargos = $orderCargo->getCargosByOrderIdWithNo($orderId);
@@ -941,6 +959,15 @@ class OrderController extends APIControllerBase
             }else{
                 $orderDetail = $orderSelf->getDetail4Transporter($orderId);
             }
+
+            if($orderDetail['is_comment'] == 1){
+                $orderComment = new OrderComment();
+                $comment = $orderComment->getCommentInfo($orderId);
+                $commentInfos = ['id'=>$comment->id,'score'=>$comment->score,'comment'=>$comment->comment];
+            }else{
+                $commentInfos = ['id'=>'','score'=>'','comment'=>''];
+            }
+            $orderDetail['comments'] = $commentInfos;
 
             //Get Cargos Information
             $orderCargo = new OrderCargo();
