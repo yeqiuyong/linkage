@@ -45,7 +45,7 @@ class OrderSelf extends Model
 
 
     public function getDetail4Manufacture($orderId){
-        $phql="select a.transporter_id, a.take_address, a.take_time, a.delivery_address, a.delivery_time, a.is_transfer_port, a.memo, b.name as company_name, c.is_customs_declare, c.customs_in, c.cargo_take_time from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderSelf c where a.transporter_id = b.company_id and a.order_id = c.order_id and a.order_id = '$orderId'";
+        $phql="select a.transporter_id, a.take_address, a.take_time, a.delivery_address, a.delivery_time, a.is_transfer_port, a.memo, a.is_comment, b.name as company_name, c.is_customs_declare, c.customs_in, c.cargo_take_time from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderSelf c where a.transporter_id = b.company_id and a.order_id = c.order_id and a.order_id = '$orderId'";
         $order = $this->modelsManager->executeQuery($phql);
 
         if(sizeof($order) == 0){
@@ -64,6 +64,7 @@ class OrderSelf extends Model
             'is_customs_declare' => $order[0]->is_customs_declare,
             'customs_in' => $order[0]->customs_in,
             'cargo_take_time' => $order[0]->cargo_take_time,
+            'is_comment' => $order[0]->is_comment,
 
         ];
 
@@ -71,7 +72,7 @@ class OrderSelf extends Model
     }
 
     public function getDetail4Transporter($orderId){
-        $phql="select a.manufacture_id, a.take_address, a.take_time, a.delivery_address, a.delivery_time, a.is_transfer_port, a.memo, b.name as company_name, c.is_customs_declare, c.customs_in, c.cargo_take_time from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderSelf c where a.manufacture_id = b.company_id and a.order_id = c.order_id and a.order_id = '$orderId'";
+        $phql="select a.manufacture_id, a.take_address, a.take_time, a.delivery_address, a.delivery_time, a.is_transfer_port, a.memo, a.is_comment, b.name as company_name, c.is_customs_declare, c.customs_in, c.cargo_take_time from Multiple\Models\Order a join Multiple\Models\Company b join Multiple\Models\OrderSelf c where a.manufacture_id = b.company_id and a.order_id = c.order_id and a.order_id = '$orderId'";
         $order = $this->modelsManager->executeQuery($phql);
 
         if(sizeof($order) == 0){
@@ -90,6 +91,7 @@ class OrderSelf extends Model
             'is_customs_declare' => $order[0]->is_customs_declare,
             'customs_in' => $order[0]->customs_in,
             'cargo_take_time' => $order[0]->cargo_take_time,
+            'is_comment' => $order[0]->is_comment,
 
         ];
 
