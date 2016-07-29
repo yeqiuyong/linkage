@@ -248,8 +248,12 @@ class Order extends Model
                 $driver_id .= $value->driver_id.',';
             }
             $driver_id = substr($driver_id,0,-1);
+            if($driver_id){
+                $sqlcondition = " a.manufacture_id = $companyId and c.driver_id in(".$driver_id.") and a.status not in(5) ";
+            }else{
+                $sqlcondition = " 1!=1 ";
+            }
             //$driver_id=$plist[0]->driver_id;
-            $sqlcondition = " a.manufacture_id = $companyId and c.driver_id in(".$driver_id.") and a.status not in(5) ";
 
             $phql="select DISTINCT a.order_id, a.type, a.create_time, a.update_time, a.status, a.transporter_id as company_id, b.name as company_name from Multiple\Models\Order a inner join Multiple\Models\Company b on a.transporter_id = b.company_id inner join Multiple\Models\DriverTask c on a.order_id = c.order_id where ". $sqlcondition." order by a.create_time desc ".$limit;
 
@@ -313,7 +317,12 @@ class Order extends Model
             }
             $driver_id = substr($driver_id,0,-1);
             //$driver_id=$plist[0]->driver_id;
-            $sqlcondition = " a.transporter_id = $companyId and c.driver_id in(".$driver_id.") and a.status not in(5) ";
+            if($driver_id){
+                $sqlcondition = " a.transporter_id = $companyId and c.driver_id in(".$driver_id.") and a.status not in(5) ";
+            }else{
+                $sqlcondition = " 1!=1 ";
+
+            }
 
             $phql="select DISTINCT a.order_id, a.type, a.create_time, a.update_time, a.status, a.manufacture_id as company_id, b.name as company_name from Multiple\Models\Order a inner join Multiple\Models\Company b on a.manufacture_id = b.company_id inner join Multiple\Models\DriverTask c on a.order_id = c.order_id where ". $sqlcondition." order by a.create_time desc ".$limit;
 
