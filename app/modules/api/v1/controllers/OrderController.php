@@ -993,13 +993,16 @@ class OrderController extends APIControllerBase
 
             $orderComment->add($orderId, $score, $comment);
 
+            $commentInfo = $orderComment->getCommentInfo($orderId);
+            $commentId = ['id'=>$commentInfo->id];
+
             $order->updateComment($orderId);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondOK();
+        return $this->respondArray($commentId);
 
     }
 
