@@ -849,11 +849,11 @@ class OrderController extends APIControllerBase
             if($orderDetail['is_comment'] == 1){
                 $orderComment = new OrderComment();
                 $comment = $orderComment->getCommentInfo($orderId);
-                $commentInfos = ['id'=>$comment->id,'score'=>$comment->score,'comment'=>$comment->comment];
+                $commentInfos = ['comment'=>$comment->comment,'comment_id'=>$comment->id,'score'=>$comment->score];
             }else{
-                $commentInfos = ['id'=>'','score'=>'','comment'=>''];
+                $commentInfos = ['comment'=>'','comment_id'=>'','score'=>''];
             }
-            $orderDetail['comments'] = $commentInfos;
+            $orderDetail['comment'] = $commentInfos;
 
             //Get Cargos Information
             $orderCargo = new OrderCargo();
@@ -906,11 +906,11 @@ class OrderController extends APIControllerBase
             if($orderDetail['is_comment'] == 1){
                 $orderComment = new OrderComment();
                 $comment = $orderComment->getCommentInfo($orderId);
-                $commentInfos = ['id'=>$comment->id,'score'=>$comment->score,'comment'=>$comment->comment];
+                $commentInfos = ['comment'=>$comment->comment,'comment_id'=>$comment->id,'score'=>$comment->score];
             }else{
-                $commentInfos = ['id'=>'','score'=>'','comment'=>''];
+                $commentInfos = ['comment'=>'','comment_id'=>'','score'=>''];
             }
-            $orderDetail['comments'] = $commentInfos;
+            $orderDetail['comment'] = $commentInfos;
 
             //Get Cargos Information
             $orderCargo = new OrderCargo();
@@ -963,11 +963,11 @@ class OrderController extends APIControllerBase
             if($orderDetail['is_comment'] == 1){
                 $orderComment = new OrderComment();
                 $comment = $orderComment->getCommentInfo($orderId);
-                $commentInfos = ['id'=>$comment->id,'score'=>$comment->score,'comment'=>$comment->comment];
+                $commentInfos = ['comment'=>$comment->comment,'comment_id'=>$comment->id,'score'=>$comment->score];
             }else{
-                $commentInfos = ['id'=>'','score'=>'','comment'=>''];
+                $commentInfos = ['comment'=>'','comment_id'=>'','score'=>''];
             }
-            $orderDetail['comments'] = $commentInfos;
+            $orderDetail['comment'] = $commentInfos;
 
             //Get Cargos Information
             $orderCargo = new OrderCargo();
