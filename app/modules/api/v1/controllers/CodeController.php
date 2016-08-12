@@ -60,7 +60,7 @@ class CodeController extends APIControllerBase
             //$this->alidayu->sendSMS($mobile, $verify_code);
             //return $this->respondError('a', $a);
             //send message
-            $this->sms->send($mobile, $verify_code,'');
+            $this->sms->send($mobile, $verify_code);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
