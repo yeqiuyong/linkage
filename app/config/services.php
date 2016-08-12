@@ -16,6 +16,7 @@ use Multiple\Core\Libraries\Elements;
 use Multiple\Core\Libraries\Logger;
 use Multiple\Core\Libraries\SMS;
 use Multiple\Core\Libraries\UPyun;
+use Multiple\Core\Libraries\Alidayu;
 
 
 /**
@@ -133,4 +134,8 @@ $di->setShared(AppServices::SMS, function() {
  */
 $di->setShared(AppServices::UPYUN, function() {
 	return new UPyun();
+});
+
+$di->setShared(AppServices::ALIDAYU, function() {
+	return new Alidayu();
 });
