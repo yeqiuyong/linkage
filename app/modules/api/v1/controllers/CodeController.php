@@ -27,15 +27,12 @@ class CodeController extends APIControllerBase
 
     private $sms;
 
-    private $alidayu;
-
     public function initialize(){
         parent::initialize();
 
         $this->redis = Di::getDefault()->get(Services::REDIS);
         $this->logger = Di::getDefault()->get(Services::LOGGER);
         $this->sms = Di::getDefault()->get(Services::SMS);
-        $this->alidayu = Di::getDefault()->get(Services::ALIDAYU);
     }
 
     /**
@@ -104,7 +101,7 @@ class CodeController extends APIControllerBase
             $msg = $userName."邀请你注册Linkage。您的邀请码是：".$inviteCode;
 
             //send message
-            $this->sms->send($mobile, $msg);
+            $this->sms->send($mobile, $verify_code);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
