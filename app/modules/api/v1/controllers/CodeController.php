@@ -53,14 +53,14 @@ class CodeController extends APIControllerBase
             $expire = 60 * 5;
             $verify_code =  rand(1000, 9999);
 
-            $msg = "［］您的校验码是：".$verify_code."。1分钟内有效。如非本人操作忽略此短信。";
+            //$msg = "［］您的校验码是：".$verify_code."。1分钟内有效。如非本人操作忽略此短信。";
 
             //如果客户端多次调用接口生成校验码，以最后一次校验码为准
             $this->redis->setex($key, $expire, $verify_code);
             //$this->alidayu->sendSMS($mobile, $verify_code);
             //return $this->respondError('a', $a);
             //send message
-            $this->sms->send($mobile, $verify_code);
+            $this->sms->send($mobile, $verify_code,'');
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -98,7 +98,7 @@ class CodeController extends APIControllerBase
             //如果客户端多次调用接口生成校验码，以最后一次校验码为准
             $this->redis->setex($inviteCode, $expire, $companyID);
 
-            $msg = $userName."邀请你注册Linkage。您的邀请码是：".$inviteCode;
+            //$msg = $userName."邀请你注册Linkage。您的邀请码是：".$inviteCode;
 
             //send message
             $this->sms->send($mobile, $inviteCode, $userName);
