@@ -60,10 +60,10 @@ class CodeController extends APIControllerBase
 
             //如果客户端多次调用接口生成校验码，以最后一次校验码为准
             $this->redis->setex($key, $expire, $verify_code);
-            $this->alidayu->sendSMS($mobile, $verify_code);
+            //$this->alidayu->sendSMS($mobile, $verify_code);
             //return $this->respondError('a', $a);
             //send message
-            //$this->sms->send($mobile, $msg);
+            $this->sms->send($mobile, $msg);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
