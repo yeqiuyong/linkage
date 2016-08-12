@@ -33,7 +33,7 @@ class SMS extends \Phalcon\Di\Injectable
      * @param $msg
      * @throws Exception
      */
-    public function send($mobile, $msg){
+    public function send($mobile, $msg,$user=''){
 
         if(!$mobile){
             throw new UserOperationException(ErrorCodes::USER_MOBILE_NULL,ErrorCodes::$MESSAGE[(ErrorCodes::USER_MOBILE_NULL)]);
@@ -49,7 +49,7 @@ class SMS extends \Phalcon\Di\Injectable
         }
         else{
             //Sms daemon would read redis consistently to send sms
-            $this->redis->lPush('sms', json_encode(array('mobile' => $mobile, 'msg' => $msg)));
+            $this->redis->lPush('sms', json_encode(array('mobile' => $mobile, 'msg' => $msg, 'user' => $user)));
         }
 
     }
