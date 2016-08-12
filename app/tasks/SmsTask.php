@@ -66,9 +66,9 @@ class SmsTask extends Task
             $req->setSmsFreeSignName("领骐物流");
 
             if($user == '0'){
-                $req->setSmsParam("{\"code\":\"$msg\"}");
+                $req->setSmsParam("{\"name\":\"$user\",\"code\":\"$msg\"}");
                 $req->setRecNum($mobile);
-                $req->setSmsTemplateCode("SMS_12991382");
+                $req->setSmsTemplateCode("SMS_13057764");
             }else{
                 $req->setSmsParam("{\"name\":\"$user\",\"code\":\"$msg\"}");
                 $req->setRecNum($mobile);
