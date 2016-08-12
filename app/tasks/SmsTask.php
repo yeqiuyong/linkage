@@ -56,35 +56,18 @@ class SmsTask extends Task
 
             echo "send $mobile push message \n";
 
-            if($user == '0'){
-                $c = new \TopClient;
-                $c->appkey = '23428422';
-                $c->secretKey = 'baa9273882d94b1a7caad3e396341751';
+            $c = new \TopClient;
+            $c->appkey = '23428422';
+            $c->secretKey = 'baa9273882d94b1a7caad3e396341751';
 
-                $req = new \AlibabaAliqinFcSmsNumSendRequest;
-                $req->setExtend("123456");
-                $req->setSmsType("normal");
-                $req->setSmsFreeSignName("领骐物流");
-                $req->setSmsParam("{\"code\":\"$msg\"}");
-                $req->setRecNum($mobile);
-                $req->setSmsTemplateCode("SMS_12991382");
-                $c->execute($req);
-            }else{
-                $c = new \TopClient;
-                $c->appkey = '23428422';
-                $c->secretKey = 'baa9273882d94b1a7caad3e396341751';
-
-                $req = new \AlibabaAliqinFcSmsNumSendRequest;
-                $req->setExtend("123456");
-                $req->setSmsType("normal");
-                $req->setSmsFreeSignName("领骐物流");
-                $req->setSmsParam("{\"name\":\"$user\",\"code\":\"$msg\"}");
-                $req->setRecNum($mobile);
-                $req->setSmsTemplateCode("SMS_13002130");
-                $c->execute($req);
-            }
-
-
+            $req = new \AlibabaAliqinFcSmsNumSendRequest;
+            $req->setExtend("123456");
+            $req->setSmsType("normal");
+            $req->setSmsFreeSignName("领骐物流");
+            $req->setSmsParam("{\"code\":\"$msg\"}");
+            $req->setRecNum($mobile);
+            $req->setSmsTemplateCode("SMS_12991382");
+            $c->execute($req);
 
             echo "\n\n";
         }
