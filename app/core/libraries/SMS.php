@@ -33,7 +33,7 @@ class SMS extends \Phalcon\Di\Injectable
      * @param $msg
      * @throws Exception
      */
-    public function send($mobile, $msg, $user){
+    public function send($mobile, $msg, $user=''){
 
         if(!$mobile){
             throw new UserOperationException(ErrorCodes::USER_MOBILE_NULL,ErrorCodes::$MESSAGE[(ErrorCodes::USER_MOBILE_NULL)]);
