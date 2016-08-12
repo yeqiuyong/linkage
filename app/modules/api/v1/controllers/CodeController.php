@@ -101,7 +101,7 @@ class CodeController extends APIControllerBase
             //$msg = $userName."邀请你注册Linkage。您的邀请码是：".$inviteCode;
 
             //send message
-            $this->sms->send($mobile, $inviteCode);
+            $this->sms->send($mobile, $inviteCode, $userName);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
