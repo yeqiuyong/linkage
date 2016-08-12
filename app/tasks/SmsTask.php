@@ -6,7 +6,10 @@
  * Time: 10:37 PM
  */
 
-include_once APPLICATION_PATH . '/../vendor/bmob/lib/BmobSms.class.php';
+require APPLICATION_PATH . '/../app/core/libraries/Alidayu/TopSdk.php';
+require APPLICATION_PATH . '/../app/core/libraries/Alidayu/top/TopClient.php';
+require APPLICATION_PATH . '/../app/core/libraries/Alidayu/top/request/AlibabaAliqinFcSmsNumSendRequest.php';
+date_default_timezone_set('Asia/Shanghai');
 
 use Phalcon\Cli\Task;
 use Phalcon\Di;
@@ -29,7 +32,6 @@ class SmsTask extends Task
      */
     public function sendAction()
     {
-        $sender = new BmobSms();
 
         $this->redis = Di::getDefault()->get(Services::REDIS);
 
@@ -53,7 +55,17 @@ class SmsTask extends Task
 
             echo "send $mobile push message \n";
 
-            $sender->sendSms($mobile, $msg);
+            $c = new \TopClient;
+            $c->appkey = '23428422';
+            $c->secretKey = 'baa9273882d94b1a7caad3e396341751';
+            $req = new \AlibabaAliqinFcSmsNumSendRequest;
+            $req->setExtend("123456");
+            $req->setSmsType("normal");
+            $req->setSmsFreeSignName("领骐物流");
+            $req->setSmsParam("{\"code\":\"$msg\"}");
+            $req->setRecNum($mobile);
+            $req->setSmsTemplateCode("SMS_12991382");
+            $c->execute($req);
 
             echo "\n\n";
         }
