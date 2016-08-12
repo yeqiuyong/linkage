@@ -52,19 +52,29 @@ class SmsTask extends Task
 
             $mobile = $sms['mobile'];
             $msg = $sms['msg'];
+            $user = $sms['user'];
 
             echo "send $mobile push message \n";
 
             $c = new \TopClient;
             $c->appkey = '23428422';
             $c->secretKey = 'baa9273882d94b1a7caad3e396341751';
+
             $req = new \AlibabaAliqinFcSmsNumSendRequest;
             $req->setExtend("123456");
             $req->setSmsType("normal");
             $req->setSmsFreeSignName("领骐物流");
-            $req->setSmsParam("{\"code\":\"$msg\"}");
-            $req->setRecNum($mobile);
-            $req->setSmsTemplateCode("SMS_12991382");
+
+            if(empty($user)){
+                $req->setSmsParam("{\"code\":\"$msg\"}");
+                $req->setRecNum($mobile);
+                $req->setSmsTemplateCode("SMS_12991382");
+            }else{
+                $req->setSmsParam("{\"name\":\"$user\",\"code\":\"$msg\"}");
+                $req->setRecNum($mobile);
+                $req->setSmsTemplateCode("SMS_13057764");
+            }
+
             $c->execute($req);
 
             echo "\n\n";
