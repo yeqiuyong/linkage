@@ -10,6 +10,7 @@
 namespace Multiple\API\Controllers;
 
 use Multiple\Core\Constants\StatusCodes;
+use Multiple\Core\Constants\LinkageUtils;
 use Multiple\Models\Company;
 use Phalcon\Di;
 
@@ -159,6 +160,36 @@ class CompanyController extends APIControllerBase
         }
 
         return $this->respondOK();
+    }
+
+    public function searchAction(){
+        $companyname = $this->request->getPost('name', 'string');
+        $pagination = $this->request->getPost('pagination', 'int')?$this->request->getPost('pagination', 'int'):0;
+        $offset = $this->request->getPost('offset', 'int')?$this->request->getPost('offset', 'int'):0;
+        $size = $this->request->getPost('size', 'int')?$this->request->getPost('size', 'int'):1000;
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try {
+            $user = new  ClientUser();
+            $role = $user->getRoleId($this->cid);
+            $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
+
+            $company = new Company();
+            if($isManufacture){
+                $companies = $company->getSearch4Manufacture($companyname, $pagination, $offset, $size);
+            }else{
+
+                $companies = $company->getSearch4Transporter($companyname, $pagination, $offset, $size);
+            }
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray(['companies' => $companies]);
     }
 
 }
