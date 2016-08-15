@@ -432,4 +432,78 @@ class Company extends Model
 
         return sizeof($companies) > 0 ? true : false;
     }
+
+    public function getSearch4Manufacture($companyname='', $pagination = 0,  $offset = 0, $size = 10){
+        if(!$pagination){
+            $limit = " limit $offset, $size";
+        }else{
+            $limit = "";
+        }
+
+        if($companyname == ''){
+            $condition = " and c.status=0 ";
+        }else{
+            $condition = " and c.name like '%".$companyname."%' and c.status=0 ";
+        }
+
+        $phql="select c.company_id, c.name, c.contactor, c.address, c.email, c.logo, c.create_time, c.update_time from Multiple\Models\Company c where type=1 ".$condition." order by c.create_time desc ".$limit;
+        $lists = $this->modelsManager->executeQuery($phql);
+
+        $companies = [];
+        foreach($lists as $list){
+            $company = [
+                'company_id' => $list->company_id,
+                'name' => $list->name,
+                'contactor' => $list->contactor,
+                'address' => $list->address,
+                'email' => $list->email,
+                'logo' => $list->logo?$list->logo:'',
+                'create_time' => $list->create_time,
+                'update_time' => $list->update_time,
+
+            ];
+
+            array_push($companies, $company);
+        }
+
+        return $companies;
+
+    }
+
+    public function getSearch4Transporter($companyname='', $pagination = 0,  $offset = 0, $size = 10){
+        if(!$pagination){
+            $limit = " limit $offset, $size";
+        }else{
+            $limit = "";
+        }
+
+        if($companyname == ''){
+            $condition = " and c.status=0 ";
+        }else{
+            $condition = " and c.name like '%".$companyname."%' and c.status=0 ";
+        }
+
+        $phql="select c.company_id, c.name, c.contactor, c.address, c.email, c.logo, c.create_time, c.update_time from Multiple\Models\Company c where type=0 ".$condition." order by c.create_time desc ".$limit;
+        $lists = $this->modelsManager->executeQuery($phql);
+
+        $companies = [];
+        foreach($lists as $list){
+            $company = [
+                'company_id' => $list->company_id,
+                'name' => $list->name,
+                'contactor' => $list->contactor,
+                'address' => $list->address,
+                'email' => $list->email,
+                'logo' => $list->logo?$list->logo:'',
+                'create_time' => $list->create_time,
+                'update_time' => $list->update_time,
+
+            ];
+
+            array_push($companies, $company);
+        }
+
+        return $companies;
+
+    }
 }
