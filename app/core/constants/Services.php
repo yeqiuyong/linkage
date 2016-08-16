@@ -43,7 +43,6 @@ class Services
     const LOGGER = 'logger';
     const SMS = 'sms';
     const UPYUN = 'ypyun';
-    const ALIDAYU = 'alidayu';
 
     // PhalconRest
     const AUTH_MANAGER = 'authManager';
