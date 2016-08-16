@@ -453,9 +453,9 @@ class Company extends Model
         foreach($lists as $list){
             $company = [
                 'company_id' => $list->company_id,
-                'name' => $list->name,
-                'contactor' => $list->contactor,
-                'address' => $list->address,
+                'company_name' => $list->name,
+                'contact_name' => $list->contactor,
+                'company_address' => $list->address,
                 'email' => $list->email,
                 'logo' => $list->logo?$list->logo:'',
                 'create_time' => $list->create_time,
@@ -490,9 +490,9 @@ class Company extends Model
         foreach($lists as $list){
             $company = [
                 'company_id' => $list->company_id,
-                'name' => $list->name,
-                'contactor' => $list->contactor,
-                'address' => $list->address,
+                'company_name' => $list->name,
+                'contact_name' => $list->contactor,
+                'company_address' => $list->address,
                 'email' => $list->email,
                 'logo' => $list->logo?$list->logo:'',
                 'create_time' => $list->create_time,
