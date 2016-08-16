@@ -136,6 +136,3 @@ $di->setShared(AppServices::UPYUN, function() {
 	return new UPyun();
 });
 
-$di->setShared(AppServices::ALIDAYU, function() {
-	return new Alidayu();
-});
