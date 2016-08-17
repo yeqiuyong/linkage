@@ -20,6 +20,7 @@ $loader->registerDirs(
 
 		APP_PATH . $config->application->vendorFractalDir,
 		APP_PATH . $config->application->vendorJWTDir,
+		APP_PATH . $config->application->apiDir,
 	)
 )->register();
 
@@ -34,6 +35,7 @@ $loader->registerNamespaces(array(
 	'Multiple\Core\Exception' => APP_PATH . $config->application->exceptionDir,
 	'Multiple\Core\Auth' => APP_PATH . $config->application->authDir,
 	'Multiple\Core\API' => APP_PATH . $config->application->coreAPIDir,
+	'Multiple\API\Controllers' => APP_PATH. $config->application->apiDir,
 
 	'League\Fractal' => APP_PATH . $config->application->vendorFractalDir,
 	'Firebase\JWT' => APP_PATH . $config->application->vendorJWTDir,
