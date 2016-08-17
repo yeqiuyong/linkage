@@ -74,7 +74,7 @@ class SmsTask extends Task
                 $req->setRecNum($mobile);
                 $req->setSmsTemplateCode("SMS_13002130");
             }
-            
+
             $c->execute($req);
 
             echo "\n\n";
