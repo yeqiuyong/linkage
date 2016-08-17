@@ -217,6 +217,13 @@ class SessionController extends APIControllerBase
         $offset = $this->request->getPost('offset', 'int');
         $size = $this->request->getPost('size', 'int');
 
+        $response = $this->_loginAction($mobile,$password,$pagination,$offset,$size);
+
+        return $this->respondArray($response);
+    }
+
+    public function _loginAction($mobile, $password, $pagination=0, $offset=0, $size=10){
+
         try {
             $authManager = $this->di->get(Services::AUTH_MANAGER);
             $session = $authManager->loginWithMobilePassword(MobileAdaptor::NAME, $mobile, $password);
@@ -265,7 +272,7 @@ class SessionController extends APIControllerBase
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
-        return $this->respondArray($response);
+        return $response;
     }
 
     /**
