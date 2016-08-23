@@ -47,6 +47,7 @@ class Order extends Model
         $this->create_time = $now;
         $this->update_time = $now;
         $this->status = StatusCodes::ORDER_PLACE;
+        $this->is_comment = '0';
 
         if($this->save() == false){
             $message = '';
