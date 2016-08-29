@@ -122,7 +122,8 @@ class RegisterController extends FrontendControllerBase
             }
 
             $user = new ClientUser();
-            $user->registerByMobile($mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
+            $user->registerByMobile('用户', 'F',$mobile, $password, StatusCodes::CLIENT_USER_ACTIVE, $companyID);
+
             $userID = $user->user_id;
 
             $userRole = new ClientUserRole();
