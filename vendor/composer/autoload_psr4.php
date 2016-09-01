@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'PhalconRest\\' => array($vendorDir . '/redound/phalcon-rest/src/PhalconRest'),
     'League\\Fractal\\' => array($vendorDir . '/league/fractal/src'),
+    'JPush\\' => array($vendorDir . '/jpush/jpush/src/JPush'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
 );
