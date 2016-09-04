@@ -48,6 +48,7 @@ class Order extends Model
         $this->update_time = $now;
         $this->status = StatusCodes::ORDER_PLACE;
         $this->is_comment = '0';
+        $this->is_read = '-1';
 
         if($this->save() == false){
             $message = '';
@@ -102,6 +103,7 @@ class Order extends Model
 
         $order->update_time = time();
         $order->status = $status;
+        $order->is_read = '-3';
 
         if($order->update() == false){
             $message = '';
@@ -737,6 +739,49 @@ class Order extends Model
         }
 
         return $results;
+    }
+
+    public function getRead4Manufacture($companyId =''){
+        $orders = self::find([
+            'conditions' => 'manufacture_id = :company_id: AND is_read=-3',
+            'bind' => ['company_id' => $companyId]
+        ]);
+
+        return (sizeof($orders) == 0) ? false : true;
+    }
+
+    public function getRead4Transporter($companyId =''){
+        $orders = self::find([
+            'conditions' => 'transporter_id = :company_id: AND is_read=-1',
+            'bind' => ['company_id' => $companyId]
+        ]);
+
+        return (sizeof($orders) == 0) ? false : true;
+    }
+
+    public function updateReadStatus($orderId,$read){
+        $order = self::findFirst([
+            'conditions' => 'order_id = :order_id:',
+            'bind' => ['order_id' => $orderId]
+        ]);
+
+        if(!isset($order->order_id)){
+            throw new UserOperationException(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
+        }
+
+        $order->update_time = time();
+        $order->is_read = $read;
+
+        if($order->update() == false){
+            $message = '';
+            foreach ($this->getMessages() as $msg) {
+                $message .= (String)$msg . ",";
+            }
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
+            throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+        }
     }
 
 }
