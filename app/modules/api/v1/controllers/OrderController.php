@@ -838,12 +838,24 @@ class OrderController extends APIControllerBase
             $role = $user->getRoleId($this->cid);
             $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
 
+            $order = new Order();
             //Get Order Detail
             $orderExport = new OrderExport();
             if($isManufacture){
                 $orderDetail = $orderExport->getDetail4Manufacture($orderId);
+
+                $order_status = $order->getStatus($orderId);
+                if($order_status == 3){
+                    $order->updateReadStatus($orderId,3);
+                }
+
             }else{
                 $orderDetail = $orderExport->getDetail4Transporter($orderId);
+
+                $order_status = $order->getStatus($orderId);
+                if($order_status == 0){
+                    $order->updateReadStatus($orderId,1);
+                }
             }
 
             if($orderDetail['is_comment'] == 1){
@@ -895,12 +907,24 @@ class OrderController extends APIControllerBase
             $role = $user->getRoleId($this->cid);
             $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
 
+            $order = new Order();
             //Get Order Detail
             $orderImport = new OrderImport();
             if($isManufacture){
                 $orderDetail = $orderImport->getDetail4Manufacture($orderId);
+                //厂商查看更改已完成订单为已读
+                $order_status = $order->getStatus($orderId);
+                if($order_status == 3){
+                    $order->updateReadStatus($orderId,3);
+                }
+
             }else{
                 $orderDetail = $orderImport->getDetail4Transporter($orderId);
+                //承运商查看订单之后更改待接收订单为已读
+                $order_status = $order->getStatus($orderId);
+                if($order_status == 0){
+                    $order->updateReadStatus($orderId,1);
+                }
             }
 
             if($orderDetail['is_comment'] == 1){
@@ -952,12 +976,25 @@ class OrderController extends APIControllerBase
             $role = $user->getRoleId($this->cid);
             $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
 
+            $order = new Order();
             //Get Order Detail
             $orderSelf = new OrderSelf();
             if($isManufacture){
                 $orderDetail = $orderSelf->getDetail4Manufacture($orderId);
+
+                //厂商查看更改已完成订单为已读
+                $order_status = $order->getStatus($orderId);
+                if($order_status == 3){
+                    $order->updateReadStatus($orderId,3);
+                }
             }else{
                 $orderDetail = $orderSelf->getDetail4Transporter($orderId);
+
+                //承运商查看订单之后更改待接收订单为已读
+                $order_status = $order->getStatus($orderId);
+                if($order_status == 0){
+                    $order->updateReadStatus($orderId,1);
+                }
             }
 
             if($orderDetail['is_comment'] == 1){
@@ -1031,6 +1068,39 @@ class OrderController extends APIControllerBase
 
         return $this->respondArray($commentId);
 
+    }
+
+    public function readAction(){
+
+        if(!isset($this->cid)){
+            return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
+        }
+
+        try {
+            $user = new  ClientUser();
+            $role = $user->getRoleId($this->cid);
+            $isManufacture = ($role == LinkageUtils::USER_ADMIN_MANUFACTURE || $role == LinkageUtils::USER_MANUFACTURE) ? true : false;
+
+            $info = $user->getUserInfomation($this->cid);
+            $order = new Order();
+
+            if($isManufacture){
+                $isread_order = $order->getRead4Manufacture($info['company_id']);
+            }else{
+                $isread_order = $order->getRead4Transporter($info['company_id']);
+            }
+
+            if(!$isread_order){
+                $is_read = ['read' => '0'];
+            }else{
+                $is_read = ['read' => '1'];
+            }
+
+        }catch (Exception $e){
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
+
+        return $this->respondArray($is_read);
     }
 
     private function genOrderId($userid){
