@@ -421,7 +421,7 @@ class ClientUser extends Model
             $condition = " limit ".$offset.",".$size;
         }
 
-        $sql="select a.user_id, a.username, a.name, a.mobile, a.icon, b.role_id from linkage_clientuser a join linkage_user_role b where a.user_id = b.user_id and b.role_id not in(5) and a.company_id in (select company_id from linkage_clientuser where user_id = $userid)" . $condition;
+        $sql="select a.user_id, a.username, a.name, a.mobile, a.icon, b.role_id from linkage_clientuser a join linkage_user_role b where a.user_id = b.user_id and b.role_id not in(1,3,5) and a.company_id in (select company_id from linkage_clientuser where user_id = $userid)" . $condition;
         // Execute the query
         $staffs = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 
