@@ -218,6 +218,9 @@ class SessionController extends APIControllerBase
         $size = $this->request->getPost('size', 'int');
 
         $response = $this->_loginAction($mobile,$password,$pagination,$offset,$size);
+        if($response == 'userdelete'){
+            return $this->respondError(ErrorCodes::USER_IS_DELETE, ErrorCodes::$MESSAGE[ErrorCodes::USER_IS_DELETE]);
+        }
 
         return $this->respondArray($response);
     }
@@ -231,8 +234,10 @@ class SessionController extends APIControllerBase
 
             $user = new ClientUser();
             $company = new Company();
-
             $userInfo = $user->getUserInfomation($userid);
+            if($userInfo['status'] == 4){
+                return 'userdelete';
+            }
             if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_MANUFACTURE || $userInfo['role'] == LinkageUtils::ROLE_MANUFACTURE){
                 $companies = $company->getTransporters($pagination, $offset, $size);
             }else if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] == LinkageUtils::ROLE_TRANSPORTER){
