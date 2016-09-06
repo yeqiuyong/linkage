@@ -72,6 +72,7 @@ class ErrorCodes
     const USER_ADVERTISE_NOT_FOUND = 4026;
     const USER_NAME_NULL = 4027;
     const USER_FAVORITE_EXIST = 4028;
+    const USER_IS_DELETE = 4029;
 
     //Company mangement
     const COMPANY_ID_NULL = 5001;
@@ -151,6 +152,7 @@ class ErrorCodes
         self:: USER_ADVERTISE_NOT_FOUND => "广告编码不存在",
         self:: USER_NAME_NULL => "用户姓名为空",
         self:: USER_FAVORITE_EXIST => "公司不能重复收藏",
+        self:: USER_IS_DELETE => "用户已经删除",
 
         // Company management
         self:: COMPANY_ID_NULL => "公司ID为空",
