@@ -87,6 +87,7 @@ class ErrorCodes
     const ORDER_ACCEPT_ERROR = 6005;
     const ORDER_COMMENT_COMMENT_ALREADY = 6006;
     const ORDER_TASK_NOT_FOUND = 6007;
+    const ORDER_IS_HANDLING = 6008;
 
 
     public static $MESSAGE = [
@@ -167,6 +168,7 @@ class ErrorCodes
         self:: ORDER_ACCEPT_ERROR => "接单失败",
         self:: ORDER_COMMENT_COMMENT_ALREADY => " 订单已经被评论",
         self:: ORDER_TASK_NOT_FOUND => "任务不存在",
+        self:: ORDER_IS_HANDLING => "订单已被接受",
 
     ];
 
