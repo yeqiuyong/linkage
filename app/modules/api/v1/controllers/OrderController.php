@@ -668,6 +668,11 @@ class OrderController extends APIControllerBase
             return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
         }
 
+        $order = new Order();
+        $orderStatus = $order->getStatus($orderId);
+        if($orderStatus == StatusCodes::ORDER_HANDLING) {
+            return $this->respondError(ErrorCodes::ORDER_IS_HANDLING, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_IS_HANDLING]);
+        }
         try {
             $user = new ClientUser();
             $mUserInfo = $user->getUserInfomation($this->cid);
