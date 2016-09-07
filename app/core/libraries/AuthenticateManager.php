@@ -129,14 +129,14 @@ class AuthenticateManager
     public function login($adaptorName, array $data)
     {
         if (!$adaptor = $this->getAdaptorByName($adaptorName)) {
-
             throw new AuthenticateException(ErrorCodes::AUTH_INVALIDTYPE, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_INVALIDTYPE]);
         }
 
         $identity = $adaptor->login($data);
 
         if (!$identity) {
-            throw new AuthenticateException(ErrorCodes::AUTH_BADLOGIN, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_BADLOGIN]);
+            return 'passwordError';
+
         }
 
         $startTime = time();
