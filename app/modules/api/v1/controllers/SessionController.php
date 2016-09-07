@@ -218,6 +218,10 @@ class SessionController extends APIControllerBase
         $size = $this->request->getPost('size', 'int');
 
         $response = $this->_loginAction($mobile,$password,$pagination,$offset,$size);
+
+        if($response == 'password'){
+            return $this->respondError(ErrorCodes::AUTH_PASSWORD_INVALID, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_PASSWORD_INVALID]);
+        }
         if($response == 'userdelete'){
             return $this->respondError(ErrorCodes::USER_IS_DELETE, ErrorCodes::$MESSAGE[ErrorCodes::USER_IS_DELETE]);
         }
@@ -230,11 +234,16 @@ class SessionController extends APIControllerBase
         try {
             $authManager = $this->di->get(Services::AUTH_MANAGER);
             $session = $authManager->loginWithMobilePassword(MobileAdaptor::NAME, $mobile, $password);
+
+           if($session == 'passwordError'){
+                return 'password';
+            }
             $userid = $session->getIdentity();
 
             $user = new ClientUser();
             $company = new Company();
             $userInfo = $user->getUserInfomation($userid);
+
             if($userInfo['status'] == 4){
                 return 'userdelete';
             }
