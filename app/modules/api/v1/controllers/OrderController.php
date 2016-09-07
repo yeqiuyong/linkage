@@ -1037,7 +1037,7 @@ class OrderController extends APIControllerBase
      */
     public function commentAction(){
         $orderId = $this->request->getPost('order_id', 'string');
-        $score = $this->request->getPost('score', 'int');
+        $score = $this->request->getPost('score', 'string');
         $comment = $this->request->getPost('comment', 'string');
 
         if(!isset($this->cid)){
