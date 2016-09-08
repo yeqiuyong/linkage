@@ -709,6 +709,12 @@ class OrderController extends APIControllerBase
             return $this->respondError(ErrorCodes::ORDER_ID_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ID_NULL]);
         }
 
+        $order = new Order();
+        $orderStatus = $order->getStatus($orderId);
+        if($orderStatus == StatusCodes::ORDER_PLACE) {
+            return $this->respondError(ErrorCodes::ORDER_NOT_HANDLING, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_HANDLING]);
+        }
+
         try {
             $user = new ClientUser();
             $userInfo = $user->getUserInfomation($this->cid);
@@ -717,7 +723,6 @@ class OrderController extends APIControllerBase
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
-            $order = new Order();
             $order->updateStatus($orderId, StatusCodes::ORDER_REJECT);
 
         }catch (Exception $e){
