@@ -59,7 +59,8 @@ class UserController extends APIControllerBase
     }
 
     public function delStaffAction(){
-        $staffId = $this->request->getPost('staff_cid','string');
+        $staffId = $this->request->getPost('staff_cid');
+
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
@@ -71,7 +72,8 @@ class UserController extends APIControllerBase
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
             }
 
-            $a = $user->delStaff($staffId);
+            $user->delStaff($staffId);
+
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
         }
