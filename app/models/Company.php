@@ -371,7 +371,7 @@ class Company extends Model
             $condition = "limit $offset, $size";
         }
 
-        $sql = "select a.company_id, a.name, a.contactor, a.address, a.service_phone_1, a.description, a.status, a.logo, b.order_num from linkage_company a left join (select count(1) as order_num, transporter_id as company_id from linkage_order b where b.status in(1,3) group by b.transporter_id) b on a.company_id = b.company_id where a.status=0 ".$condition;
+        $sql = "select a.company_id, a.name, a.contactor, a.address, a.service_phone_1, a.description, a.status, a.logo, a.level, b.order_num from linkage_company a left join (select count(1) as order_num, transporter_id as company_id from linkage_order b where b.status in(1,3) group by b.transporter_id) b on a.company_id = b.company_id where a.status=0 ".$condition;
         $transporters = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 
         $results = [];;
@@ -384,7 +384,7 @@ class Company extends Model
             $result['contact_phone'] = isset($transporter->service_phone_1) ? $transporter->service_phone_1 : '';
             $result['description'] = isset($transporter->description) ? $transporter->description : '';
             $result['logo'] = isset($transporter->logo) ? $transporter->logo : '';
-            $result['score'] = 5;
+            $result['score'] = isset($transporter->level) ? $transporter->level : '0';
             $result['order_num'] = isset($transporter->order_num) ? (int)$transporter->order_num : 0;
 
             array_push($results,$result);
@@ -441,13 +441,12 @@ class Company extends Model
         }
 
         if($companyname == ''){
-            $condition = " and c.status=0 ";
+            $condition = " and a.status=0 ";
         }else{
-            $condition = " and c.name like '%".$companyname."%' and c.status=0 ";
+            $condition = " and a.name like '%".$companyname."%' and a.status=0 ";
         }
-
-        $phql="select c.company_id, c.name, c.contactor, c.address, c.email, c.logo, c.create_time, c.update_time from Multiple\Models\Company c where type=1 ".$condition." order by c.create_time desc ".$limit;
-        $lists = $this->modelsManager->executeQuery($phql);
+        $sql = "select a.company_id, a.name, a.contactor, a.address, a.email, a.logo, a.create_time, a.update_time, a.level, b.order_num from linkage_company a left join (select count(1) as order_num, transporter_id as company_id from linkage_order b where b.status in(1,3) group by b.transporter_id) b on a.company_id = b.company_id where a.type=1 ".$condition." order by a.create_time desc ".$limit;
+        $lists = new Resultset(null, $this, $this->getReadConnection()->query($sql));
 
         $companies = [];
         foreach($lists as $list){
@@ -460,6 +459,8 @@ class Company extends Model
                 'logo' => $list->logo?$list->logo:'',
                 'create_time' => $list->create_time,
                 'update_time' => $list->update_time,
+                'score' => isset($list->level)?$list->level:'0',
+                'order_num' => isset($list->order_num)?$list->order_num:'0'
 
             ];
 
@@ -483,7 +484,7 @@ class Company extends Model
             $condition = " and c.name like '%".$companyname."%' and c.status=0 ";
         }
 
-        $phql="select c.company_id, c.name, c.contactor, c.address, c.email, c.logo, c.create_time, c.update_time from Multiple\Models\Company c where type=0 ".$condition." order by c.create_time desc ".$limit;
+        $phql="select c.company_id, c.name, c.contactor, c.address, c.email, c.logo, c.create_time, c.update_time, c.level from Multiple\Models\Company c where type=0 ".$condition." order by c.create_time desc ".$limit;
         $lists = $this->modelsManager->executeQuery($phql);
 
         $companies = [];
@@ -497,6 +498,7 @@ class Company extends Model
                 'logo' => $list->logo?$list->logo:'',
                 'create_time' => $list->create_time,
                 'update_time' => $list->update_time,
+                'score' => isset($list->level)?$list->level:'0',
 
             ];
 
