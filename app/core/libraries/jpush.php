@@ -5,6 +5,13 @@
  * Date: 16-8-30
  * Time: 下午7:49
  */
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/Client.php';
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/PushPayload.php';
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/Http.php';
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/ReportPayload.php';
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/Exceptions/JPushException.php';
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/Exceptions/APIConnectionException.php';
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/Exceptions/APIRequestException.php';
 
 class jpush
 {
@@ -15,11 +22,16 @@ class jpush
     private $_appkeys;
 
     public function __construct(){
-        $this->_masterSecret = '886e799b9063abb80fb6a4db';
-        $this->_appkeys = 'ab6203c0c8263729040aade7';
+        $this->_masterSecret = 'ab6203c0c8263729040aade7';
+        $this->_appkeys = '886e799b9063abb80fb6a4db';
     }
 
-    public function request_post($url = '', $param = '') {
+    /**
+     * 模拟post进行url请求
+     * @param string $url
+     * @param string $param
+     */
+    function request_post($url = '', $param = '',$header='') {
         if (empty($url) || empty($param)) {
             return false;
         }
@@ -32,33 +44,78 @@ class jpush
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//要求结果为字符串且输出到屏幕上
         curl_setopt($ch, CURLOPT_POST, 1);//post提交方式
         curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$header);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         $data = curl_exec($ch);//运行curl
         curl_close($ch);
 
         return $data;
     }
 
-    public function send($sendno = 0,$receiver_type = 1, $receiver_value = '', $msg_type = 1, $msg_content = '', $platform = 'android,ios') {
-        $url = 'http://api.jpush.cn:8800/sendmsg/v2/sendmsg';
-        $param = '';
-        $param .= '&sendno='.$sendno;
-        $appkeys = $this->_appkeys;
-        $param .= '&app_key='.$appkeys;
-        $param .= '&receiver_type='.$receiver_type;
-        $param .= '&receiver_value='.$receiver_value;
-        $masterSecret = $this->_masterSecret;
-        $verification_code = md5($sendno.$receiver_type.$receiver_value.$masterSecret);
-        $param .= '&verification_code='.$verification_code;
-        $param .= '&msg_type='.$msg_type;
-        $param .= '&msg_content='.$msg_content;
-        $param .= '&platform='.$platform;
-        $res = $this->request_post($url, $param);
-        if ($res === false) {
-            return false;
-        }
-        $res_arr = json_decode($res, true);
-        return $res_arr;
-    }
+    function pushsend($receiver='0',$alert = '消息提示',$type=2) {
 
+        $client = new \JPush\Client($this->_appkeys,$this->_masterSecret);
+        $push = $client->push();
+        $platform = array('ios', 'android');
+        $alias = array($receiver);
+        $ios_notification = array(
+            'sound' => 'Linkage 通知',
+            'badge' => 2,
+            'content-available' => true,
+            'category' => 'jiguang',
+            'extras'=> array(
+                'id'=> $receiver,
+                'title'=>'Linkage 通知',
+                'content'=> $alert,
+                'create_time'=>time(),
+                'type' => $type
+            )
+        );
+        $android_notification = array(
+            'title' => 'Linkage 通知',
+            'build_id' => 2,
+            'extras'=> array(
+                'id'=> $receiver,
+                'title'=>'Linkage 通知',
+                'content'=> $alert,
+                'create_time'=>time(),
+                'type' => $type
+            ),
+        );
+
+        $content = 'Hello World';
+
+        $message = array(
+            'content_type'=>'text',
+            'title'=>'1122',
+            'extras'=> array(
+                'id'=> $receiver,
+                'title'=>'Linkage 通知',
+                'content'=> $alert,
+                'create_time'=>time(),
+                'type' => $type
+            )
+        );
+
+//
+//        $options = array(
+//            'sendno' => 100,
+//            'time_to_live' => 100,
+//
+//            'big_push_duration' => 100
+//        );
+
+        $response = $push->setPlatform($platform)
+            ->addAlias($alias)
+            ->message($content, $message)
+            ->iosNotification($alert, $ios_notification)
+            ->androidNotification($alert, $android_notification)
+
+            //->options($options)
+        ->send();
+        return $response;
+
+    }
 
 }
