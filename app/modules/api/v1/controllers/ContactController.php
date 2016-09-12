@@ -65,17 +65,9 @@ class ContactController extends APIControllerBase
 
     }
     public function pushAction(){
-        $n_title   =  '领骐';
-        $n_content =  '领骐物流';
-
-        $arr = array('fromer'=>'发送者','fromer_name'=>'发送者名字','fromer_icon'=>'发送者头像','image'=>'发送图片链接','sound'=>'发送音乐链接');//自定义参数
-
-        $sendno = 4;
-        $receiver_value = '';
-        $platform = 'Android,iOS' ;
-        $msg_content = json_encode(array('n_builder_id'=>0, 'n_title'=>$n_title, 'n_content'=>$n_content,'n_extras'=>$arr));
+        $receiver = '1000073';
         $obj = new \jpush();
-        $res = $obj->send($sendno, 4, $receiver_value, 1, $msg_content, $platform);
+        $res = $obj->pushsend($receiver);
         print_r($res);
         exit();
     }
