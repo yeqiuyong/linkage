@@ -1,7 +1,7 @@
 <?php
 namespace JPush;
 use InvalidArgumentException;
-
+require_once APP_PATH . 'vendor/jpush/jpush/src/JPush/Config.php';
 class Client {
 
     private $appKey;
