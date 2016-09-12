@@ -143,6 +143,8 @@ class Order extends Model
         return ['type' => $order->type,
             'manufacture_id' => $order->manufacture_id,
             'transporter_id' => $order->transporter_id,
+            'manufacture_contact_id' => $order->manufacture_contact_id,
+            'transporter_contact_id' => $order->transporter_contact_id,
         ];
     }
 
