@@ -28,6 +28,8 @@ use Multiple\Models\Company;
 use Multiple\Models\DriverTask;
 use Multiple\Models\OrderComment;
 
+require_once APP_PATH . 'app/core/libraries/jpush.php';
+
 /**
  * @resource("User")
  */
@@ -604,6 +606,14 @@ class OrderController extends APIControllerBase
                 $this->redis->setTimeout($mutex, 30);
 
                 $order->accept($orderId, $this->cid, $userInfo['name'], $userInfo['mobile']);
+
+                $order_info = $order->getOrderInfo($orderId);
+                $receiver = $order_info['manufacture_contact_id'];
+                $alert = '您的订单已被接收';
+                $type = 2;
+                $obj = new \jpush();
+                $res = $obj->pushsend($receiver,$alert,$type);
+
                 $this->redis->delete($mutex);
             }else{
                 return $this->respondError(ErrorCodes::ORDER_ACCEPT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_ACCEPT_ERROR]);
