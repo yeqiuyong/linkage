@@ -607,12 +607,10 @@ class OrderController extends APIControllerBase
 
                 $order->accept($orderId, $this->cid, $userInfo['name'], $userInfo['mobile']);
 
-                $order_info = $order->getOrderInfo($orderId);
-                $receiver = $order_info['manufacture_contact_id'];
                 $alert = '您的订单已被接收';
-                $type = 2;
+                $order_info = $order->getOrderInfo($orderId);
                 $obj = new \jpush();
-                $res = $obj->pushsend($receiver,$alert,$type);
+                $res = $obj->pushsend($order_info['manufacture_contact_id'],$alert,2);
 
                 $this->redis->delete($mutex);
             }else{
@@ -653,6 +651,11 @@ class OrderController extends APIControllerBase
 
             $order = new Order();
             $order->updateStatus($orderId, StatusCodes::ORDER_HANDLED);
+
+            $alert = '您的订单已被完成';
+            $order_info = $order->getOrderInfo($orderId);
+            $obj = new \jpush();
+            $res = $obj->pushsend($order_info['manufacture_contact_id'],$alert,2);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
@@ -734,6 +737,11 @@ class OrderController extends APIControllerBase
             }
 
             $order->updateStatus($orderId, StatusCodes::ORDER_REJECT);
+
+            $alert = '您的订单被拒绝';
+            $order_info = $order->getOrderInfo($orderId);
+            $obj = new \jpush();
+            $res = $obj->pushsend($order_info['manufacture_contact_id'],$alert,2);
 
         }catch (Exception $e){
             return $this->respondError($e->getCode(), $e->getMessage());
