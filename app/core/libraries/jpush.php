@@ -83,7 +83,9 @@ class jpush
                 'type' => $type
             ),
         );
-
+        /*
+         *自定义消息
+         * /
         $content = 'Hello World';
 
         $message = array(
@@ -97,7 +99,7 @@ class jpush
                 'type' => $type
             )
         );
-
+        */
 //
 //        $options = array(
 //            'sendno' => 100,
@@ -108,10 +110,9 @@ class jpush
 
         $response = $push->setPlatform($platform)
             ->addAlias($alias)
-            ->message($content, $message)
             ->iosNotification($alert, $ios_notification)
             ->androidNotification($alert, $android_notification)
-
+            //->message($content, $message)自定义消息
             //->options($options)
         ->send();
         return $response;
