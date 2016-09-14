@@ -724,8 +724,8 @@ class OrderController extends APIControllerBase
 
         $order = new Order();
         $orderStatus = $order->getStatus($orderId);
-        if($orderStatus == StatusCodes::ORDER_PLACE) {
-            return $this->respondError(ErrorCodes::ORDER_NOT_HANDLING, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_HANDLING]);
+        if($orderStatus != StatusCodes::ORDER_PLACE) {
+            return $this->respondError(ErrorCodes::ORDER_REJECT_ERROR, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_REJECT_ERROR]);
         }
 
         try {
