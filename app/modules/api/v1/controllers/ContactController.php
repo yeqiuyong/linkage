@@ -19,7 +19,6 @@ use Multiple\Core\Constants\Services;
 use Multiple\Models\ClientUser;
 use Multiple\Models\Contact;
 
-require_once APP_PATH . 'app/core/libraries/jpush.php';
 
 class ContactController extends APIControllerBase
 {
@@ -64,11 +63,5 @@ class ContactController extends APIControllerBase
         return $this->respondOK();
 
     }
-    public function pushAction(){
-        $receiver = '1000073';
-        $obj = new \jpush();
-        $res = $obj->pushsend($receiver);
-        print_r($res);
-        exit();
-    }
+
 }
