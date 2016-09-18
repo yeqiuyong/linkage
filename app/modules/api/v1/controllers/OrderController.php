@@ -71,6 +71,11 @@ class OrderController extends APIControllerBase
         $shipSchedule = $this->request->getPost('ship_schedule_no', 'string');
         $isBookCargo = $this->request->getPost('is_book_cargo', 'int');
 
+        //写日志
+        $message = $tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$port.','.$customsIn.','.$so.','.$soImages.','.$shipCompany.','.$shipName.','.$shipSchedule.','.$isBookCargo;
+        $logger = Di::getDefault()->get(Services::LOGGER);
+        $logger->fatal($message);
+
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
         }
@@ -79,7 +84,7 @@ class OrderController extends APIControllerBase
             return $this->respondError(ErrorCodes::ORDER_TRANSPORTER_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_TRANSPORTER_NULL]);
         }
 
-        try{
+       // try{
             // Start a transaction
             $this->db->begin();
 
@@ -120,11 +125,11 @@ class OrderController extends APIControllerBase
                 'process' => 0
             ];
 
-        }catch (Exception $e){
-            $this->db->rollback();
+        //}catch (Exception $e){
+        //    $this->db->rollback();
 
-            return $this->respondError($e->getCode(), $e->getMessage());
-        }
+        //    return $this->respondError($e->getCode(), $e->getMessage());
+        //}
 
         return $this->respondArray($result);
 
