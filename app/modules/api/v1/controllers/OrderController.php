@@ -604,6 +604,7 @@ class OrderController extends APIControllerBase
                 }
 
                 $this->redis->setTimeout($mutex, 30);
+                $userInfo['name'] = empty($userInfo['name'])?'':$userInfo['name'];
 
                 $order->accept($orderId, $this->cid, $userInfo['name'], $userInfo['mobile']);
 
