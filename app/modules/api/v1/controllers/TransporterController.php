@@ -83,6 +83,7 @@ class TransporterController extends APIControllerBase
 
             foreach($cargos as $cargo){
                 $driverTask = new DriverTask();
+                $cargo['car_id'] = isset($cargo['car_id'])?$cargo['car_id']:0;
                 $driverTask->add($orderId,
                     $orderInfo['type'],
                     $orderInfo['transporter_id'],
