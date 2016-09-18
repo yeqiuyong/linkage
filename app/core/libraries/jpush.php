@@ -60,10 +60,9 @@ class jpush
         $platform = array('ios', 'android');
         $alias = array($receiver);
         $ios_notification = array(
-            'sound' => 'Linkage 通知',
-            'badge' => 2,
+            'sound' => '',
+            'badge' => '+1',
             'content-available' => true,
-            'category' => 'jiguang',
             'extras'=> array(
                 'id'=> $receiver,
                 'title'=>'Linkage 通知',
@@ -100,20 +99,17 @@ class jpush
             )
         );
         */
-//
-//        $options = array(
-//            'sendno' => 100,
-//            'time_to_live' => 100,
-//
-//            'big_push_duration' => 100
-//        );
+
+        $options = array(
+            'apns_production' => true
+        );
 
         $response = $push->setPlatform($platform)
             ->addAlias($alias)
             ->iosNotification($alert, $ios_notification)
             ->androidNotification($alert, $android_notification)
             //->message($content, $message)自定义消息
-            //->options($options)
+            ->options($options)
         ->send();
         return $response;
 
