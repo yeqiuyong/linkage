@@ -72,7 +72,7 @@ class OrderController extends APIControllerBase
         $isBookCargo = $this->request->getPost('is_book_cargo', 'int');
 
         //写日志
-        $message = $tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$port.','.$customsIn.','.$so.','.$soImages.','.$shipCompany.','.$shipName.','.$shipSchedule.','.$isBookCargo;
+        $message = 'export:'.$tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$port.','.$customsIn.','.$so.','.$soImages.','.$shipCompany.','.$shipName.','.$shipSchedule.','.$isBookCargo;
         $logger = Di::getDefault()->get(Services::LOGGER);
         $logger->fatal($message);
 
@@ -124,6 +124,10 @@ class OrderController extends APIControllerBase
                 'create_time' => time(),
                 'process' => 0
             ];
+            //写日志
+            $message = 'export:'.$orderId.','.$tCompanyId.','.$tCompanyInfo['name'];
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
         //}catch (Exception $e){
         //    $this->db->rollback();
@@ -156,6 +160,11 @@ class OrderController extends APIControllerBase
         $cargoCompany = $this->request->getPost('cargo_company', 'string');
         $customBroker = $this->request->getPost('customs_broker', 'string');
         $customContact = $this->request->getPost('customs_contact', 'string');
+
+        //写日志
+        $message = 'import:'.$tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$rentExpire.','.$billNo.','.$cargoCompany.','.$customBroker.','.$customContact;
+        $logger = Di::getDefault()->get(Services::LOGGER);
+        $logger->fatal($message);
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
@@ -204,6 +213,11 @@ class OrderController extends APIControllerBase
                 'process' => 0
             ];
 
+            //写日志
+            $message = 'import:'.$orderId.','.$tCompanyId.','.$tCompanyInfo['name'];
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
+
         }catch (Exception $e){
             $this->db->rollback();
 
@@ -232,6 +246,11 @@ class OrderController extends APIControllerBase
         $customsIn = $this->request->getPost('customs_in', 'int');
         $cargoTakeTime = $this->request->getPost('cargo_take_time', 'int');
         $isCustomsDeclare = $this->request->getPost('is_customs_declare', 'int');
+
+        //写日志
+        $message = 'self:'.$tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$customsIn.','.$customsIn.','.$cargoTakeTime.','.$isCustomsDeclare;
+        $logger = Di::getDefault()->get(Services::LOGGER);
+        $logger->fatal($message);
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
@@ -281,6 +300,10 @@ class OrderController extends APIControllerBase
                 'create_time' => time(),
                 'process' => 0
             ];
+            //写日志
+            $message = 'self:'.$orderId.','.$tCompanyId.','.$tCompanyInfo['name'];
+            $logger = Di::getDefault()->get(Services::LOGGER);
+            $logger->fatal($message);
 
         }catch (Exception $e){
             $this->db->rollback();
@@ -609,9 +632,9 @@ class OrderController extends APIControllerBase
                 }
 
                 $this->redis->setTimeout($mutex, 30);
-                $userInfo['name'] = empty($userInfo['name'])?'':$userInfo['name'];
+                $userInfo['realname'] = empty($userInfo['realname'])?'':$userInfo['realname'];
 
-                $order->accept($orderId, $this->cid, $userInfo['name'], $userInfo['mobile']);
+                $order->accept($orderId, $this->cid, $userInfo['realname'], $userInfo['mobile']);
 
                 $alert = '您的订单已被接收';
                 $order_info = $order->getOrderInfo($orderId);
