@@ -84,7 +84,7 @@ class OrderController extends APIControllerBase
             return $this->respondError(ErrorCodes::ORDER_TRANSPORTER_NULL, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_TRANSPORTER_NULL]);
         }
 
-       // try{
+        try{
             // Start a transaction
             $this->db->begin();
 
@@ -129,11 +129,11 @@ class OrderController extends APIControllerBase
             $logger = Di::getDefault()->get(Services::LOGGER);
             $logger->fatal($message);
 
-        //}catch (Exception $e){
-        //    $this->db->rollback();
+        }catch (Exception $e){
+            $this->db->rollback();
 
-        //    return $this->respondError($e->getCode(), $e->getMessage());
-        //}
+            return $this->respondError($e->getCode(), $e->getMessage());
+        }
 
         return $this->respondArray($result);
 
@@ -160,11 +160,6 @@ class OrderController extends APIControllerBase
         $cargoCompany = $this->request->getPost('cargo_company', 'string');
         $customBroker = $this->request->getPost('customs_broker', 'string');
         $customContact = $this->request->getPost('customs_contact', 'string');
-
-        //写日志
-        $message = 'import:'.$tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$rentExpire.','.$billNo.','.$cargoCompany.','.$customBroker.','.$customContact;
-        $logger = Di::getDefault()->get(Services::LOGGER);
-        $logger->fatal($message);
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
@@ -213,11 +208,6 @@ class OrderController extends APIControllerBase
                 'process' => 0
             ];
 
-            //写日志
-            $message = 'import:'.$orderId.','.$tCompanyId.','.$tCompanyInfo['name'];
-            $logger = Di::getDefault()->get(Services::LOGGER);
-            $logger->fatal($message);
-
         }catch (Exception $e){
             $this->db->rollback();
 
@@ -246,11 +236,6 @@ class OrderController extends APIControllerBase
         $customsIn = $this->request->getPost('customs_in', 'int');
         $cargoTakeTime = $this->request->getPost('cargo_take_time', 'int');
         $isCustomsDeclare = $this->request->getPost('is_customs_declare', 'int');
-
-        //写日志
-        $message = 'self:'.$tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$customsIn.','.$customsIn.','.$cargoTakeTime.','.$isCustomsDeclare;
-        $logger = Di::getDefault()->get(Services::LOGGER);
-        $logger->fatal($message);
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
@@ -300,10 +285,6 @@ class OrderController extends APIControllerBase
                 'create_time' => time(),
                 'process' => 0
             ];
-            //写日志
-            $message = 'self:'.$orderId.','.$tCompanyId.','.$tCompanyInfo['name'];
-            $logger = Di::getDefault()->get(Services::LOGGER);
-            $logger->fatal($message);
 
         }catch (Exception $e){
             $this->db->rollback();
@@ -1161,9 +1142,10 @@ class OrderController extends APIControllerBase
     }
 
     private function genOrderId($userid){
+        $userid = substr($userid,-5);
         $date = time();
 
-        return $userid.substr($date, 0, 8);
+        return $userid.$date;
     }
 
     private function genCargosObj($cargoStr){
