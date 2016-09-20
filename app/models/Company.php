@@ -508,4 +508,32 @@ class Company extends Model
         return $companies;
 
     }
+
+    public function updateCompanyLevel($companyId,$score=0){
+        if($score != 0){
+            $company = self::findFirst([
+                'conditions' => 'company_id = :company_id:',
+                'bind' => ['company_id' => $companyId]
+            ]);
+
+            if(!isset($company->company_id)){
+                throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
+            }
+
+            $company->level = intval(floor($score/5));//每5分加一级
+            $company->update_time = time();
+
+            if($company->update() == false){
+                $message = '';
+                foreach ($this->getMessages() as $msg) {
+                    $message .= (String)$msg . ",";
+                }
+                $logger = Di::getDefault()->get(Services::LOGGER);
+                $logger->fatal($message);
+
+                throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
+            }
+        }
+    }
+
 }
