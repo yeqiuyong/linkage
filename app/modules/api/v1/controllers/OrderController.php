@@ -10,6 +10,8 @@
 namespace Multiple\API\Controllers;
 
 use Phalcon\Di;
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 
 use Multiple\Core\Exception\Exception;
 use Multiple\Core\APIControllerBase;
@@ -72,9 +74,9 @@ class OrderController extends APIControllerBase
         $isBookCargo = $this->request->getPost('is_book_cargo', 'int');
 
         //写日志
-        $message = 'export:'.$tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$port.','.$customsIn.','.$so.','.$soImages.','.$shipCompany.','.$shipName.','.$shipSchedule.','.$isBookCargo;
-        $logger = Di::getDefault()->get(Services::LOGGER);
-        $logger->fatal($message);
+        //$message = 'export:'.$tCompanyId.','.$cargoStr.','.$takeAddress.','.$takeTime.','.$deliveryAddress.','.$deliveryTime.','.$isTransferPort.','.$memo.','.$port.','.$customsIn.','.$so.','.$soImages.','.$shipCompany.','.$shipName.','.$shipSchedule.','.$isBookCargo;
+        //$logger = Di::getDefault()->get(Services::LOGGER);
+        //$logger->fatal($message);
 
         if(!isset($this->cid)){
             return $this->respondError(ErrorCodes::AUTH_IDENTITY_MISS, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_IDENTITY_MISS]);
@@ -125,9 +127,9 @@ class OrderController extends APIControllerBase
                 'process' => 0
             ];
             //写日志
-            $message = 'export:'.$orderId.','.$tCompanyId.','.$tCompanyInfo['name'];
-            $logger = Di::getDefault()->get(Services::LOGGER);
-            $logger->fatal($message);
+            //$message = 'export:'.$orderId.','.$tCompanyId.','.$tCompanyInfo['name'];
+            //$logger = Di::getDefault()->get(Services::LOGGER);
+            //$logger->fatal($message);
 
         }catch (Exception $e){
             $this->db->rollback();
@@ -1082,8 +1084,10 @@ class OrderController extends APIControllerBase
         }
 
         try {
+            $this->db->begin();
             $order = new Order();
             $isOrderExist = $order->isOrderExist($orderId);
+
             if(!$isOrderExist){
                 return $this->respondError(ErrorCodes::ORDER_NOT_FOUND, ErrorCodes::$MESSAGE[ErrorCodes::ORDER_NOT_FOUND]);
             }
@@ -1097,10 +1101,20 @@ class OrderController extends APIControllerBase
 
             $commentInfo = $orderComment->getCommentInfo($orderId);
             $commentId = ['id'=>$commentInfo->id];
-
+            //更新订单是否已评价状态
             $order->updateComment($orderId);
+            //获取厂商所有订单的总评分
+            $order_info = $order->getOrderInfo($orderId);
+            $order_score = $order->getOrderScore($order_info['manufacture_id']);
+
+            //更新厂商等级分数厂商所有订单评价相加多增加5分则升一级
+            $company = new Company();
+            $company->updateCompanyLevel($order_info['manufacture_id'],$order_score);
+
+            $this->db->commit();
 
         }catch (Exception $e){
+            $this->db->rollback();
             return $this->respondError($e->getCode(), $e->getMessage());
         }
 
