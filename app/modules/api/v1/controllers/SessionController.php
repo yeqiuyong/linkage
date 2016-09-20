@@ -244,7 +244,7 @@ class SessionController extends APIControllerBase
             $company = new Company();
             $userInfo = $user->getUserInfomation($userid);
 
-            if($userInfo['status'] == 4){
+            if($userInfo['status'] == 4 || $userInfo['status'] == 1 || $userInfo['status'] == 3){
                 return 'userdelete';
             }
             if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_MANUFACTURE || $userInfo['role'] == LinkageUtils::ROLE_MANUFACTURE){
