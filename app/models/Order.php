@@ -786,4 +786,16 @@ class Order extends Model
         }
     }
 
+    public function getOrderScore($companyId){
+        $phql="select sum(b.score) as allscore from Multiple\Models\Order a join Multiple\Models\OrderComment b where a.order_id = b.order_id and a.is_comment='1' and a.manufacture_id='".$companyId."'";
+        $orders = $this->modelsManager->executeQuery($phql);
+        foreach ($orders as $order) {
+
+            $result = $order->allscore;
+
+        }
+        return $result;
+
+    }
+
 }
