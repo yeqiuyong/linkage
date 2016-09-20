@@ -49,16 +49,22 @@ class SystemSet extends Model
 
     public function set($userid, $isReceiveSms, $isReceiveEmail)
     {
+        $setting = self::findFirst([
+            'conditions' => 'user_id = :userid:',
+            'bind' => ['userid' => $userid]
+        ]);
+
+        if(!isset($setting->user_id)){
+            throw new DataBaseException(ErrorCodes::DATA_FIND_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FIND_FAIL]);
+        }
+
         $now = time();
 
-        $this->user_id = $userid;
-        $this->receive_sms = $isReceiveSms;
-        $this->receive_email = $isReceiveEmail;
+        $setting->receive_sms = $isReceiveSms;
+        $setting->receive_email = $isReceiveEmail;
+        $setting->update_time = $now;
 
-        //$this->create_time = $now;
-        $this->update_time = $now;
-
-        if ($this->save() == false) {
+        if ($setting->update() == false) {
             $message = '';
             foreach ($this->getMessages() as $msg) {
                 $message .= (String)$msg . ',';
