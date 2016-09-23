@@ -520,7 +520,7 @@ class Company extends Model
                 throw new UserOperationException(ErrorCodes::COMPANY_NOTFOUND, ErrorCodes::$MESSAGE[ErrorCodes::COMPANY_NOTFOUND]);
             }
 
-            $company->level = intval(floor($score/5));//每5分加一级
+            $company->level = $score;//每5分加一级
             $company->update_time = time();
 
             if($company->update() == false){
