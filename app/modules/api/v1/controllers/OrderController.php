@@ -1085,6 +1085,7 @@ class OrderController extends APIControllerBase
 
         try {
             $this->db->begin();
+
             $order = new Order();
             $isOrderExist = $order->isOrderExist($orderId);
 
@@ -1104,12 +1105,21 @@ class OrderController extends APIControllerBase
             //更新订单是否已评价状态
             $order->updateComment($orderId);
             //获取厂商所有订单的总评分
-            $order_info = $order->getOrderInfo($orderId);
-            $order_score = $order->getOrderScore($order_info['manufacture_id']);
-
-            //更新厂商等级分数厂商所有订单评价相加多增加5分则升一级
+            $manu_order_info = $order->getOrderInfo($orderId);
+            $manu_score_num = $order->getOrderScore4manu($manu_order_info['manufacture_id']);
+            $manu_score = intval(floor($manu_score_num[0]/$manu_score_num[1]));
+            //更新厂商等级分数
             $company = new Company();
-            $company->updateCompanyLevel($order_info['manufacture_id'],$order_score);
+            $company->updateCompanyLevel($manu_order_info['manufacture_id'],$manu_score);
+
+            //获取承运商所有订单的总评分
+            $user = new  ClientUser();
+            $userinfo = $user->getUserInfomation($this->cid);
+            $tran_score_num = $order->getOrderScore4tran($userinfo['company_id']);
+            $tran_score = intval(floor($tran_score_num[0]/$tran_score_num[1]));
+            //更新承运商等级分数
+            $company = new Company();
+            $company->updateCompanyLevel($userinfo['company_id'],$tran_score);
 
             $this->db->commit();
 
