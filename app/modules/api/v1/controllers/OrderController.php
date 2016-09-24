@@ -1104,23 +1104,24 @@ class OrderController extends APIControllerBase
             $commentId = ['id'=>$commentInfo->id];
             //更新订单是否已评价状态
             $order->updateComment($orderId);
-            //获取厂商所有订单的总评分
-            $manu_order_info = $order->getOrderInfo($orderId);
-            $manu_score_num = $order->getOrderScore4manu($manu_order_info['manufacture_id']);
-            $manu_score = intval(floor($manu_score_num[0]/$manu_score_num[1]));
-            //更新厂商等级分数
-            $company = new Company();
-            $company->updateCompanyLevel($manu_order_info['manufacture_id'],$manu_score);
-
             //获取承运商所有订单的总评分
-            $user = new  ClientUser();
-            $userinfo = $user->getUserInfomation($this->cid);
-            $tran_score_num = $order->getOrderScore4tran($userinfo['company_id']);
+            $tran_order_info = $order->getOrderInfo($orderId);
+            $transporter_id = $tran_order_info['transporter_id'];
+            $tran_score_num = $order->getOrderScore4manu($transporter_id);
             $tran_score = intval(floor($tran_score_num[0]/$tran_score_num[1]));
             //更新承运商等级分数
             $company = new Company();
-            $company->updateCompanyLevel($userinfo['company_id'],$tran_score);
-
+            $company->updateCompanyLevel($transporter_id,$tran_score);
+            /*
+            //获取厂商所有订单的总评分
+            $user = new  ClientUser();
+            $userinfo = $user->getUserInfomation($this->cid);
+            $manu_score_num = $order->getOrderScore4tran($userinfo['company_id']);
+            $manu_score = intval(floor($manu_score_num[0]/$manu_score_num[1]));
+            //更新厂商等级分数
+            $company = new Company();
+            $company->updateCompanyLevel($userinfo['company_id'],$manu_score);
+            */
             $this->db->commit();
 
         }catch (Exception $e){
