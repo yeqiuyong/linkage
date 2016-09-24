@@ -250,6 +250,13 @@ class SessionController extends APIControllerBase
             if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_MANUFACTURE || $userInfo['role'] == LinkageUtils::ROLE_MANUFACTURE){
                 $companies = $company->getTransporters($pagination, $offset, $size);
             }else if($userInfo['role'] == LinkageUtils::ROLE_ADMIN_TRANSPORTER || $userInfo['role'] == LinkageUtils::ROLE_TRANSPORTER){
+                $order = new Order();
+                $tran_score_num = $order->getOrderScore4manu($userInfo['company_id']);
+                $tran_score = intval(floor($tran_score_num[0]/$tran_score_num[1]));
+                //更新承运商等级分数
+                $company = new Company();
+                $company->updateCompanyLevel($userInfo['company_id'],$tran_score);
+
                 $companies = $company->getManufactures($pagination, $offset, $size);
             }else{
                 return $this->respondError(ErrorCodes::AUTH_UNAUTHORIZED, ErrorCodes::$MESSAGE[ErrorCodes::AUTH_UNAUTHORIZED]);
