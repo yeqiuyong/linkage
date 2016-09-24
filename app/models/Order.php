@@ -785,9 +785,9 @@ class Order extends Model
             throw new DataBaseException(ErrorCodes::DATA_FAIL, ErrorCodes::$MESSAGE[ErrorCodes::DATA_FAIL]);
         }
     }
-
+    //查找承运商的总订单数量
     public function getOrderScore4manu($companyId){
-        $phql="select count(1)as total, sum(b.score) as allscore from Multiple\Models\Order a join Multiple\Models\OrderComment b where a.order_id = b.order_id and a.is_comment='1' and a.manufacture_id='".$companyId."'";
+        $phql="select count(1)as total, sum(b.score) as allscore from Multiple\Models\Order a join Multiple\Models\OrderComment b where a.order_id = b.order_id and a.is_comment='1' and a.transporter_id='".$companyId."'";
         $orders = $this->modelsManager->executeQuery($phql);
         foreach ($orders as $order) {
 
@@ -798,9 +798,9 @@ class Order extends Model
         return $result;
 
     }
-
+    //查找厂商的总订单数量
     public function getOrderScore4tran($companyId){
-        $phql="select count(1)as total, sum(b.score) as allscore from Multiple\Models\Order a join Multiple\Models\OrderComment b where a.order_id = b.order_id and a.is_comment='1' and a.transporter_id='".$companyId."'";
+        $phql="select count(1)as total, sum(b.score) as allscore from Multiple\Models\Order a join Multiple\Models\OrderComment b where a.order_id = b.order_id and a.is_comment='1' and a.manufacture_id='".$companyId."'";
         $orders = $this->modelsManager->executeQuery($phql);
         foreach ($orders as $order) {
 
